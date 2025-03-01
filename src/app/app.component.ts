@@ -48,3 +48,85 @@ export class AppComponent implements OnInit {
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { Component, OnInit, HostListener } from '@angular/core';
+// import { FlowbiteService } from '../../core/services/flowbite.service';
+// import { NgClass } from '@angular/common';
+
+// @Component({
+//   selector: 'app-com1',
+//   standalone: true,
+//   imports: [NgClass],
+//   templateUrl: './com1.component.html',
+//   styleUrl: './com1.component.scss',
+// })
+// export class Com1Component implements OnInit {
+//   constructor(private flowbiteService: FlowbiteService) {}
+//   isNavbarOpen = false;
+//   ngOnInit(): void {
+//     this.flowbiteService.loadFlowbite((flowbite) => {
+//       // Your custom code here
+//       this.updateActiveSection();
+//       console.log('Flowbite loaded', flowbite);
+//     });
+//   }
+//   toggleNavbar(): void {
+//     this.isNavbarOpen = !this.isNavbarOpen;
+//   }
+//   @HostListener('window:scroll', [])
+//   onScroll(): void {
+//     this.updateActiveSection();
+//   }
+//   scrollToSection(sectionId: string): void {
+//     const section = document.getElementById(sectionId);
+//     if (section) {
+//       section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+//       this.isNavbarOpen = false;
+//     }
+//   }
+//   private updateActiveSection(): void {
+//     const sections = document.querySelectorAll('section');
+//     let currentSection = '';
+
+//     sections.forEach((section) => {
+//       const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+//       if (window.scrollY >= sectionTop - 60) {
+//         currentSection = section.getAttribute('id')!;
+//       }
+//     });
+
+//     document.querySelectorAll('.nav-link').forEach((button) => {
+//       button.classList.remove('text-blue-500', 'font-bold');
+//     });
+
+//     if (currentSection) {
+//       const activeButton = document.getElementById(`btn-${currentSection}`);
+//       if (activeButton) {
+//         activeButton.classList.add('text-blue-500', 'font-bold');
+//       }
+//     }
+//   }
+// }
