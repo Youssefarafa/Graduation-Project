@@ -1,0 +1,45 @@
+import { Component, OnInit } from '@angular/core';
+import { FlowbiteService } from '../../core/services/flowbite.service';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NgClass, NgIf } from '@angular/common';
+
+@Component({
+  selector: 'app-navbar-user',
+  standalone: true,
+  imports: [RouterLink, RouterLinkActive, NgIf, NgClass],
+  templateUrl: './navbar-user.component.html',
+  styleUrl: './navbar-user.component.scss',
+})
+export class NavbarUserComponent implements OnInit {
+  constructor(private flowbiteService: FlowbiteService) {}
+  isDarkMode = false;
+  ngOnInit(): void {
+    this.flowbiteService.loadFlowbite((flowbite) => {
+      // Your custom code here
+      const systemPrefersDark = window.matchMedia(
+        '(prefers-color-scheme: dark)'
+      ).matches;
+      this.isDarkMode = systemPrefersDark;
+      // Apply the initial theme
+      this.applyTheme();
+      window
+        .matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', (event) => {
+          this.isDarkMode = event.matches;
+          this.applyTheme();
+        });
+      console.log('Flowbite loaded', flowbite);
+    });
+  }
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+    this.applyTheme();
+  }
+  applyTheme() {
+    if (this.isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }
+}
