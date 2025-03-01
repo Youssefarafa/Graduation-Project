@@ -4,6 +4,9 @@ module.exports = {
   content: ["./src/**/*.{html,ts}", "./node_modules/flowbite/**/*.js",],
   theme: {
     extend: {
+      fontSize:{
+        'xxs':'0.5rem'
+      },
       fontFamily: {
         'Philosopher': ['Philosopher', 'sans-serif'],
         'Roboto':['Roboto','sans-serif']

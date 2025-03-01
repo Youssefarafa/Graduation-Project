@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FlowbiteService } from '../../core/services/flowbite.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-navbar-admin',
@@ -30,6 +31,7 @@ export class NavbarAdminComponent implements OnInit {
         });
       console.log('Flowbite loaded', flowbite);
     });
+    initFlowbite(); // Call the dropdown initialization function
   }
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
@@ -42,4 +44,7 @@ export class NavbarAdminComponent implements OnInit {
       document.documentElement.classList.remove('dark');
     }
   }
+  // ngAfterViewInit() {
+    
+  // }
 }

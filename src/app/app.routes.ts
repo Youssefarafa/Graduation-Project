@@ -45,6 +45,7 @@ export const routes: Routes = [
       { path: 'Orders', component: OrdersComponent },
       { path: 'Customers', component: CustomersComponent },
       { path: 'PlantDiseases', component: PlantDiseasesComponent },
+      { path: 'Account', component: AccountComponent },
     ],
   },
   {
