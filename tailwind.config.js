@@ -9,7 +9,9 @@ module.exports = {
       },
       fontFamily: {
         'Philosopher': ['Philosopher', 'sans-serif'],
-        'Roboto':['Roboto','sans-serif']
+        'Roboto':['Roboto','sans-serif'],
+        'Quicksand':['Quicksand','sans-serif'],
+        'Poppins':['Poppins','sans-serif'],
       },
       backgroundImage: {
         'lines-notfound': "url('./assets/Images/LinesNotFound.svg')",

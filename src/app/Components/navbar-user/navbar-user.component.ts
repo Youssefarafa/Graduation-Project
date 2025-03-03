@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FlowbiteService } from '../../core/services/flowbite.service';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { initFlowbite } from 'flowbite';
 
@@ -29,7 +29,7 @@ export class NavbarUserComponent implements OnInit {
           this.isDarkMode = event.matches;
           this.applyTheme();
         });
-      console.log('Flowbite loaded', flowbite);
+      // console.log('Flowbite loaded', flowbite);
     });
     initFlowbite(); // Call the dropdown initialization function
   }

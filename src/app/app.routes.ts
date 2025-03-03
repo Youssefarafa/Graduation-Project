@@ -22,9 +22,9 @@ import { PlantDiseasesComponent } from './Components/plant-diseases/plant-diseas
 import { DashBoardComponent } from './Components/dash-board/dash-board.component';
 
 export const routes: Routes = [
-  // { path: '', redirectTo: 'Start', pathMatch: 'full' },
+  { path: '', redirectTo: 'Start', pathMatch: 'full' },
   {
-    path: '',
+    path: 'Start',
     component: StartComponent,
     children: [
       { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -35,7 +35,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: '',
+    path: 'Admin',
     component: AdminComponent,
     children: [
       { path: '', redirectTo: 'DashBoard', pathMatch: 'full' },
@@ -46,10 +46,11 @@ export const routes: Routes = [
       { path: 'Customers', component: CustomersComponent },
       { path: 'PlantDiseases', component: PlantDiseasesComponent },
       { path: 'Account', component: AccountComponent },
+      // { path: 'Account/:role', component: AccountComponent }, // 🔥 Reusing the same compo
     ],
   },
   {
-    path: '',
+    path: 'User',
     component: UserComponent,
     children: [
       { path: '', redirectTo: 'Shop', pathMatch: 'full' },
@@ -59,6 +60,7 @@ export const routes: Routes = [
       { path: 'DLModel', component: DLModelComponent },
       { path: 'Alert', component: AlertComponent },
       { path: 'Account', component: AccountComponent },
+      // { path: 'Account/:role', component: AccountComponent }, // 🔥 Reusing the same compo
     ],
   },
   { path: '**', component: NotfoundComponent },

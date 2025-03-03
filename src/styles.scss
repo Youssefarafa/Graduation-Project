@@ -4,18 +4,43 @@
 @tailwind utilities;
 @custom-variant dark (&:where(.dark, .dark *));
 @font-face {
-    font-family: 'Philosopher';
-    font-style: normal;
-    font-weight: 700;
-    src: url('assets/Fonts/Philosopher/Philosopher-Bold.ttf') format('truetype');
+  font-family: "Philosopher";
+  font-style: normal;
+  font-weight: 700;
+  src: url("assets/Fonts/Philosopher/Philosopher-Bold.ttf") format("truetype");
 }
 @font-face {
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 500;
-    src: url('assets/Fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 100 900;
+  src: url("assets/Fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
+    format("truetype");
 }
-*{
-    box-sizing: border-box;
+@font-face {
+  font-family: "Quicksand";
+  font-style: normal;
+  font-weight: 300 700;
+  src: url("assets/Fonts/Quicksand/Quicksand-VariableFont_wght.ttf")
+    format("truetype");
 }
-  
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  src: url("assets/Fonts/Poppins/Poppins-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  src: url("assets/Fonts/Poppins/Poppins-Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  src: url("assets/Fonts/Poppins/Poppins-SemiBold.ttf") format("truetype");
+}
+* {
+  box-sizing: border-box;
+}

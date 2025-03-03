@@ -29,7 +29,7 @@ export class NavbarAdminComponent implements OnInit {
           this.isDarkMode = event.matches;
           this.applyTheme();
         });
-      console.log('Flowbite loaded', flowbite);
+      // console.log('Flowbite loaded', flowbite);
     });
     initFlowbite(); // Call the dropdown initialization function
   }
