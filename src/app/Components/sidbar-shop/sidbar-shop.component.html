@@ -1,0 +1,23 @@
+<div class="flex">
+    <!-- Sidebar -->
+    <div [ngClass]="{'w-64': isOpen, 'w-16': !isOpen}" class="transition-all duration-300 bg-gray-800 text-white fixed top-[72px] bottom-0 h-full z-10">
+        <button (click)="toggleSidebar()"       
+            class="absolute top-4 right-[-20px] bg-gray-700 p-2 rounded-full shadow-lg hover:bg-gray-600 transition-all">
+            <i [ngClass]="{'fa-solid fa-bars text-xl': !isOpen, 'fas fa-times text-xl': isOpen}"></i>
+        </button>
+        <div class="h-full px-3 py-4 overflow-hidden">          
+            <ul class="space-y-1">
+                <li>
+                    <a [routerLink]="['/User/Shop/Products']" (click)="closeOnLinkClick()"
+                        routerLinkActive="md:px-1 font-semibold border-2 rounded-sm border-green-700 bg-gray-100 md:bg-transparent text-green-600 dark:text-green-500 dark:bg-green-900 md:dark:bg-transparent "
+                        class="flex items-center p-2 hover:bg-gray-700 rounded "><i class="fa-solid fa-tags"></i><span *ngIf="isOpen" class="ml-3">Products</span></a>
+                </li>
+                <li>
+                    <a [routerLink]="['/User/Shop/Categories']" (click)="closeOnLinkClick()"
+                        routerLinkActive="md:px-1 font-semibold border-2 rounded-sm border-green-700 bg-gray-100 md:bg-transparent text-green-600 dark:text-green-500 dark:bg-green-900 md:dark:bg-transparent "
+                        class="flex items-center p-2 hover:bg-gray-700 rounded"><i class="fa-solid fa-layer-group"></i><span *ngIf="isOpen" class="ml-3">Categories</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

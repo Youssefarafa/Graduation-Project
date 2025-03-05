@@ -4,17 +4,17 @@ import {
   OnInit,
   PLATFORM_ID,
   Renderer2,
-  inject,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { initAccordions, initFlowbite } from 'flowbite';
-// import { Analytics, logEvent } from '@angular/fire/analytics';
 import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from './Components/footer/footer.component';
 import { NotfoundComponent } from './Components/notfound/Notfound.component';
 import { UserComponent } from './Layouts/user/user.component';
 import { AdminComponent } from './Layouts/admin/admin.component';
 import { StartComponent } from './Layouts/start/start.component';
+import { FlowbiteService } from './core/services/flowbite.service';
+// import { Analytics, logEvent } from '@angular/fire/analytics';
 // import { getAuth } from "firebase/auth";
 // mport { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 @Component({
@@ -32,45 +32,27 @@ import { StartComponent } from './Layouts/start/start.component';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  constructor(@Inject(PLATFORM_ID) private platformId: any) {}
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: any,
+    private flowbiteService: FlowbiteService
+  ) {}
   title = 'Project';
   // private analytics = inject(Analytics);
-
   // constructor() {
   //   // Log an event
   //   this.analytics.logEvent('app_started', { component: 'AppComponent' });
   // }
 
   ngOnInit(): void {
+    this.flowbiteService.loadFlowbite((flowbite) => {
+      // Your custom code here
+    });
     if (isPlatformBrowser(this.platformId)) {
       initAccordions(); // Call your function ONLY in the browser
       initFlowbite();
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import { Component, OnInit, HostListener } from '@angular/core';
 // import { FlowbiteService } from '../../core/services/flowbite.service';

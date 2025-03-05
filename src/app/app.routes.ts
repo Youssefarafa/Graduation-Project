@@ -20,6 +20,10 @@ import { OrdersComponent } from './Components/orders/orders.component';
 import { CustomersComponent } from './Components/customers/customers.component';
 import { PlantDiseasesComponent } from './Components/plant-diseases/plant-diseases.component';
 import { DashBoardComponent } from './Components/dash-board/dash-board.component';
+import { ProductsShopComponent } from './Components/products-shop/products-shop.component';
+import { CategoriesShopComponent } from './Components/categories-shop/categories-shop.component';
+import { WishListShopComponent } from './Components/wish-list-shop/wish-list-shop.component';
+import { CartShopComponent } from './Components/cart-shop/cart-shop.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Start', pathMatch: 'full' },
@@ -54,7 +58,13 @@ export const routes: Routes = [
     component: UserComponent,
     children: [
       { path: '', redirectTo: 'Shop', pathMatch: 'full' },
-      { path: 'Shop', component: ShopComponent },
+      { path: 'Shop', component: ShopComponent,children:[
+        { path: '', redirectTo: 'Products', pathMatch: 'full' },
+        { path: 'Products', component: ProductsShopComponent },
+        { path: 'Categories', component: CategoriesShopComponent },
+        { path: 'WishList', component: WishListShopComponent },
+        { path: 'CartShop', component: CartShopComponent },
+      ] },
       { path: 'ChatBot', component: ChatBotComponent },
       { path: 'CVModel', component: CVModelComponent },
       { path: 'DLModel', component: DLModelComponent },
