@@ -1,6 +1,7 @@
 import { RouterLink, ActivatedRoute, NavigationEnd,Router } from '@angular/router';
 import {  Component, OnInit } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { console } from 'inspector';
 
 
 @Component({
@@ -35,13 +36,12 @@ export class FooterComponent implements OnInit {
   ngOnInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.updateClasses(event.url);
+        this.updateClasses(event.url); 
       }
     });
   }
-
   updateClasses(url: string) {
-    if (url.includes('/User/Shop')) {
+    if (url=='/User/Shop/Products' || url =='/User/Shop/CartShop' || url=='/User/Shop/WishList' || url=='/User/Shop/Categories' || url=='/User/Shop') {
       this.existingClass['ms-16'] = true;
     } else {
       this.existingClass['ms-16'] = false;

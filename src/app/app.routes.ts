@@ -1,4 +1,3 @@
-import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NotfoundComponent } from './Components/notfound/Notfound.component';
 import { StartComponent } from './Layouts/start/start.component';
@@ -24,6 +23,7 @@ import { ProductsShopComponent } from './Components/products-shop/products-shop.
 import { CategoriesShopComponent } from './Components/categories-shop/categories-shop.component';
 import { WishListShopComponent } from './Components/wish-list-shop/wish-list-shop.component';
 import { CartShopComponent } from './Components/cart-shop/cart-shop.component';
+import { SystemSettingsComponent } from './Components/system-settings/system-settings.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'Start', pathMatch: 'full' },
@@ -49,7 +49,7 @@ export const routes: Routes = [
       { path: 'Orders', component: OrdersComponent },
       { path: 'Customers', component: CustomersComponent },
       { path: 'PlantDiseases', component: PlantDiseasesComponent },
-      { path: 'Account', component: AccountComponent },
+      { path: 'SystemSettings', component: SystemSettingsComponent },
       // { path: 'Account/:role', component: AccountComponent }, // 🔥 Reusing the same compo
     ],
   },
