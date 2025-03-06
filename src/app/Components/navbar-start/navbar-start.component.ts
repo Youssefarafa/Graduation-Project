@@ -1,8 +1,7 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { initFlowbite } from 'flowbite';
-import { FlowbiteService } from '../../core/services/flowbite.service';
+import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 
 @Component({
   selector: 'app-navbar-start',
@@ -12,39 +11,51 @@ import { FlowbiteService } from '../../core/services/flowbite.service';
   styleUrl: './navbar-start.component.scss',
 })
 export class NavbarStartComponent implements OnInit {
-  constructor(private flowbiteService: FlowbiteService) {}
-  isDarkMode = false;
-  ngOnInit(): void {
-    this.flowbiteService.loadFlowbite((flowbite) => {
-      // Your custom code here
-      const systemPrefersDark = window.matchMedia(
-        '(prefers-color-scheme: dark)'
-      ).matches;
-      this.isDarkMode = systemPrefersDark;
-      // Apply the initial theme
-      this.applyTheme();
-      window
-        .matchMedia('(prefers-color-scheme: dark)')
-        .addEventListener('change', (event) => {
-          this.isDarkMode = event.matches;
-          this.applyTheme();
+    isDarkMode = false;
+  
+    constructor(
+      private platformDetectionService: PlatformDetectionService,
+      private renderer: Renderer2
+    ) {}
+  
+    ngOnInit() {
+      if (this.platformDetectionService.isBrowser) {
+        console.log('Running in the browser');
+  
+        // Load Flowbite (Independent of Dark Mode)
+        this.platformDetectionService.loadFlowbite((flowbite) => {
+          flowbite.initFlowbite();
+          console.log('Flowbite loaded successfully');
         });
-      // console.log('Flowbite loaded', flowbite);
-    });
-    initFlowbite(); // Call the dropdown initialization function
-  }
-  toggleTheme() {
-    this.isDarkMode = !this.isDarkMode;
-    this.applyTheme();
-  }
-  applyTheme() {
-    if (this.isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+  
+        // Apply dark mode settings after DOM renders
+        this.platformDetectionService.executeAfterDOMRender(() => {
+          this.setupDarkMode();
+        });
+      }
     }
-  }
-  // ngAfterViewInit() {
-
-  // }
+  
+    setupDarkMode() {
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      this.isDarkMode = systemPrefersDark;
+      this.applyTheme();
+  
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+        this.isDarkMode = event.matches;
+        this.applyTheme();
+      });
+    }
+  
+    toggleTheme() {
+      this.isDarkMode = !this.isDarkMode;
+      this.applyTheme();
+    }
+  
+    applyTheme() {
+      if (this.isDarkMode) {
+        this.renderer.addClass(document.documentElement, 'dark');
+      } else {
+        this.renderer.removeClass(document.documentElement, 'dark');
+      }
+    }
 }

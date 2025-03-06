@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { FlowbiteService } from '../../core/services/flowbite.service';
-import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-account',

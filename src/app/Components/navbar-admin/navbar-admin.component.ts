@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { FlowbiteService } from '../../core/services/flowbite.service';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
-import { initFlowbite } from 'flowbite';
+import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 
 @Component({
   selector: 'app-navbar-admin',
@@ -12,39 +11,51 @@ import { initFlowbite } from 'flowbite';
   styleUrl: './navbar-admin.component.scss'
 })
 export class NavbarAdminComponent implements OnInit {
-  constructor(private flowbiteService: FlowbiteService) {}
   isDarkMode = false;
-  ngOnInit(): void {
-    this.flowbiteService.loadFlowbite((flowbite) => {
-      // Your custom code here
-      const systemPrefersDark = window.matchMedia(
-        '(prefers-color-scheme: dark)'
-      ).matches;
-      this.isDarkMode = systemPrefersDark;
-      // Apply the initial theme
-      this.applyTheme();
-      window
-        .matchMedia('(prefers-color-scheme: dark)')
-        .addEventListener('change', (event) => {
-          this.isDarkMode = event.matches;
-          this.applyTheme();
-        });
-      // console.log('Flowbite loaded', flowbite);
-    });
-    initFlowbite(); // Call the dropdown initialization function
+
+  constructor(
+    private platformDetectionService: PlatformDetectionService,
+    private renderer: Renderer2
+  ) {}
+
+  ngOnInit() {
+    if (this.platformDetectionService.isBrowser) {
+      console.log('Running in the browser');
+
+      // Load Flowbite (Independent of Dark Mode)
+      this.platformDetectionService.loadFlowbite((flowbite) => {
+        flowbite.initFlowbite();
+        console.log('Flowbite loaded successfully');
+      });
+
+      // Apply dark mode settings after DOM renders
+      this.platformDetectionService.executeAfterDOMRender(() => {
+        this.setupDarkMode();
+      });
+    }
   }
+
+  setupDarkMode() {
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.isDarkMode = systemPrefersDark;
+    this.applyTheme();
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+      this.isDarkMode = event.matches;
+      this.applyTheme();
+    });
+  }
+
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
     this.applyTheme();
   }
+
   applyTheme() {
     if (this.isDarkMode) {
-      document.documentElement.classList.add('dark');
+      this.renderer.addClass(document.documentElement, 'dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      this.renderer.removeClass(document.documentElement, 'dark');
     }
   }
-  // ngAfterViewInit() {
-    
-  // }
 }
