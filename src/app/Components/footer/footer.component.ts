@@ -12,15 +12,16 @@ import { PlatformDetectionService } from '../../core/services/platform-detection
 })
 export class FooterComponent implements OnInit {
   existingClass: { [key: string]: boolean } = {
+    'shadow-[inset_0px_10px_27px_-10px_rgba(0,0,0,0.56)]': true,
     'bg-gradient-to-t': true,
     'from-[#238564]': true,
     'from-40%': true,
     'via-[#238564]': true,
     'via-1%': true,
     'to-[#00F9A6]': true,
-    'dark:from-[rgb(27,90,69)]': true,
-    'dark:via-[#1b5a45]': true,
-    'dark:to-[#21946e]': true,
+    'dark:from-[#78350f]': true,
+    // 'dark:via-[#1b5a45]': true,
+    'dark:to-[#d97706]': true,
     'to-59%': true,
     'px-2': true,
     'sm:px-4': true,
@@ -61,6 +62,7 @@ export class FooterComponent implements OnInit {
       '/User/Shop/WishList',
       '/User/Shop/Categories',
       '/User/Shop',
+      '/User'
     ];
 
     this.existingClass['ms-16'] = shopRoutes.includes(url);

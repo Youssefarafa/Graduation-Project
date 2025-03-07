@@ -1,20 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import { ProductsShopService } from '../../core/services/products-shop.service';
-import { Products } from '../../core/interface/products';
-import { ButtonWishComponent } from "../button-wish/button-wish.component";
-import { ButtonCartComponent } from "../button-cart/button-cart.component";
-
+import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-products-shop',
+  selector: 'app-button-wish',
   standalone: true,
-  imports: [ButtonWishComponent, ButtonCartComponent],
-  templateUrl: './products-shop.component.html',
-  styleUrl: './products-shop.component.scss',
+  imports: [NgClass],
+  templateUrl: './button-wish.component.html',
+  styleUrl: './button-wish.component.scss'
 })
-export class ProductsShopComponent implements OnInit {
-  products?: Products;
+export class ButtonWishComponent implements OnInit{
+ isFavorite = false; // Track if it's in the wishlist
+  isBouncing = true;  // Track animation state
   constructor(
     private platformDetectionService: PlatformDetectionService,
     private _ProductsShopService: ProductsShopService
@@ -31,22 +29,11 @@ export class ProductsShopComponent implements OnInit {
 
       // Access the DOM safely after rendering
       this.platformDetectionService.executeAfterDOMRender(() => {
-        this.getProducts();
       });
     }
   }
-  getProducts = () => {
-    return this._ProductsShopService.getproducts().subscribe({
-      next: (res) => {
-        this.products = res;
-      },
-      error: (err) => {
-        console.error('Error fetching products:', err);
-      },
-      complete: () => {
-        console.log('Product fetching complete');
-      }      
-    });
-  };
-
+  toggleWishlist() {
+    this.isFavorite = !this.isFavorite;  // Toggle SVG color
+    this.isBouncing = !this.isBouncing;  // Toggle animation
+  }
 }

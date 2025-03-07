@@ -60,7 +60,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'Shop', pathMatch: 'full' },
       { path: 'Shop', component: ShopComponent,children:[
         { path: '', redirectTo: 'Products', pathMatch: 'full' },
-        { path: 'Products', component: ProductsShopComponent },
+        { path: 'Products', component: ProductsShopComponent,title:'Products' },
         { path: 'Categories', component: CategoriesShopComponent },
         { path: 'WishList', component: WishListShopComponent },
         { path: 'CartShop', component: CartShopComponent },

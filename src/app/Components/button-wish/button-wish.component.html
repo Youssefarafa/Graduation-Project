@@ -1,0 +1,11 @@
+<button (click)="toggleWishlist()" [class.animate-bounce]="isBouncing" class="flex items-center justify-center text-green-700 dark:text-green-300 border border-green-500 
+hover:bg-green-200 dark:hover:bg-green-700 transition-all duration-300 active:ring-4 active:outline-none active:ring-green-300 
+font-medium rounded-lg text-sm px-2 py-1 shadow-md transform hover:scale-110">
+<svg class="w-5 h-5 transition-all duration-300"
+    [ngClass]="{ 'text-green-600 dark:text-green-300': !isFavorite,  'text-red-600 dark:text-red-500': isFavorite}"
+    fill="currentColor" viewBox="0 0 20 20">
+    <path fill-rule="evenodd"
+        d="M3.172 5.172a4 4 0 0 1 5.656 0l.172.172.172-.172a4 4 0 0 1 5.656 5.656L10 17.414l-5.828-5.828a4 4 0 0 1 0-5.656z"
+        clip-rule="evenodd"></path>
+</svg>
+</button>
