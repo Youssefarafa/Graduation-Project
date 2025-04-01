@@ -1,1 +1,586 @@
-<p>signup works!</p>
+<div
+    class="min-h-screen flex items-center justify-center p-6 pb-10 bg-[url('./assets/Images/LoginupGroup.svg')] bg-no-repeat bg-center ">
+    <div class="flex justify-around xl:justify-between w-full max-w-7xl space-x-0">
+        <!-- Left Section: Signup Form -->
+        <div class="w-full md:w-[70%] lg:w-1/2 px-3 md:px-7 lg:px-5 xl:px10">
+            <h2 class="text-3xl font-bold mb-2 mt-0 md:pt-10">Sign up</h2>
+            <p class="text-gray-600 mb-6">Let’s get you all set up so you can access your personal account.</p>
+            <!-- Form -->
+            <form [formGroup]="register" (ngSubmit)="onSubmit()">
+                <div class="mt-10 grid grid-cols-2 space-x-5">
+                    <!-- First Name -->
+                    <div class="relative">  
+                        <input autocomplete="off" (keydown.enter)="lname.focus()" type="text" #fname id="fname"
+                            formControlName="fname"
+                            class="peer w-full p-2 border rounded-lg focus:outline-none focus:ring-2" required
+                            (focus)="setFocus('fname', true); changeLabel('fnameLabel', 'First Name :')"
+                            (input)="setFocus('fname', true); changeLabel('fnameLabel', 'First Name :')"
+                            (blur)="handleBlur('fname'); setFocus('fname', false); resetLabel('fnameLabel', 'Enter Your First Name...',fname)"
+                            [ngClass]="{
+                                'focus:ring-blue-400': (register.get('fname')?.invalid && !register.get('fname')?.touched),
+                                'focus:ring-green-500': register.get('fname')?.valid,
+                                'focus:ring-red-500': (register.get('fname')?.invalid && register.get('fname')?.touched) || (register.get('fname')?.invalid &&  register.get('fname')?.touched ),
+                                'border-red-500 ring-2 ring-red-500 animate-shake': showError['fname'], }">
+                        <div *ngIf="!isFocused['fname'] && register.get('fname')?.invalid && register.get('fname')?.touched"
+                            class="absolute -right-[10px] top-1/2 transform -translate-y-1/2 bg-red-500 w-1 h-7 rounded-lg shadow-md">
+                        </div>
+                        <label for="fname" class="cursor-text peer-focus:cursor-default peer-valid:cursor-default absolute left-2 top-2 text-gray-500 text-sm transition-all duration-300 
+                        peer-focus:top-[-30px] peer-focus:text-sm peer-focus:text-gray-700 peer-focus:font-bold
+                        peer-valid:top-[-30px] peer-valid:text-sm peer-valid:text-gray-700 peer-valid:font-bold">
+                            {{ fnameLabel }}
+                        </label>
+                        <div role="tooltip" [ngClass]="{
+                            'opacity-0 invisible': register.get('fname')?.valid || !isFocused['fname'] || (register.get('fname')?.errors && register.get('fname')?.touched),
+                            'opacity-100 visible': register.get('fname')?.invalid && isFocused['fname'] && !(register.get('fname')?.errors && register.get('fname')?.touched)
+                        }"
+                            class="absolute bottom-[55px] left-1/2 transform -translate-x-1/2 z-10 w-72 text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-xl transition-opacity duration-[300ms] p-3 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                            <!-- Arrow -->
+                            <div
+                                class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-gray-400 dark:border-t-gray-600">
+                            </div>
+                            <!-- Popover Content -->
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Your First Name should be :-</h3>
+                            <p class="text-sm ps-2">At least 2 characters.</p>
+                            <p class="text-sm ps-2">At most 20 characters.</p>
+                        </div>
+                    </div>
+                    <!-- Last Name -->
+                    <div class="relative">
+                        <input autocomplete="off" (keydown.enter)="email.focus()" type="text" #lname id="lname"
+                            formControlName="lname"
+                            class="peer w-full p-2 border rounded-lg focus:outline-none focus:ring-2" required
+                            (focus)="setFocus('lname', true); changeLabel('lnameLabel', 'Last Name :')"
+                            (input)="setFocus('lname', true); changeLabel('lnameLabel', 'Last Name :')"
+                            (blur)="handleBlur('lname'); setFocus('lname', false); resetLabel('lnameLabel', 'Enter Your Last Name...',lname)"
+                            [ngClass]="{
+                                'focus:ring-blue-400': (register.get('lname')?.invalid && !register.get('lname')?.touched),
+                                'focus:ring-green-500': register.get('lname')?.valid,
+                                'focus:ring-red-500': (register.get('lname')?.invalid && register.get('lname')?.touched) || (register.get('lname')?.invalid &&  register.get('lname')?.touched ),
+                                'border-red-500 ring-2 ring-red-500 animate-shake': showError['lname'], }">
+                        <div *ngIf="!isFocused['lname'] && register.get('lname')?.invalid && register.get('lname')?.touched"
+                            class="absolute -right-[10px] top-1/2 transform -translate-y-1/2 bg-red-500 w-1 h-7 rounded-lg shadow-md">
+                        </div>
+                        <label for="lname" class="cursor-text peer-focus:cursor-default peer-valid:cursor-default absolute left-2 top-2 text-gray-500 text-sm transition-all duration-300 
+                        peer-focus:top-[-30px] peer-focus:text-sm peer-focus:text-gray-700 peer-focus:font-bold
+                        peer-valid:top-[-30px] peer-valid:text-sm peer-valid:text-gray-700 peer-valid:font-bold">
+                            {{lnameLabel}}
+                        </label>
+                        <div role="tooltip" [ngClass]="{
+                            'opacity-0 invisible': register.get('lname')?.valid || !isFocused['lname'] || (register.get('lname')?.errors && register.get('lname')?.touched),
+                            'opacity-100 visible': register.get('lname')?.invalid && isFocused['lname'] && !(register.get('lname')?.errors && register.get('lname')?.touched)
+                        }"
+                            class="absolute bottom-[55px] left-1/2 transform -translate-x-1/2 z-10 w-72 text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-xl transition-opacity duration-[300ms] p-3 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                            <!-- Arrow -->
+                            <div
+                                class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-gray-400 dark:border-t-gray-600">
+                            </div>
+                            <!-- Popover Content -->
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Your Last Name should be :-</h3>
+                            <p class="text-sm ps-2">At least 2 characters.</p>
+                            <p class="text-sm ps-2">At most 20 characters.</p>
+                        </div>
+                    </div>
+                </div>
+                @if(register.get('fname')?.errors && register.get('fname')?.touched || register.get('lname')?.errors &&
+                register.get('lname')?.touched){
+                <div class="flex flex-col space-y-2 p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                    role="alert">
+                    @if(register.get('fname')?.errors && register.get('fname')?.touched ){
+                    <div class="flex">
+                        <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                        </svg>
+                        <span class="sr-only">Danger</span>
+                        <div>
+                            <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                                    First Name Input:</strong></span>
+                            <ul class="mt-1.5 list-disc list-inside">
+                                @if(register.get('fname')?.hasError('required')){
+                                <li>Input is required.</li>
+                                }
+                                @if(register.get('fname')?.hasError('minlength')){
+                                <li>At least 2 characters.</li>
+                                }
+                                @if(register.get('fname')?.hasError('maxlength')){
+                                <li>At most 20 characters.</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    }
+                    @if(register.get('lname')?.errors && register.get('lname')?.touched ){
+                    <div class="flex">
+                        <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                        </svg>
+                        <span class="sr-only">Danger</span>
+                        <div>
+                            <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                                    Last Name Input:</strong></span>
+                            <ul class="mt-1.5 list-disc list-inside">
+                                @if(register.get('lname')?.hasError('required')){
+                                <li>Input is required.</li>
+                                }
+                                @if(register.get('lname')?.hasError('minlength')){
+                                <li>At least 2 characters.</li>
+                                }
+                                @if(register.get('lname')?.hasError('maxlength')){
+                                <li>At most 20 characters.</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    }
+                </div>
+                }
+                <!-- Email -->
+                <div class="mt-10 relative">
+                    <input autocomplete="off" (keydown.enter)="password.focus()" type="text" #email id="email"
+                        formControlName="email"
+                        class="peer w-full p-2 border rounded-lg focus:outline-none focus:ring-2" required
+                        (focus)="setFocus('email', true); changeLabel('emailLabel', 'Email :')"
+                        (input)="setFocus('email', true); changeLabel('emailLabel', 'Email :')"
+                        (blur)="handleBlur('email'); setFocus('email', false); resetLabel('emailLabel', 'Enter Your Email...',email)"
+                        [ngClass]="{
+                            'focus:ring-blue-400': (register.get('email')?.invalid && !register.get('email')?.touched),
+                            'focus:ring-green-500': register.get('email')?.valid,
+                            'focus:ring-red-500': (register.get('email')?.invalid && register.get('email')?.touched) || (register.get('email')?.invalid &&  register.get('email')?.touched ),
+                            'border-red-500 ring-2 ring-red-500 animate-shake': showError['email'], 
+                            }">
+                    <div *ngIf="!isFocused['email'] && register.get('email')?.invalid && register.get('email')?.touched"
+                        class="absolute -right-[10px] top-1/2 transform -translate-y-1/2 bg-red-500 w-1 h-7 rounded-lg shadow-md">
+                    </div>
+                    <label for="email" class="cursor-text peer-focus:cursor-default peer-valid:cursor-default absolute left-2 top-2 text-gray-500 text-sm transition-all duration-300 
+                    peer-focus:top-[-30px] peer-focus:text-sm peer-focus:text-gray-700 peer-focus:font-bold
+                    peer-valid:top-[-30px] peer-valid:text-sm peer-valid:text-gray-700 peer-valid:font-bold">
+                        {{emailLabel}}
+                    </label>
+                    <div role="tooltip" [ngClass]="{
+                        'opacity-0 invisible': register.get('email')?.valid || !isFocused['email'] || (register.get('email')?.errors && register.get('email')?.touched),
+                        'opacity-100 visible': register.get('email')?.invalid && isFocused['email'] && !(register.get('email')?.errors && register.get('email')?.touched)
+                    }"
+                        class="absolute bottom-[55px] left-1/2 transform -translate-x-1/2 z-10 w-72 text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-xl transition-opacity duration-[300ms] p-3 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                        <!-- Arrow -->
+                        <div
+                            class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-gray-400 dark:border-t-gray-600">
+                        </div>
+                        <!-- Popover Content -->
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Your Email should be :-</h3>
+                        <p class="text-sm ps-2">At most 50 characters.</p>
+                        <p class="text-sm ps-2">Valid email address.</p>
+                    </div>
+                </div>
+                @if(register.get('email')?.errors && register.get('email')?.touched ){
+                <div class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                    role="alert">
+                    <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Danger</span>
+                    <div>
+                        <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                                Email Input:</strong></span>
+                        <ul class="mt-1.5 list-disc list-inside">
+                            @if(register.get('email')?.hasError('required')){
+                            <li>Input is required.</li>
+                            }
+                            @if(register.get('email')?.hasError('email')){
+                            <li>Valid email address.</li>
+                            }
+                            @if(register.get('email')?.hasError('maxlength')){
+                            <li>At most 50 characters.</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                }
+                <!-- Password -->
+                <div class="mt-10 relative">
+                    <input [type]="showPassword ? 'text' : 'password'" (keydown.enter)="rePassword.focus()" #password
+                        id="password" formControlName="password" autocomplete="off" required
+                        class="peer w-full p-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ease-in-out"
+                        [class]="passwordClass"
+                        (focus)="setFocus('password', true); changeLabel('passwordLabel', 'Password :')"
+                        (input)="setFocus('password', true); changeLabel('passwordLabel', 'Password :')"
+                        (blur)="handleBlur('password'); setFocus('password', false); resetLabel('passwordLabel', 'Enter Your Password...',password)">
+                    <div *ngIf="!isFocused['password'] && register.get('password')?.invalid && register.get('password')?.touched"
+                        class="absolute -right-[10px] top-1/2 transform -translate-y-1/2 bg-red-500 w-1 h-7 rounded-lg shadow-md">
+                    </div>
+                    <label for="password" class="cursor-text peer-focus:cursor-default peer-valid:cursor-default absolute left-2 top-2 text-gray-500 text-sm transition-all duration-300 
+                    peer-focus:top-[-30px] peer-focus:text-sm peer-focus:text-gray-700 peer-focus:font-bold
+                    peer-valid:top-[-30px] peer-valid:text-sm peer-valid:text-gray-700 peer-valid:font-bold">
+                        {{passwordLabel}}
+                    </label>
+                    <div role="tooltip" [ngClass]="{
+                        'opacity-0 invisible': register.get('password')?.valid || !isFocused['password'] || (register.get('password')?.errors && register.get('password')?.touched),
+                        'opacity-100 visible': register.get('password')?.invalid && isFocused['password'] && !(register.get('password')?.errors && register.get('password')?.touched)
+                    }"
+                        class="absolute bottom-[55px] left-1/2 transform -translate-x-1/2 z-10 w-[330px] text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-xl transition-opacity duration-[300ms] p-3 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                        <!-- Arrow -->
+                        <div
+                            class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-gray-400 dark:border-t-gray-600">
+                        </div>
+                        <!-- Popover Content -->
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Your Password should be :-</h3>
+                        <p class="text-sm ps-2">At least 8 characters.</p>
+                        <p class="text-sm ps-2">At most 15 characters.</p>
+                        <p class="text-sm ps-2">At least one uppercase letter.</p>
+                        <p class="text-sm ps-2">At least one lowercase letter.</p>
+                        <p class="text-sm ps-2">At least one number.</p>
+                        <p class="text-sm ps-2">At least one special character, e.g., ! &#64; # ?</p>
+                        <p class="text-sm ps-2">No any space.</p>
+                    </div>
+                    <!-- Toggle Button -->
+                    <button type="button" (click)="togglePasswordVisibility('password')"
+                        (mousedown)="$event.preventDefault()"
+                        class="absolute top-1/2 -translate-y-1/2 right-3 text-gray-700">
+                        <!-- 🚫 Eye Closed (When Password is Hidden) -->
+                        <i class="fa-regular fa-eye-slash absolute top-[-9px] right-[0px] transition-opacity duration-300 ease-in-out"
+                            [class.opacity-100]="!showPassword" [class.opacity-0]="showPassword"></i>
+                        <!-- 👁️ Eye Open (When Password is Visible) -->
+                        <i class="fa-solid fa-eye absolute top-[-9px] right-[0px] transition-opacity duration-300 ease-in-out"
+                            [class.opacity-100]="showPassword" [class.opacity-0]="!showPassword"></i>
+                    </button>
+                </div>
+                @if(register.get('password')?.errors && register.get('password')?.touched ){
+                <div class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                    role="alert">
+                    <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Danger</span>
+                    <div>
+                        <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                                Password Input:</strong></span>
+                        <ul class="mt-1.5 list-disc list-inside">
+                            @if(register.get('password')?.hasError('required')){
+                            <li>Input is required.</li>
+                            }@else{
+                            <li *ngFor="let error of passwordErrors">{{ error }}</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                }
+                <!-- Confirm Password -->
+                <div class="mt-10 relative">
+                    <input [type]="showConfirmPassword ? 'text' : 'password'" (keydown.enter)="TermsPolicies.focus()"
+                        #rePassword id="rePassword" formControlName="rePassword" autocomplete="off"
+                        class="peer w-full p-2 border rounded-lg focus:outline-none focus:ring-2" required
+                        (focus)="setFocus('rePassword', true); changeLabel('confirmPasswordLabel', 'Confirm Password :')"
+                        (input)="setFocus('rePassword', true); changeLabel('confirmPasswordLabel', 'Confirm Password :')"
+                        (blur)="handleBlur('rePassword'); setFocus('rePassword', false); resetLabel('confirmPasswordLabel', 'Enter Your Confirm Password...',rePassword)"
+                        [ngClass]="{
+                            'focus:ring-blue-400': (register.get('rePassword')?.invalid && !register.get('rePassword')?.touched && register.get('password')?.value) || (!register.get('password')?.value && register.get('rePassword')?.dirty) || (!register.get('rePassword')?.touched && !register.get('password')?.value),
+                            'focus:ring-green-500': register.get('rePassword')?.valid || (!register.get('password')?.value && register.get('rePassword')?.valid),
+                            'focus:ring-red-500': (register.get('rePassword')?.touched) && (register.get('rePassword')?.invalid) && register.get('password')?.value,
+                            'border-red-500 ring-2 ring-red-500 animate-shake': showError['rePassword'],
+                        }">
+                    <div *ngIf="!isFocused['rePassword'] && register.get('rePassword')?.invalid && register.get('rePassword')?.touched && register.get('password')?.value"
+                        class="absolute -right-[10px] top-1/2 transform -translate-y-1/2 bg-red-500 w-1 h-7 rounded-lg shadow-md">
+                    </div>
+                    <label for="rePassword" class="cursor-text peer-focus:cursor-default peer-valid:cursor-default absolute left-2 top-2 text-gray-500 text-sm transition-all duration-300 
+                    peer-focus:top-[-30px] peer-focus:text-sm peer-focus:text-gray-700 peer-focus:font-bold
+                    peer-valid:top-[-30px] peer-valid:text-sm peer-valid:text-gray-700 peer-valid:font-bold">
+                        {{confirmPasswordLabel}}
+                    </label>
+                    <div role="tooltip" [ngClass]="{
+                        'opacity-0 invisible': register.get('rePassword')?.valid || !isFocused['rePassword'] || (register.get('rePassword')?.errors && register.get('rePassword')?.touched && register.get('password')?.value),
+                        'opacity-100 visible': register.get('rePassword')?.invalid && isFocused['rePassword'] && !(register.get('rePassword')?.errors && register.get('rePassword')?.touched && register.get('password')?.value)
+                    }"
+                        class="absolute bottom-[55px] left-1/2 transform -translate-x-1/2 z-10 w-72 text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-xl transition-opacity duration-[300ms] p-3 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                        <!-- Arrow -->
+                        <div
+                            class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-gray-400 dark:border-t-gray-600">
+                        </div>
+                        <!-- Popover Content -->
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Your Confirm Password should be :-</h3>
+                        <p class="text-sm ps-2">Match with password input.</p>
+                    </div>
+                    <!-- Toggle Button -->
+                    <button type="button" (click)="togglePasswordVisibility('rePassword')"
+                        (mousedown)="$event.preventDefault()"
+                        class="absolute top-1/2 -translate-y-1/2 right-3 text-gray-700">
+                        <!-- 🚫 Eye Closed (When Password is Hidden) -->
+                        <i class="fa-regular fa-eye-slash absolute top-[-9px] right-[0px] transition-opacity duration-300 ease-in-out"
+                            [class.opacity-100]="!showConfirmPassword" [class.opacity-0]="showConfirmPassword"></i>
+                        <!-- 👁️ Eye Open (When Password is Visible) -->
+                        <i class="fa-solid fa-eye absolute top-[-9px] right-[0px] transition-opacity duration-300 ease-in-out"
+                            [class.opacity-100]="showConfirmPassword" [class.opacity-0]="!showConfirmPassword"></i>
+                    </button>
+                </div>
+                <!--! @if(register?.hasError('mismatch') && register.get('rePassword')?.touched && register.get('password')?.value){ -->
+                @if(register.get('rePassword')?.errors && register.get('rePassword')?.touched &&
+                register.get('password')?.value){
+                <div class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                    role="alert">
+                    <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Danger</span>
+                    <div>
+                        <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                                Confirm Password Input:</strong></span>
+                        <ul class="mt-1.5 list-disc list-inside">
+                            @if(register.get('rePassword')?.hasError('required')){
+                            <li>Input is required.</li>
+                            }
+                            <!--! @if(register?.hasError('mismatch') && !register.get('rePassword')?.hasError('required')){ -->
+                            @if(register.get('rePassword')?.hasError('mismatch') &&
+                            !register.get('rePassword')?.hasError('required') ){
+                            <li>Input is not match.</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                }
+                @if( register.get('rePassword')?.touched &&
+                !register.get('password')?.value && register.get('password')?.touched && isSubnitClick==true){
+                <div class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                    role="alert">
+                    <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Danger</span>
+                    <div>
+                        <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                                Confirm Password Input:</strong></span>
+                        <ul class="mt-1.5 list-disc list-inside">
+                            <li>Before that, fill Passowrd Input!</li>
+                        </ul>
+                    </div>
+                </div>
+                }
+                <!-- Terms Agreement -->
+                <div class="mt-4 flex items-center">
+                    <input type="checkbox" value="Agreement"
+                        class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded-[5px] dark:bg-gray-700 dark:border-gray-600 mr-3 cursor-pointer"
+                        #TermsPolicies id="TermsPolicies" (click)="toggleChicked()" (keypress.space)="toggleChicked()"
+                        (keydown.enter)="CreateAccunt.focus()">
+                    <label class="text-gray-600 text-sm" for="TermsPolicies">
+                        I agree to all the
+                        <button data-modal-target="extralarge-modal-Terms" data-modal-toggle="extralarge-modal-Terms"
+                            class="text-green-600 font-semibold cursor-pointer" type="button"
+                            (click)="onChildClick($event); openModal('extralarge-modal-Terms')">
+                            Terms & Conditions
+                        </button>
+                        <!-- Extra Large Modal For Terms  -->
+                        <div id="extralarge-modal-Terms" tabindex="-1"
+                            (click)="onChildClick($event); closeModal('extralarge-modal-Terms')" aria-hidden="true"
+                            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%)] max-h-full">
+                            <div class="relative w-full max-w-7xl max-h-full" (click)="onChildClick($event);">
+                                <!-- Modal content -->
+                                <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                                    <!-- Modal header -->
+                                    <div
+                                        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                                            Terms & Conditions
+                                        </h3>
+                                        <button type="button"
+                                            (click)="onChildClick($event); closeModal('extralarge-modal-Terms')"
+                                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                            data-modal-hide="extralarge-modal-Terms">
+                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                fill="none" viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                            </svg>
+                                            <!-- <span class="sr-only">Close modal</span> -->
+                                        </button>
+                                    </div>
+                                    <!-- Modal body -->
+                                    <div class="p-4 md:p-5 space-y-4">
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Acceptance of Terms:</strong> By using Napata’s website, you agree
+                                            to comply with our terms and conditions.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>User Responsibility:</strong> You are responsible for providing
+                                            accurate information and keeping your login credentials secure.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Prohibited Activities:</strong> Any misuse, hacking, or illegal
+                                            activity on the platform will result in account suspension.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Intellectual Property:</strong> All content, logos, and materials on
+                                            Napata’s website are owned by us and protected by copyright laws.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Service Modifications:</strong> We reserve the right to update or
+                                            discontinue any service without prior notice.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>User-Generated Content:</strong> You grant Napata the right to use
+                                            any content you upload, as per our guidelines.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>No Warranty:</strong> Our services are provided "as is," and we do
+                                            not guarantee uninterrupted or error-free performance.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Liability Limitation:</strong> Napata is not responsible for any
+                                            losses or damages resulting from website use.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Termination of Accounts:</strong> We reserve the right to suspend or
+                                            terminate accounts that violate our policies.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Governing Law:</strong> These terms are governed by the laws of
+                                            Egypt and any disputes will be resolved accordingly.
+                                        </p>
+                                    </div>
+                                    <!-- Modal footer -->
+                                    <div
+                                        class="flex items-center p-4 md:p-5 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
+                                        <button data-modal-hide="extralarge-modal-Terms" type="button"
+                                            (click)="onChildClick($event); closeModal('extralarge-modal-Terms')"
+                                            class="text-white bg-green-700 hover:bg-green-800 active:ring-4 active:outline-none active:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:active:ring-green-800">I
+                                            have understood</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        and
+                        <button data-modal-target="extralarge-modal-Privacy-Policies"
+                            data-modal-toggle="extralarge-modal-Privacy-Policies"
+                            (click)="onChildClick($event); openModal('extralarge-modal-Privacy-Policies')"
+                            class="text-green-600 font-semibold cursor-pointer" type="button">
+                            Privacy Policies
+                        </button>
+                        <!-- Extra Large Modal For Privacy Policies  -->
+                        <div id="extralarge-modal-Privacy-Policies" tabindex="-1"
+                            (click)="onChildClick($event); closeModal('extralarge-modal-Privacy-Policies')"
+                            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%)] max-h-full">
+                            <div class="relative w-full max-w-7xl max-h-full" (click)="onChildClick($event);">
+                                <!-- Modal content -->
+                                <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                                    <!-- Modal header -->
+                                    <div
+                                        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                                            Privacy Policies
+                                        </h3>
+                                        <button type="button"
+                                            (click)="onChildClick($event); closeModal('extralarge-modal-Privacy-Policies')"
+                                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                            data-modal-hide="extralarge-modal-Privacy-Policies">
+                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                fill="none" viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                            </svg>
+                                            <span class="sr-only">Close modal</span>
+                                        </button>
+                                    </div>
+                                    <!-- Modal body -->
+                                    <div class="p-4 md:p-5 space-y-4">
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Data Collection:</strong> We collect personal information such as
+                                            name, email, and contact details to improve our services.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Data Protection:</strong> Your personal data is securely stored and
+                                            protected using encryption technologies.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Third-Party Sharing:</strong> We do not sell or share your data with
+                                            third parties without your consent, except as required by law.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Cookies Usage:</strong> We use cookies to enhance user experience,
+                                            analyze website traffic, and provide personalized content.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>User Control:</strong> You can update, modify, or delete your
+                                            personal information at any time through your account settings.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Legal Compliance:</strong> We adhere to international data
+                                            protection laws, including GDPR and other regional regulations.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Children’s Privacy:</strong> Our services are not intended for
+                                            children under the age of 13, and we do not knowingly collect their data.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Policy Updates:</strong> We may update our privacy policies
+                                            periodically, and users will be notified of any significant changes.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Marketing Preferences:</strong> You have the right to opt out of
+                                            marketing emails and promotional notifications at any time.
+                                        </p>
+                                        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                            <strong>Contact & Support:</strong> If you have any privacy concerns or
+                                            requests, you can contact our support team for assistance.
+                                        </p>
+                                    </div>
+                                    <!-- Modal footer -->
+                                    <div
+                                        class="flex items-center p-4 md:p-5 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
+                                        <button data-modal-hide="extralarge-modal-Privacy-Policies" type="button"
+                                            (click)="onChildClick($event); closeModal('extralarge-modal-Privacy-Policies')"
+                                            class="text-white bg-green-700 hover:bg-green-800 active:ring-4 active:outline-none active:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:active:ring-green-800">I
+                                            have understood</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>.
+                    </label>
+                </div>
+                <!-- Create Account Button --> <!--[disabled]="!isChecked || register.invalid" -->
+                <button type="submit" #CreateAccunt class="mt-4 w-full bg-green-600 text-white p-3 rounded-lg font-bold transition 
+                    hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed">
+                    Create account
+                </button>
+                <!-- Already have an account -->
+                <p class="text-center mt-4 text-gray-600">
+                    Already have an account? <a routerLink="/Start/Login" class="text-green-600 font-semibold">Login</a>
+                </p>
+                <!-- Divider -->
+                <div class="flex items-center my-4">
+                    <hr class="flex-grow border-gray-300">
+                    <span class="mx-2 text-gray-500 text-sm">Or Sign up with</span>
+                    <hr class="flex-grow border-gray-300">
+                </div>
+                <!-- Social Media Sign-Up -->
+                <div class="grid grid-cols-3 justify-center space-x-4 pt-4">
+                    <button
+                        class="border bg-green-100 dark:bg-green-200 p-3 rounded-lg flex items-center space-x-2 col-span-1 justify-center">
+                        <img src="./assets/Images/icons_Facebook.png" alt="Facebook" class="w-7 h-7">
+                    </button>
+                    <button
+                        class="border bg-green-100 dark:bg-green-200 p-3 rounded-lg flex items-center space-x-2 col-span-1 justify-center">
+                        <img src="./assets/Images/icons_google.png" alt="Google" class="w-7 h-7">
+                    </button>
+                    <button
+                        class="border bg-green-100 dark:bg-green-200 p-3 rounded-lg flex items-center space-x-2 col-span-1 justify-center">
+                        <img src="./assets/Images/icons_Apple.png" alt="Apple" class="w-7 h-7">
+                    </button>
+                </div>
+            </form>
+        </div>
+        <!-- Right Section: Image -->
+        <div class="hidden md:block w-[40%] h-[110vh]">
+            <img src="./assets/Images/womans-hands-gloves-planting-young-plant(1) 1.png" alt="Planting"
+                class="h-full w-full object-fill rounded-r-lg">
+        </div>
+    </div>
+</div>
