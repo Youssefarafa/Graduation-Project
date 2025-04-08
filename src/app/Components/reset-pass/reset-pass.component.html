@@ -1,0 +1,250 @@
+<div
+    class="min-h-screen flex items-center sm:items-start md:items-center justify-center px-6 sm:py-6 pb-10 bg-[url('./assets/Images/LoginupGroup.svg')] bg-no-repeat bg-center ">
+    <div class="flex justify-around xl:justify-between w-full max-w-7xl space-x-0">
+        <!-- Left Section: Signup Form -->
+        <div class="">
+            <div class="w-full pt-4 md:pt-8 px-3 hidden sm:block">
+                <ol class="flex items-center  w-full">
+                    <li
+                        class="flex grow items-center text-green-800 dark:text-green-100 after:content-[''] after:w-full after:h-1 after:border-b after:border-green-200 after:border-4 after:inline-block dark:after:border-green-600">
+                        <span
+                            class="text-green-800 dark:text-green-100 flex items-center justify-center  bg-green-200 rounded-full py-1 px-2 dark:bg-green-600 shrink-0">
+                            <span
+                                class=" flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                                </svg>
+                                <span>Forget Password</span>
+                            </span>
+                        </span>
+                    </li>
+                    <li
+                        class="flex grow items-center text-green-800 dark:text-green-100 after:content-[''] after:w-full after:h-1 after:border-b after:border-green-200 after:border-4 after:inline-block dark:after:border-green-600">
+                        <span
+                            class="flex items-center justify-center text-green-800 dark:text-green-100 bg-green-200 rounded-full py-1 px-2 dark:bg-green-600 shrink-0">
+                            <span
+                                class="flex grow items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                                </svg>
+                                Verify Code
+                            </span>
+                        </span>
+                    </li>
+                    <li class="flex items-center ">
+                        <span
+                            class="flex items-center justify-center  text-green-800 dark:text-green-100 bg-green-200 rounded-full py-1 px-2 dark:bg-green-600 shrink-0">
+                            <span class="me-2">3- </span>
+                            Set New Password
+                        </span>
+                    </li>
+                </ol>
+            </div>
+            <div class="w-full md:w-[100%]  px-3 md:px-7 lg:px-5 xl:px10">
+                <h2 class="text-3xl font-bold mt-0 sm:pt-28 mb-2 dark:text-gray-200 font-Roboto">Set a password</h2>
+                <p class="text-gray-600 mb-6 dark:text-gray-200 font-Quicksand font-medium">Your previous password has
+                    been reseted. Please set a new password for your account.
+                </p>
+                <!-- Form -->
+                <form [formGroup]="setNewPass" (ngSubmit)="onSubmit()">
+                    <!-- Password -->
+                    <div class="mt-10 relative">
+                        <input [type]="showPassword ? 'text' : 'password'" (keydown.enter)="rePassword.focus()"
+                            #password id="password" formControlName="password" autocomplete="off" required
+                            class="peer w-full p-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ease-in-out"
+                            [class]="passwordClass"
+                            (focus)="setFocus('password', true); changeLabel('passwordLabel', 'Password :')"
+                            (input)="setFocus('password', true); changeLabel('passwordLabel', 'Password :')"
+                            (blur)="handleBlur('password'); setFocus('password', false); resetLabel('passwordLabel', 'Enter Your Password...',password)">
+                        <div *ngIf="!isFocused['password'] && setNewPass.get('password')?.invalid && setNewPass.get('password')?.touched"
+                            class="absolute -right-[10px] top-1/2 transform -translate-y-1/2 bg-red-500 w-1 h-7 rounded-lg shadow-md">
+                        </div>
+                        <label for="password"
+                            class="cursor-text peer-focus:cursor-default peer-valid:cursor-default absolute left-2 top-2 text-gray-500 text-sm transition-all duration-300 font-Quicksand font-normal
+                        peer-focus:top-[-30px] peer-focus:text-gray-700 dark:peer-focus:text-gray-200 peer-focus:font-Roboto peer-focus:text-base peer-focus:font-bold
+                        peer-valid:top-[-30px] peer-valid:text-gray-700 dark:peer-valid:text-gray-200 peer-valid:font-Roboto peer-valid:text-base peer-valid:font-bold">
+                            {{passwordLabel}}
+                        </label>
+                        <div role="tooltip" [ngClass]="{
+                            'opacity-0 invisible': setNewPass.get('password')?.valid || !isFocused['password'] || (setNewPass.get('password')?.errors && setNewPass.get('password')?.touched),
+                            'opacity-100 visible': setNewPass.get('password')?.invalid && isFocused['password'] && !(setNewPass.get('password')?.errors && setNewPass.get('password')?.touched)
+                        }"
+                            class="absolute bottom-[55px] left-1/2 transform -translate-x-1/2 z-10 w-[330px] text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-xl transition-opacity duration-[300ms] p-3 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                            <!-- Arrow -->
+                            <div
+                                class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-gray-400 dark:border-t-gray-600">
+                            </div>
+                            <!-- Popover Content -->
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Your Password should be :-</h3>
+                            <p class="text-sm ps-2">At least 8 characters.</p>
+                            <p class="text-sm ps-2">At most 15 characters.</p>
+                            <p class="text-sm ps-2">At least one uppercase letter.</p>
+                            <p class="text-sm ps-2">At least one lowercase letter.</p>
+                            <p class="text-sm ps-2">At least one number.</p>
+                            <p class="text-sm ps-2">At least one special character, e.g., ! &#64; # ?</p>
+                            <p class="text-sm ps-2">No any space.</p>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button type="button" (click)="togglePasswordVisibility('password')"
+                            (mousedown)="$event.preventDefault()"
+                            class="absolute top-1/2 -translate-y-1/2 right-3 text-gray-700">
+                            <!-- 🚫 Eye Closed (When Password is Hidden) -->
+                            <i class="fa-regular fa-eye-slash absolute top-[-9px] right-[0px] transition-opacity duration-300 ease-in-out"
+                                [class.opacity-100]="!showPassword" [class.opacity-0]="showPassword"></i>
+                            <!-- 👁️ Eye Open (When Password is Visible) -->
+                            <i class="fa-solid fa-eye absolute top-[-9px] right-[0px] transition-opacity duration-300 ease-in-out"
+                                [class.opacity-100]="showPassword" [class.opacity-0]="!showPassword"></i>
+                        </button>
+                    </div>
+                    @if(setNewPass.get('password')?.errors && setNewPass.get('password')?.touched ){
+                    <div class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-green-900 dark:text-red-400 dark:border-red-800"
+                        role="alert">
+                        <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                        </svg>
+                        <span class="sr-only">Danger</span>
+                        <div>
+                            <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                                    Password Input:</strong></span>
+                            <ul class="mt-1.5 list-disc list-inside">
+                                @if(setNewPass.get('password')?.hasError('required')){
+                                <li>Input is required.</li>
+                                }@else{
+                                <li *ngFor="let error of passwordErrors">{{ error }}</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    }
+                    <!-- Confirm Password -->
+                    <div class="mt-10 relative">
+                        <input [type]="showConfirmPassword ? 'text' : 'password'" (keydown.enter)="submitButton.focus()"
+                            #rePassword id="rePassword" formControlName="rePassword" autocomplete="off"
+                            class="peer w-full p-2 border rounded-lg focus:outline-none focus:ring-2" required
+                            (focus)="setFocus('rePassword', true); changeLabel('confirmPasswordLabel', 'Confirm Password :')"
+                            (input)="setFocus('rePassword', true); changeLabel('confirmPasswordLabel', 'Confirm Password :')"
+                            (blur)="handleBlur('rePassword'); setFocus('rePassword', false); resetLabel('confirmPasswordLabel', 'Enter Your Confirm Password...',rePassword)"
+                            [ngClass]="{
+                                'focus:ring-blue-400': (setNewPass.get('rePassword')?.invalid && !setNewPass.get('rePassword')?.touched && setNewPass.get('password')?.value) || (!setNewPass.get('password')?.value && setNewPass.get('rePassword')?.dirty) || (setNewPass.get('rePassword')?.invalid && !setNewPass.get('password')?.value),
+                                'focus:ring-green-500': setNewPass.get('rePassword')?.valid ,
+                                'focus:ring-red-500': (setNewPass.get('rePassword')?.touched) && (setNewPass.get('rePassword')?.invalid) && setNewPass.get('password')?.value,
+                                'border-red-500 ring-2 ring-red-500 animate-shake': showError['rePassword'],
+                            }">
+                        <div *ngIf="!isFocused['rePassword'] && setNewPass.get('rePassword')?.invalid && setNewPass.get('rePassword')?.touched && setNewPass.get('password')?.value"
+                            class="absolute -right-[10px] top-1/2 transform -translate-y-1/2 bg-red-500 w-1 h-7 rounded-lg shadow-md">
+                        </div>
+                        <label for="rePassword"
+                            class="cursor-text peer-focus:cursor-default peer-valid:cursor-default absolute left-2 top-2 text-gray-500 text-sm transition-all duration-300 font-Quicksand font-normal
+                        peer-focus:top-[-30px] peer-focus:text-gray-700 dark:peer-focus:text-gray-200 peer-focus:font-Roboto peer-focus:text-base peer-focus:font-bold
+                        peer-valid:top-[-30px] peer-valid:text-gray-700 dark:peer-valid:text-gray-200 peer-valid:font-Roboto peer-valid:text-base peer-valid:font-bold">
+                            {{confirmPasswordLabel}}
+                        </label>
+                        <div role="tooltip" [ngClass]="{
+                            'opacity-0 invisible': setNewPass.get('rePassword')?.valid || !isFocused['rePassword'] || (setNewPass.get('rePassword')?.errors && setNewPass.get('rePassword')?.touched && setNewPass.get('password')?.value) || isSubnitClick==true,
+                            'opacity-100 visible': setNewPass.get('rePassword')?.invalid && isFocused['rePassword'] && !(setNewPass.get('rePassword')?.errors && setNewPass.get('rePassword')?.touched && setNewPass.get('password')?.value)
+                        }"
+                            class="absolute bottom-[55px] left-1/2 transform -translate-x-1/2 z-10 w-72 text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-xl transition-opacity duration-[300ms] p-3 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                            <!-- Arrow -->
+                            <div
+                                class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-gray-400 dark:border-t-gray-600">
+                            </div>
+                            <!-- Popover Content -->
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Your Confirm Password should be :-
+                            </h3>
+                            <p class="text-sm ps-2">Match with password input.</p>
+                        </div>
+                        <!-- Toggle Button -->
+                        <button type="button" (click)="togglePasswordVisibility('rePassword')"
+                            (mousedown)="$event.preventDefault()"
+                            class="absolute top-1/2 -translate-y-1/2 right-3 text-gray-700">
+                            <!-- 🚫 Eye Closed (When Password is Hidden) -->
+                            <i class="fa-regular fa-eye-slash absolute top-[-9px] right-[0px] transition-opacity duration-300 ease-in-out"
+                                [class.opacity-100]="!showConfirmPassword" [class.opacity-0]="showConfirmPassword"></i>
+                            <!-- 👁️ Eye Open (When Password is Visible) -->
+                            <i class="fa-solid fa-eye absolute top-[-9px] right-[0px] transition-opacity duration-300 ease-in-out"
+                                [class.opacity-100]="showConfirmPassword" [class.opacity-0]="!showConfirmPassword"></i>
+                        </button>
+                    </div>
+                    <!--! @if(setNewPass?.hasError('mismatch') && setNewPass.get('rePassword')?.touched && setNewPass.get('password')?.value){ -->
+                    @if(setNewPass.get('rePassword')?.errors && setNewPass.get('rePassword')?.touched &&
+                    setNewPass.get('password')?.value){
+                    <div class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-green-900 dark:text-red-400 dark:border-red-800"
+                        role="alert">
+                        <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                        </svg>
+                        <span class="sr-only">Danger</span>
+                        <div>
+                            <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                                    Confirm Password Input:</strong></span>
+                            <ul class="mt-1.5 list-disc list-inside">
+                                @if(setNewPass.get('rePassword')?.hasError('required')){
+                                <li>Input is required.</li>
+                                }
+                                <!--! @if(setNewPass?.hasError('mismatch') && !setNewPass.get('rePassword')?.hasError('required')){ -->
+                                @if(setNewPass.get('rePassword')?.hasError('mismatch') &&
+                                !setNewPass.get('rePassword')?.hasError('required') ){
+                                <li>Input is not match.</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    }
+                    @if( setNewPass.get('rePassword')?.touched &&
+                    !setNewPass.get('password')?.value && setNewPass.get('password')?.touched && isSubnitClick==true){
+                    <div class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-green-900 dark:text-red-400 dark:border-red-800"
+                        role="alert">
+                        <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                        </svg>
+                        <span class="sr-only">Danger</span>
+                        <div>
+                            <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                                    Confirm Password Input:</strong></span>
+                            <ul class="mt-1.5 list-disc list-inside">
+                                <li>Before that, fill Passowrd Input!</li>
+                            </ul>
+                        </div>
+                    </div>
+                    }
+                    <!-- Create Account Button --> <!--[disabled]="!isChecked || login.invalid" -->
+                    <div class="text-red-700 mt-4 mb-2 text-center text-base font-semibold">{{errsubmitmessage}}</div>
+                    <div class="">
+                        <button type="submit" [disabled]="isSubnitClick" #submitButton class="mt-4 w-full bg-green-600 text-white dark:text-green-100 p-3 rounded-lg text-lg font-bold font-Roboto transition text-center flex justify-center
+                        hover:bg-green-700 active:bg-green-800 disabled:bg-green-400 disabled:cursor-not-allowed">
+                            @if(!isSubnitClick){
+                            <div>Set Password</div>
+                            }@else{
+                            <div class="align-baseline"><svg aria-hidden="true" role="status"
+                                    class="inline w-5 h-5 me-1 text-white animate-spin" viewBox="0 0 100 101"
+                                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                        fill="#E5E7EB" />
+                                    <path
+                                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                        fill="currentColor" />
+                                </svg>
+                                Loading...</div>
+                            }
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Right Section: Image -->
+        <div class="hidden md:block w-[40%] h-[90vh]">
+            <img src="./assets/Images/resetPass.png" alt="Planting" class="h-full w-full object-fill rounded-r-lg">
+        </div>
+    </div>
+</div>

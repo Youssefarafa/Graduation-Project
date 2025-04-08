@@ -4,15 +4,17 @@
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+// environment.ts
 export const environment = {
-firebaseConfig : {
-  apiKey: "AIzaSyAE14Kb9Huyof_tzOmOq4UFlSrKmUiQ8x4",
-  authDomain: "testsssssssssss.firebaseapp.com",
-  projectId: "testsssssssssss",
-  storageBucket: "testsssssssssss.firebasestorage.app",
-  messagingSenderId: "665321574092",
-  appId: "1:665321574092:web:271c94f3c91ef5b5047c69" 
-}};
-
+  production: false,
+  firebase: {
+    apiKey: "AIzaSyB2BIKkryRNjy-Dl-ngsjRGmbmMNgZHXpI",
+    authDomain: "finalproject-fc9a0.firebaseapp.com",
+    projectId: "finalproject-fc9a0",
+    storageBucket: "finalproject-fc9a0.firebasestorage.app",
+    messagingSenderId: "1075488139066",
+    appId: "1:1075488139066:web:df364b40448815cdf5d203"
+  }
+};
 // Initialize Firebase
 // const app = initializeApp(firebaseConfig);

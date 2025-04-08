@@ -24,7 +24,12 @@ import { CategoriesShopComponent } from './Components/categories-shop/categories
 import { WishListShopComponent } from './Components/wish-list-shop/wish-list-shop.component';
 import { CartShopComponent } from './Components/cart-shop/cart-shop.component';
 import { SystemSettingsComponent } from './Components/system-settings/system-settings.component';
-
+import { ForgetPassComponent } from './Components/forget-pass/forget-pass.component';
+import { isLoggedInGuard } from './core/guards/is-logged-in.guard';
+import { authGuard } from './core/guards/auth.guard';
+import { VerifyCodeComponent } from './Components/verify-code/verify-code.component';
+import { ResetPassComponent } from './Components/reset-pass/reset-pass.component';
+// !    canActivate:[isLoggedInGuard],canActivate:[authGuard],
 export const routes: Routes = [
   { path: '', redirectTo: 'Start', pathMatch: 'full' },
   {
@@ -32,13 +37,16 @@ export const routes: Routes = [
     component: StartComponent,
     children: [
       { path: '', redirectTo: 'Home', pathMatch: 'full' },
-      { path: 'Home', component: HomeComponent },
-      { path: 'OurTeam', component: OurTeamComponent },
-      { path: 'Login', component: LoginComponent },
-      { path: 'Signup', component: SignupComponent },
+      { path: 'Home', component: HomeComponent,},
+      { path: 'OurTeam', component: OurTeamComponent,},
+      { path: 'Login', component: LoginComponent, canActivate:[isLoggedInGuard]},
+      { path: 'Signup', component: SignupComponent, canActivate:[isLoggedInGuard]},
+      { path: 'ForgetPass', component: ForgetPassComponent, canActivate:[isLoggedInGuard]},
+      { path: 'verifyCode', component: VerifyCodeComponent, canActivate:[isLoggedInGuard]},
+      { path: 'resetPass', component: ResetPassComponent, canActivate:[isLoggedInGuard]},
     ],
   },
-  {
+  {    
     path: 'Admin',
     component: AdminComponent,
     children: [
@@ -58,13 +66,21 @@ export const routes: Routes = [
     component: UserComponent,
     children: [
       { path: '', redirectTo: 'Shop', pathMatch: 'full' },
-      { path: 'Shop', component: ShopComponent,children:[
-        { path: '', redirectTo: 'Products', pathMatch: 'full' },
-        { path: 'Products', component: ProductsShopComponent,title:'Products' },
-        { path: 'Categories', component: CategoriesShopComponent },
-        { path: 'WishList', component: WishListShopComponent },
-        { path: 'CartShop', component: CartShopComponent },
-      ] },
+      {
+        path: 'Shop',
+        component: ShopComponent,
+        children: [
+          { path: '', redirectTo: 'Products', pathMatch: 'full' },
+          {
+            path: 'Products',
+            component: ProductsShopComponent,
+            title: 'Products',
+          },
+          { path: 'Categories', component: CategoriesShopComponent },
+          { path: 'WishList', component: WishListShopComponent },
+          { path: 'CartShop', component: CartShopComponent },
+        ],
+      },
       { path: 'ChatBot', component: ChatBotComponent },
       { path: 'CVModel', component: CVModelComponent },
       { path: 'DLModel', component: DLModelComponent },

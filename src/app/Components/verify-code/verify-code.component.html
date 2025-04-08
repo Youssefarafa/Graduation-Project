@@ -1,0 +1,113 @@
+<div
+    class="min-h-screen flex items-center sm:items-start md:items-center justify-center px-6 sm:py-6 pb-10 bg-[url('./assets/Images/LoginupGroup.svg')] bg-no-repeat bg-center ">
+    <div class="flex justify-around xl:justify-between w-full max-w-7xl space-x-0">
+        <!-- Left Section: Signup Form -->
+        <div class="lg:w-[55%]">
+            <div class="w-full pt-4 md:pt-8 px-3 hidden sm:block">
+                <ol class="flex items-center  w-full">
+                    <li
+                        class="flex grow items-center text-green-800 dark:text-green-100 after:content-[''] after:w-full after:h-1 after:border-b after:border-green-200 after:border-4 after:inline-block dark:after:border-green-600">
+                        <span
+                            class="text-green-800 dark:text-green-100 flex items-center justify-center  bg-green-200 rounded-full py-1 px-2 dark:bg-green-600 shrink-0">
+                            <span
+                                class=" flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                                </svg>
+                                <span>Forget Password</span>
+                            </span>
+                        </span>
+                    </li>
+                    <li
+                        class="flex grow items-center text-green-800 dark:text-green-100 after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-300 after:border-4 after:inline-block dark:after:border-gray-700">
+                        <span
+                            class="flex items-center justify-center text-green-800 dark:text-green-100 bg-green-200 rounded-full py-1 px-2 dark:bg-green-600 shrink-0">
+                            <span
+                                class="flex grow items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+                                <span class="me-2">2- </span>
+                                Verify Code
+                            </span>
+                        </span>
+                    </li>
+                    <li class="flex items-center ">
+                        <span
+                            class="flex items-center justify-center  text-gray-500 dark:text-gray-100 bg-gray-300 rounded-full py-1 px-2 dark:bg-gray-700 shrink-0">
+                            <span class="me-2">3</span>
+                            Set New Password
+                        </span>
+                    </li>
+                </ol>
+            </div>
+            <div class="w-full md:w-[100%]  px-3 md:px-7 lg:px-5 xl:px10">
+                <div class="w-36 mt-0 sm:pt-28 mb-3">
+                    <a routerLink="/Start/Login"
+                        class="align-middle no-underline inline-flex items-center text-gray-600 text-sm font-Poppins font-medium hover:text-gray-800 active:text-gray-950 dark:text-gray-100 dark:hover:text-gray-300 dark:active:text-gray-400">
+                        <span class="mr-2 text-3xl ">&lt;</span> Back to login
+                    </a>
+                </div>
+                <h2 class="text-3xl font-bold mb-2 dark:text-gray-200 font-Roboto">Verify code</h2>
+                <p class="text-gray-600 mb-6 dark:text-gray-200 font-Quicksand font-medium">An authentication code has
+                    been
+                    sent to your email.
+                </p>
+                <!-- Form -->
+                <form (ngSubmit)="onSubmit()">
+                    <div class="flex justify-start items-end  mb-8">
+                        <!-- Code -->
+                        <div class="flex items-center justify-start gap-2 me-6">
+                            <input *ngFor="let digit of digits; let i = index; trackBy: trackByFn" #inputRef type="text"
+                                [(ngModel)]="digits[i]" [name]="'digit' + i" (keydown)="onKeyDown($event, i)"
+                                (input)="onInput($event, i)" (paste)="onPaste($event)" (focus)="onFocus($event)" class="w-10 h-12 text-center text-[20px] font-bold text-emerald-900 dark:text-emerald-50
+                                    bg-white dark:bg-slate-800 border-2 border-emerald-400 dark:border-emerald-700 rounded-lg
+                                    transition-all duration-150
+                                    hover:border-emerald-500 dark:hover:border-emerald-500 
+                                    focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 
+                                    focus:ring-2 focus:ring-emerald-200 dark:focus:ring-emerald-900" maxlength="1"
+                                inputmode="numeric" autocomplete="one-time-code" />
+                        </div>
+                        <!-- resend cade -->
+                        <div class="text-sm text-gray-600 dark:text-gray-200 font-Poppins">
+                            Didn’t receive a code?
+                            <a class="font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors ps-1"
+                                (click)="resendCode()" [class.cursor-pointer]="canResend"
+                                [class.opacity-50]="!canResend" [class.cursor-not-allowed]="!canResend">
+                                Resend
+                            </a>
+                            <span *ngIf="!canResend" class="ml-2 text-emerald-600 dark:text-emerald-400">
+                                ({{ formattedCountdown }})
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Create Account Button --> <!--[disabled]="!isChecked || login.invalid" -->
+                    <div class="text-red-700 mt-4 mb-2 text-center text-base font-semibold">{{errsubmitmessage}}</div>
+                    <div class="">
+                        <button type="submit" [disabled]="!isOtpValid || isSubnitClick" #submitButton class="mt-4 w-full bg-green-600 text-white dark:text-green-100 p-3 rounded-lg text-lg font-bold font-Roboto transition text-center flex justify-center
+                        hover:bg-green-700 active:bg-green-800 disabled:bg-green-400 disabled:cursor-not-allowed">
+                            @if(!isOtpValid || !isSubnitClick){
+                            <div>Verify</div>
+                            }@else{
+                            <div class="align-baseline"><svg aria-hidden="true" role="status"
+                                    class="inline w-5 h-5 me-1 text-white animate-spin" viewBox="0 0 100 101"
+                                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                        fill="#E5E7EB" />
+                                    <path
+                                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                        fill="currentColor" />
+                                </svg>
+                                Loading...</div>
+                            }
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Right Section: Image -->
+        <div class="hidden md:block w-[40%] h-[90vh]">
+            <img src="./assets/Images/verafy Code .png" alt="Planting" class="h-full w-full object-fill rounded-r-lg">
+        </div>
+    </div>
+</div>

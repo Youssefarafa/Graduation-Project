@@ -1,6 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
+import { Router } from '@angular/router';
 // import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 // import { provideAnalytics, getAnalytics } from '@angular/fire/analytics';
 // import { environment } from './environments/environment';

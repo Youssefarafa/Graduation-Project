@@ -1,1 +1,260 @@
-<p>login works!</p>
+<div
+    class="min-h-screen flex items-center justify-center p-6 pb-10 bg-[url('./assets/Images/LoginupGroup.svg')] bg-no-repeat bg-center ">
+    <div class="flex justify-around xl:justify-between w-full max-w-7xl space-x-0">
+        <!-- Left Section: Signup Form -->
+        <div class="w-full md:w-[70%] lg:w-1/2 px-3 md:px-7 lg:px-5 xl:px10">
+            <h2 class="text-3xl font-bold mb-2 mt-0 md:pt-10 dark:text-gray-200 font-Roboto">Login</h2>
+            <p class="text-gray-600 mb-6 dark:text-gray-200 font-Quicksand font-medium">Login to access your account.
+            </p>
+            <!-- Form -->
+            <form [formGroup]="login" (ngSubmit)="onSubmit()">
+                <!-- Email -->
+                <div class="mt-10 relative">
+                    <input autocomplete="off" (keydown.enter)="password.focus()" type="text" #email id="email"
+                        formControlName="email"
+                        class="peer w-full p-2 border rounded-lg focus:outline-none focus:ring-2" required
+                        (focus)="setFocus('email', true); changeLabel('emailLabel', 'Email :')"
+                        (input)="setFocus('email', true); changeLabel('emailLabel', 'Email :')"
+                        (blur)="handleBlur('email'); setFocus('email', false); resetLabel('emailLabel', 'Enter Your Email...',email)"
+                        [ngClass]="{
+                            'focus:ring-blue-400': (login.get('email')?.invalid && !login.get('email')?.touched),
+                            'focus:ring-green-500': login.get('email')?.valid,
+                            'focus:ring-red-500': (login.get('email')?.invalid && login.get('email')?.touched) || (login.get('email')?.invalid &&  login.get('email')?.touched ),
+                            'border-red-500 ring-2 ring-red-500 animate-shake': showError['email'], 
+                            }">
+                    <div *ngIf="!isFocused['email'] && login.get('email')?.invalid && login.get('email')?.touched"
+                        class="absolute -right-[10px] top-1/2 transform -translate-y-1/2 bg-red-500 w-1 h-7 rounded-lg shadow-md">
+                    </div>
+                    <label for="email"
+                        class="cursor-text peer-focus:cursor-default peer-valid:cursor-default absolute left-2 top-2 text-gray-500 text-sm transition-all duration-300 font-Quicksand font-normal
+                    peer-focus:top-[-30px] peer-focus:text-gray-700 dark:peer-focus:text-gray-200 peer-focus:font-Roboto peer-focus:text-base peer-focus:font-bold
+                    peer-valid:top-[-30px] peer-valid:text-gray-700 dark:peer-valid:text-gray-200 peer-valid:font-Roboto peer-valid:text-base peer-valid:font-bold">
+                        {{emailLabel}}
+                    </label>
+                    <div role="tooltip" [ngClass]="{
+                        'opacity-0 invisible': login.get('email')?.valid || !isFocused['email'] || (login.get('email')?.errors && login.get('email')?.touched),
+                        'opacity-100 visible': login.get('email')?.invalid && isFocused['email'] && !(login.get('email')?.errors && login.get('email')?.touched)
+                    }"
+                        class="absolute bottom-[55px] left-1/2 transform -translate-x-1/2 z-10 w-72 text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-xl transition-opacity duration-[300ms] p-3 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                        <!-- Arrow -->
+                        <div
+                            class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-gray-400 dark:border-t-gray-600">
+                        </div>
+                        <!-- Popover Content -->
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Your Email should be :-</h3>
+                        <p class="text-sm ps-2">At most 50 characters.</p>
+                        <p class="text-sm ps-2">Valid email address.</p>
+                    </div>
+                </div>
+                @if(login.get('email')?.errors && login.get('email')?.touched ){
+                <div class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-green-900 dark:text-red-400 dark:border-red-800"
+                    role="alert">
+                    <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Danger</span>
+                    <div>
+                        <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                                Email Input:</strong></span>
+                        <ul class="mt-1.5 list-disc list-inside">
+                            @if(login.get('email')?.hasError('required')){
+                            <li>Input is required.</li>
+                            }
+                            @if(login.get('email')?.hasError('email')){
+                            <li>Valid email address.</li>
+                            }
+                            @if(login.get('email')?.hasError('maxlength')){
+                            <li>At most 50 characters.</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                }
+                <!-- Password -->
+                <div class="mt-10 relative">
+                    <input [type]="showPassword ? 'text' : 'password'" (keydown.enter)="rememberMe.focus()" #password
+                        id="password" formControlName="password" autocomplete="off" required
+                        class="peer w-full p-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ease-in-out"
+                        (focus)="setFocus('password', true); changeLabel('passwordLabel', 'Password :')"
+                        (input)="setFocus('password', true); changeLabel('passwordLabel', 'Password :')"
+                        (blur)="handleBlur('password'); setFocus('password', false); resetLabel('passwordLabel', 'Enter Your Password...',password)"
+                        [ngClass]="{
+                            'focus:ring-blue-400': (login.get('password')?.invalid && !login.get('password')?.touched),
+                            'focus:ring-green-500': login.get('password')?.valid,
+                            'focus:ring-red-500': (login.get('password')?.invalid && login.get('password')?.touched) || (login.get('password')?.invalid &&  login.get('password')?.touched ),
+                            'border-red-500 ring-2 ring-red-500 animate-shake': showError['password'], 
+                            }">
+                    <div *ngIf="!isFocused['password'] && login.get('password')?.invalid && login.get('password')?.touched"
+                        class="absolute -right-[10px] top-1/2 transform -translate-y-1/2 bg-red-500 w-1 h-7 rounded-lg shadow-md">
+                    </div>
+                    <label for="password"
+                        class="cursor-text peer-focus:cursor-default peer-valid:cursor-default absolute left-2 top-2 text-gray-500 text-sm transition-all duration-300 font-Quicksand font-normal
+                    peer-focus:top-[-30px] peer-focus:text-gray-700 dark:peer-focus:text-gray-200  peer-focus:font-Roboto peer-focus:text-base peer-focus:font-bold
+                    peer-valid:top-[-30px] peer-valid:text-gray-700 dark:peer-valid:text-gray-200  peer-valid:font-Roboto peer-valid:text-base peer-valid:font-bold">
+                        {{passwordLabel}}
+                    </label>
+                    <!-- Toggle Button -->
+                    <button type="button" (click)="togglePasswordVisibility()" (mousedown)="$event.preventDefault()"
+                        class="absolute top-1/2 -translate-y-1/2 right-3 text-gray-700">
+                        <!-- 🚫 Eye Closed (When Password is Hidden) -->
+                        <i class="fa-regular fa-eye-slash absolute top-[-9px] right-[0px] transition-opacity duration-300 ease-in-out"
+                            [class.opacity-100]="!showPassword" [class.opacity-0]="showPassword"></i>
+                        <!-- 👁️ Eye Open (When Password is Visible) -->
+                        <i class="fa-solid fa-eye absolute top-[-9px] right-[0px] transition-opacity duration-300 ease-in-out"
+                            [class.opacity-100]="showPassword" [class.opacity-0]="!showPassword"></i>
+                    </button>
+                </div>
+                @if(login.get('password')?.errors && login.get('password')?.touched ){
+                <div class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-green-900 dark:text-red-400 dark:border-red-800"
+                    role="alert">
+                    <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Danger</span>
+                    <div>
+                        <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                                Password Input:</strong></span>
+                        <ul class="mt-1.5 list-disc list-inside">
+                            @if(login.get('password')?.hasError('required')){
+                            <li>Input is required.</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                }
+                <!-- Remember Me -->
+                <div class="flex items-center justify-between mt-4 font-Roboto">
+                    <div>
+                        <input type="checkbox" value="rememberMe" #rememberMe id="rememberMe"
+                            (keydown.enter)="LoggingIn.focus()" (click)="toggleChicked()"
+                            (keypress.space)="toggleChicked()"
+                            class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded-[5px] dark:bg-gray-600 dark:border-gray-500 mr-3 cursor-pointer" />
+                        <label class="text-gray-600 dark:text-gray-100 text-sm" for="rememberMe">Remember me</label>
+                    </div>
+                    <a routerLink="/Start/ForgetPass" class="text-green-600 text-sm font-semibold">Forgot Password?</a>
+                </div>
+                <!-- I'M NOT A ROBOT -->
+                <div class="w-full flex justify-start my-3">
+                    <div class="transform scale-100 sm:scale-90 md:scale-80 lg:scale-75 origin-left">
+                        <ngx-recaptcha2 class="g-recaptcha" [theme]="isDarkMode ? 'dark' : 'light'"
+                            [siteKey]="'6LfjsQ0rAAAAAKGq-5m443IEunFrrFEDXItGWyOa'" [useGlobalDomain]="false"
+                            formControlName="recaptcha"></ngx-recaptcha2>
+                    </div>
+                </div>
+                <!-- Signin Account Button --> <!--[disabled]="!isChecked || login.invalid" -->
+                <div class="text-red-700 mt-4 mb-2 text-center text-base font-semibold">{{errsubmitmessage}}</div>
+                <button type="submit" [disabled]="isSubnitClick || isSubmissionInProgress" #LoggingIn class="mt-4 w-full bg-green-600 text-white dark:text-green-100 p-3 rounded-lg text-lg font-bold font-Roboto transition text-center flex justify-center
+                    hover:bg-green-700 active:bg-green-800 disabled:bg-green-400 disabled:cursor-not-allowed">
+                    @if(!isSubnitClick){
+                    <div>Login</div>
+                    }@else{
+                    <div class="align-baseline"><svg aria-hidden="true" role="status"
+                            class="inline w-5 h-5 me-1 text-white animate-spin" viewBox="0 0 100 101" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="#E5E7EB" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
+                        Loading...</div>
+                    }
+                </button>
+                <!-- Don't have an account -->
+                <p class="text-center mt-4 text-gray-600 dark:text-gray-100">
+                    Don’t have an account? <a routerLink="/Start/Signup"
+                        class="text-green-600 font-semibold font-Roboto">Sign
+                        up</a>
+                </p>
+                <!-- Divider -->
+                <div class="flex items-center my-4">
+                    <hr class="flex-grow border-gray-300">
+                    <span class="mx-2 text-gray-500 dark:text-gray-100 text-base font-medium font-Quicksand">Or Login
+                        with</span>
+                    <hr class="flex-grow border-gray-300">
+                </div>
+                <!-- Social Media Sign-In -->
+                <div *ngIf="errorMessageForGoogleAndFacebookAndYahoo"
+                    class="flex items-center p-4 my-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                    role="alert">
+                    <svg class="shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <div>
+                        <span class="font-medium">Sorry! </span>{{errorMessageForGoogleAndFacebookAndYahoo}}
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 justify-center space-x-4 pt-4">
+                    <button (click)="onSignInWithFacebook()" [disabled]="isSubmissionInProgress || isSubnitClick"
+                        class="disabled:bg-green-100 disabled:dark:bg-gray-100 disabled:cursor-not-allowed   border bg-green-200 hover:bg-green-300 active:bg-green-400 dark:bg-gray-100 dark:hover:bg-gray-300 dark:active:bg-gray-400 duration-300 p-3 rounded-lg flex items-center space-x-2 col-span-1 justify-center">
+                        @if(isSubmissionInProgress && typeAuthByFirbase=='Facebook'){
+                        <div class="align-baseline"><svg aria-hidden="true" role="status"
+                                class="inline w-5 h-5 me-1 text-white animate-spin" viewBox="0 0 100 101" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                    fill="#E5E7EB" />
+                                <path
+                                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                    fill="currentColor" />
+                            </svg>
+                        </div>
+                        }@else{
+                        <img src="./assets/Images/icons_Facebook.png" alt="Facebook" class="w-7 h-7">
+                        }
+                    </button>
+                    <button (click)="onSignInWithGoogle()" [disabled]="isSubmissionInProgress || isSubnitClick"
+                        class="disabled:bg-green-100 disabled:dark:bg-gray-100 disabled:cursor-not-allowed   border bg-green-200 hover:bg-green-300 active:bg-green-400 dark:bg-gray-100 dark:hover:bg-gray-300 dark:active:bg-gray-400 duration-300 p-3 rounded-lg flex items-center space-x-2 col-span-1 justify-center">
+                        @if(isSubmissionInProgress && typeAuthByFirbase=='Google'){
+                        <div class="align-baseline"><svg aria-hidden="true" role="status"
+                                class="inline w-5 h-5 me-1 text-white animate-spin" viewBox="0 0 100 101" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                    fill="#E5E7EB" />
+                                <path
+                                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                    fill="currentColor" />
+                            </svg>
+                        </div>
+                        }@else{
+                        <img src="./assets/Images/icons_google.png" alt="Google" class="w-7 h-7">
+                        }
+                    </button>
+                    <button (click)="onSignInWithYahoo()" [disabled]="isSubmissionInProgress || isSubnitClick"
+                        class="disabled:bg-green-100 disabled:dark:bg-gray-100 disabled:cursor-not-allowed   border bg-green-200 hover:bg-green-300 active:bg-green-400 dark:bg-gray-100 dark:hover:bg-gray-300 dark:active:bg-gray-400 duration-300 p-3 rounded-lg flex items-center space-x-2 col-span-1 justify-center">
+                        @if(isSubmissionInProgress && typeAuthByFirbase=='Yahoo'){
+                        <div class="align-baseline"><svg aria-hidden="true" role="status"
+                                class="inline w-5 h-5 me-1 text-white animate-spin" viewBox="0 0 100 101" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                    fill="#E5E7EB" />
+                                <path
+                                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                    fill="currentColor" />
+                            </svg>
+                        </div>
+                        }@else{
+                        <img src="./assets/Images/Yahoo icon.png" alt="Apple" class="w-7 h-7">
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+        <!-- Right Section: Image -->
+        <div class="hidden md:block w-[40%] h-[95vh]">
+            <img src="./assets/Images/woman-repotting-houseplant-inside-her-house 2.png" alt="Planting"
+                class="h-full w-full object-fill rounded-r-lg">
+        </div>
+    </div>
+</div>
+

@@ -1,16 +1,18 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
+import { NavbarService } from '../../core/services/navbar.service';
 
 @Component({
   selector: 'app-navbar-admin',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, NgIf, NgClass],
   templateUrl: './navbar-admin.component.html',
-  styleUrl: './navbar-admin.component.scss'
+  styleUrl: './navbar-admin.component.scss',
 })
 export class NavbarAdminComponent implements OnInit {
+  private readonly _isDarkMode = inject(NavbarService);
   isDarkMode = false;
 
   constructor(
@@ -31,23 +33,35 @@ export class NavbarAdminComponent implements OnInit {
       // Apply dark mode settings after DOM renders
       this.platformDetectionService.executeAfterDOMRender(() => {
         this.setupDarkMode();
+        // Subscribe to the dark mode state from NavbarService
+        this._isDarkMode.isDarkMode$.subscribe((darkModeState) => {
+          this.isDarkMode = darkModeState; // Update local state
+          this.applyTheme(); // Apply theme based on updated state
+        });
       });
     }
   }
 
   setupDarkMode() {
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const systemPrefersDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
     this.isDarkMode = systemPrefersDark;
+    this._isDarkMode.setDarkMode(this.isDarkMode);
     this.applyTheme();
 
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-      this.isDarkMode = event.matches;
-      this.applyTheme();
-    });
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', (event) => {
+        this.isDarkMode = event.matches;
+        this._isDarkMode.setDarkMode(this.isDarkMode);
+        this.applyTheme();
+      });
   }
 
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
+    this._isDarkMode.setDarkMode(this.isDarkMode);
     this.applyTheme();
   }
 

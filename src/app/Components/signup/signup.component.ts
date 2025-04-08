@@ -3,9 +3,14 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  inject,
+  OnDestroy,
   OnInit,
+  Output,
   Renderer2,
   ViewChild,
+  EventEmitter,
+  NgZone,
 } from '@angular/core';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import {
@@ -22,18 +27,43 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import {
+  Auth,
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  OAuthProvider,
+} from '@angular/fire/auth';
+import { NgxCaptchaModule } from 'ngx-captcha';
+import { NavbarService } from '../../core/services/navbar.service';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, NgIf, NgFor, NgClass, RouterLink], //FormsModule
+  imports: [
+    ReactiveFormsModule,
+    NgIf,
+    NgFor,
+    NgClass,
+    RouterLink,
+    NgxCaptchaModule,
+  ], //FormsModule
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss',
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
+  private readonly _AuthService = inject(AuthService);
+  private readonly _Router = inject(Router);
+  isDarkMode = false;
+  _DarkMode = inject(NavbarService);
   register = new FormGroup(
     {
+      recaptcha: new FormControl(null, [Validators.required]),
       fname: new FormControl(null, [
         Validators.required,
         Validators.minLength(2),
@@ -85,6 +115,7 @@ export class SignupComponent implements OnInit {
   passwordControl: Subscription | undefined = undefined; //Subscription | null = null;
   confirmPasswordControl = this.register.get('rePassword');
   isSubnitClick = false;
+  errsubmitmessage = '';
 
   constructor(
     private platformDetectionService: PlatformDetectionService,
@@ -103,6 +134,11 @@ export class SignupComponent implements OnInit {
       // Access the DOM safely after rendering
       this.platformDetectionService.executeAfterDOMRender(() => {
         //Start code there...
+        this._DarkMode.isDarkMode$.subscribe((darkMode) => {
+          this.isDarkMode = darkMode; // Update local component state
+          this.cdRef.markForCheck();
+        });
+
         this.passwordControl = this.register
           .get('password')
           ?.valueChanges.pipe(debounceTime(300), distinctUntilChanged())
@@ -190,14 +226,59 @@ export class SignupComponent implements OnInit {
     if (this.CreateAccunt?.nativeElement === document.activeElement) {
       if (!this.isChecked && this.register.valid) {
         alert('Please agree to the terms and conditions.');
+        this.errsubmitmessage = '';
+        this.isSubnitClick = false;
+        this.cdRef.detectChanges();
         return;
       }
       if (this.register.valid) {
         console.log('Form Submitted:', this.register.value);
+        this.errsubmitmessage = '';
+        this.isSubnitClick = true;
+        console.log(this.register.value);
+
+        this._AuthService
+          .signup(
+            // this.register.value
+            {
+              // fname: this.register.get('fname')?.value ?? ('' as string),
+              name: this.register.get('lname')?.value ?? ('' as string),
+              email: this.register.get('email')?.value ?? ('' as string),
+              password: this.register.get('password')?.value ?? ('' as string),
+              rePassword:
+                this.register.get('rePassword')?.value ?? ('' as string),
+            }
+          )
+          .subscribe({
+            next: (res) => {
+              if (res.message == 'success') {
+                this._Router.navigate(['/Start/Login']);
+              }
+              console.log('res:  ', res);
+              this.errsubmitmessage = '';
+              this.isSubnitClick = false;
+              this.cdRef.detectChanges();
+            },
+            error: (err: HttpErrorResponse) => {
+              console.log('err:  ', err);
+              console.log('err:  ', err.error.message);
+              this.errsubmitmessage = err.error.message;
+              this.isSubnitClick = false;
+              this.cdRef.detectChanges();
+            },
+            complete: () => {
+              console.log('complete the signup request');
+              this.errsubmitmessage = '';
+              this.isSubnitClick = false;
+              this.cdRef.detectChanges();
+            },
+          });
       } else {
         // this.register?.get('password')?.setValue("");
+        this.errsubmitmessage = '';
+        this.isSubnitClick = false;
+        this.cdRef.detectChanges();
         this.register.markAllAsTouched();
-        this.isSubnitClick = true;
       }
     }
   }
@@ -280,7 +361,7 @@ export class SignupComponent implements OnInit {
     if (!passwordControl) return '';
     if (this.showError['password'])
       return 'border-red-500 ring-2 ring-red-500 animate-shake';
-    if(this.passwordStrength === '') return 'focus:ring-blue-400';
+    if (this.passwordStrength === '') return 'focus:ring-blue-400';
     if (this.passwordStrength === 'Very Strong') return 'focus:ring-green-500';
     if (this.passwordStrength === 'Strong') return 'focus:ring-teal-500';
     if (this.passwordStrength === 'Medium') return 'focus:ring-yellow-500';
@@ -330,7 +411,6 @@ export class SignupComponent implements OnInit {
     if (modal) {
       modal.classList.remove('hidden'); // Show modal
       modal.removeAttribute('aria-hidden'); // Ensure it's visible to assistive tech
-
       // Move focus inside the modal
       const focusableElement = modal.querySelector(
         'button, a, input, textarea, select'
@@ -358,5 +438,111 @@ export class SignupComponent implements OnInit {
 
   ngOnDestroy() {
     this.passwordControl?.unsubscribe();
+  }
+
+  private readonly auth = inject(Auth);
+  private readonly router = inject(Router);
+  private readonly ngZone = inject(NgZone);
+  isSubmissionInProgress = false;
+  errorMessageForGoogleAndFacebookAndYahoo = '';
+  typeAuthByFirbase = '';
+
+  async onSignUpWithGoogle() {
+    try {
+      this.ngZone.run(() => {
+        this.isSubmissionInProgress = true;
+        this.typeAuthByFirbase = 'Google';
+        this.cdRef.detectChanges();
+      });
+      const provider = new GoogleAuthProvider();
+      provider.addScope('profile');
+      provider.addScope('email');
+      await this.auth.signOut();
+      const result = await signInWithPopup(this.auth, provider);
+      const user = result.user;
+      console.log('User signed up:', user);
+      await this.router.navigate(['/Start/Home']);
+    } catch (error) {
+      console.error('Google Sign-up Error:', error);
+      this.handleSignUpError(error);
+    } finally {
+      this.ngZone.run(() => {
+        this.isSubmissionInProgress = false;
+        this.typeAuthByFirbase = '';
+        this.cdRef.detectChanges();
+      });
+    }
+  }
+
+  async onSignUpWithFacebook() {
+    try {
+      this.ngZone.run(() => {
+        this.isSubmissionInProgress = true;
+        this.typeAuthByFirbase = 'Facebook';
+        this.cdRef.detectChanges();
+      });
+      const provider = new FacebookAuthProvider();
+      provider.addScope('email'); // Optional, but useful
+      provider.addScope('public_profile');
+      await this.auth.signOut();
+      const result = await signInWithPopup(this.auth, provider);
+      const user = result.user;
+      console.log('user signed up:', user);
+      await this.router.navigate(['/Start/Home']);
+    } catch (error) {
+      console.error('Sign-up Error:', error);
+      this.handleSignUpError(error);
+    } finally {
+      this.ngZone.run(() => {
+        this.isSubmissionInProgress = false;
+        this.typeAuthByFirbase = '';
+        this.cdRef.detectChanges();
+      });
+    }
+  }
+
+  async onSignUpWithYahoo() {
+    try {
+      this.ngZone.run(() => {
+        this.isSubmissionInProgress = true;
+        this.typeAuthByFirbase = 'Yahoo';
+        this.cdRef.detectChanges();
+      });
+      const provider = new OAuthProvider('yahoo.com');
+      provider.addScope('email');
+      provider.addScope('profile');
+      await this.auth.signOut();
+      const result = await signInWithPopup(this.auth, provider);
+      const user = result.user;
+      console.log('Yahoo user:', user);
+      await this.router.navigate(['/Start/Home']);
+    } catch (error) {
+      console.error('Yahoo Sign-up Error:', error);
+      this.handleSignUpError(error);
+    } finally {
+      this.ngZone.run(() => {
+        this.isSubmissionInProgress = false;
+        this.typeAuthByFirbase = '';
+        this.cdRef.detectChanges();
+      });
+    }
+  }
+
+  private handleSignUpError(error: any): void {
+    console.error('Google Sign-up Error:', error);
+    const errorMessages: { [key: string]: string } = {
+      'auth/popup-closed-by-user': 'Sign-up canceled. Please try again.',
+      'auth/account-exists-with-different-credential':
+        'This email is already registered with another sign-up method.',
+      'auth/network-request-failed':
+        'Network error. Please check your internet connection.',
+    };
+    this.errorMessageForGoogleAndFacebookAndYahoo =
+      errorMessages[error.code] || 'Sign-up failed. Please try again.';
+    this.cdRef.detectChanges();
+    setTimeout(() => {
+      this.errorMessageForGoogleAndFacebookAndYahoo = '';
+      this.cdRef.detectChanges();
+    }, 5000);
   }
 }
