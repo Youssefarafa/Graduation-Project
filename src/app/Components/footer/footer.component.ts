@@ -64,7 +64,7 @@ export class FooterComponent implements OnInit {
       '/User/Shop',
       '/User'
     ];
-
     this.existingClass['ms-16'] = shopRoutes.includes(url);
   }
+  
 }

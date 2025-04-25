@@ -2,12 +2,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
+@import 'ngx-owl-carousel-o/lib/styles/scss/owl.theme.default';
 @custom-variant dark (&:where(.dark, .dark *));
 @font-face {
   font-family: "Philosopher";
   font-style: normal;
   font-weight: 700;
   src: url("assets/Fonts/Philosopher/Philosopher-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Philosopher";
+  font-style: italic;
+  font-weight: 700;
+  src: url("assets/Fonts/Philosopher/Philosopher-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Philosopher";
+  font-style: normal;
+  font-weight: 400;
+  src: url("assets/Fonts/Philosopher/Philosopher-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Philosopher";
+  font-style: italic;
+  font-weight: 400;
+  src: url("assets/Fonts/Philosopher/Philosopher-Regular.ttf") format("truetype");
 }
 @font-face {
   font-family: "Roboto";
@@ -69,11 +89,20 @@
   font-weight: 600;
   src: url("assets/Fonts/Poppins/Poppins-SemiBold.ttf") format("truetype");
 }
+@font-face {
+  font-family: "Poppins";
+  font-style: italic;
+  font-weight: 600;
+  src: url("assets/Fonts/Poppins/Poppins-SemiBold.ttf") format("truetype");
+}
 * {
   box-sizing: border-box;
 }
 
 /* Apply global body styles */
 body {
-  @apply bg-zinc-100   dark:bg-[#0d261a] /* Deep Forest Green */transition-colors  overflow-x-hidden;
+  @apply bg-zinc-100   dark:bg-[#0d261a] /* Deep Forest Green */transition-colors duration-300  overflow-x-hidden;
+}
+html {
+  scroll-behavior: smooth;
 }

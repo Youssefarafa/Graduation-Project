@@ -40,6 +40,11 @@ export class AppComponent implements OnInit {
       });
     }
   }
+  onContainerDragOverDragLeaveDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.dataTransfer!.dropEffect = 'none'; // 🚫 Not allowed
+  }
 }
 
 // import {

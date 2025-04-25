@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit {
     isDarkMode = false;
     _DarkMode = inject(NavbarService);
   login = new FormGroup({
+    recaptcha: new FormControl(null, [Validators.required]),
     email: new FormControl('', [
       Validators.required,
       Validators.email,
@@ -94,6 +95,7 @@ export class LoginComponent implements OnInit {
         const savedPassword = localStorage.getItem('password');
         if (savedEmail && savedPassword) {
           this.login?.setValue({
+            recaptcha: null,
             email: savedEmail,
             password: savedPassword,
           });

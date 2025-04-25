@@ -1,14 +1,19 @@
-<div class="container mx-auto ps-8 sm:ps-8 pe-[6px] py-6  transition-colors duration-300">
+<div class="ms-[-12px] " #DivParentOfCarousel>
+    <owl-carousel-o  #carouselRef [options]="customOptions1">    
+        <ng-template [dataMerge]="1" carouselSlide><div class="w-full h-[45vh] bg-[url('./assets/Images/Plantss.webp')] bg-[length:100%_100%] bg-center bg-no-repeat relative"><div class="absolute inset-0 bg-black bg-opacity-65 flex justify-center items-center"><h1 class="mb-4 text-2xl font-extrabold text-gray-200 dark:text-white md:text-4xl xl:text-5xl w-2/4 text-center">We have all <span class="text-transparent bg-clip-text bg-gradient-to-r from-lime-700 via-teal-600 to-green-700 ">Tools Plants Products </span>You might need.</h1></div></div></ng-template>
+        <ng-template [dataMerge]="2" carouselSlide><div class="w-full h-[45vh] bg-[url('./assets/Images/plantsss.jpg')] bg-[length:100%_100%] bg-center bg-no-repeat relative"><div class="absolute inset-0 bg-black bg-opacity-65 flex justify-center items-center"><h1 class="mb-4 text-2xl font-extrabold text-gray-200 dark:text-white md:text-4xl xl:text-5xl w-2/4 text-center">We have all <span class="text-transparent bg-clip-text bg-gradient-to-r from-lime-700 via-teal-600 to-green-700 ">Agricultural Seeds Of All Kinds </span>You might need.</h1></div></div></ng-template>
+        <ng-template [dataMerge]="1" carouselSlide><div class="w-full h-[45vh] bg-[url('./assets/Images/Plantsssss.jpg')] bg-[length:100%_100%] bg-center bg-no-repeat relative"><div class="absolute inset-0 bg-black bg-opacity-65 flex justify-center items-center"><h1 class="mb-4 text-2xl font-extrabold text-gray-200 dark:text-white md:text-4xl xl:text-5xl w-2/4 text-center">We have all <span class="text-transparent bg-clip-text bg-gradient-to-r from-lime-700 via-teal-600 to-green-700 ">Aornamental Plants Products </span>You might need.</h1></div></div></ng-template>
+    </owl-carousel-o>
+</div>
+<div class="container mx-auto ps-8 sm:ps-8 pe-[6px] py-6 transition-colors duration-300">
     <h2 class="text-2xl font-bold text-green-800 dark:text-green-300 text-center mb-6">Our Plant Collection</h2>
-
     <!-- Responsive Grid for Products -->
     <div
         class="grid grid-cols-1 w-[75%] mx-auto sm:w-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-
         <!-- Plant Product Card -->
         @for (product of products?.data; track $index) {
         <div
-            class="bg-green-50 dark:bg-green-800 border border-green-300 dark:border-green-600 rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl p-3">
+            class="bg-white dark:bg-green-800 border border-green-300 dark:border-green-600 rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl p-3">
             <a href="#">
                 <img class="w-full h-80 object-fill rounded-md transition-transform duration-300 hover:scale-110"
                     [src]="product.imageCover" [alt]="product.title">
@@ -55,3 +60,7 @@
         <!-- End of Product Card -->
     </div>
 </div>
+
+
+
+
