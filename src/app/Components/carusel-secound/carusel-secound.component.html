@@ -1,0 +1,43 @@
+<!-- <div class="mt-4 ps-[-12px] sm:ps-8">
+    <h3 class="text-3xl ms-[24px] sm:ms-[0px] font-bold text-green-800 font-Roboto dark:text-green-300  py-4">Shop
+        Popular Products:</h3>
+    <div class=" h-[200px] border-0 me-[24px] sm:me-[12px] ms-[24px] sm:ms-[0px] rounded-md overflow-hidden"
+        #DivParentOfCarousel1>
+        <owl-carousel-o #carouselRef1 [options]="customOptions2" class="h-full">
+            @for (slide of categories; track $index) {
+            <ng-template carouselSlide [id]="slide._id">
+                <div class="h-[200px] overflow-hidden relative group hover:cursor-pointer">
+                    <img [ngSrc]="slide.image" class="h-full w-full " fill [alt]="slide.name" [title]="slide.name">
+                    <p class=" absolute inset-x-0 bottom-0 bg-black bg-opacity-75 text-white text-sm font-Poppins text-center py-2  transform translate-y-full  group-hover:translate-y-0  transition-transform duration-300 ease-out">
+                        {{ slide.name }}
+                    </p>
+                </div>
+            </ng-template>
+            }
+        </owl-carousel-o>
+    </div>
+</div> -->
+<div class="mt-4 ps-[-12px] sm:ps-8">
+    <h3 class="text-3xl ms-[24px] sm:ms-[0px] font-bold text-green-800 font-Roboto dark:text-green-300  py-4">
+        Shop
+        Popular Products:</h3>
+    <div class=" h-[200px] border-0 me-[24px] sm:me-[12px] ms-[24px] sm:ms-[0px] rounded-md overflow-hidden"
+        #DivParentOfCarousel1>
+        <!-- 2) stage that we will translate with JS -->
+        <div #carouselRef1 class="flex will-change-transform" style="user-select: none; -webkit-user-drag: none;">
+            @for (slide of categories; track $index) {
+            <ng-container style="user-select: none; -webkit-user-drag: none;">
+                <div class=" carousel-product h-[200px] w-[200px] flex-shrink-0 overflow-hidden relative group hover:cursor-pointer mx-1">
+                    <div class="absolute top-0 bottom-0 right-0 left-0 z-[2]" style="user-select: none; -webkit-user-drag: none;"></div>
+                    <img [ngSrc]="slide.image" fill class="w-full h-full" 
+                        [alt]="slide.name" [title]="slide.name" />
+                    <p
+                        class="absolute z-[2] inset-x-0 bottom-0 bg-black bg-opacity-75 text-white text-sm font-Poppins text-center py-2 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
+                        {{ slide.name }}
+                    </p>
+                </div>
+            </ng-container>
+            }
+        </div>
+    </div>
+</div>

@@ -57,14 +57,16 @@ export class FooterComponent implements OnInit {
 
   updateClasses(url: string) {
     const shopRoutes = [
-      '/User/Shop/Products',
-      '/User/Shop/CartShop',
-      '/User/Shop/WishList',
-      '/User/Shop/Categories',
-      '/User/Shop',
-      '/User'
+      'Shop/Products',
+      'Shop/CartShop',
+      'Shop/WishList',
+      'Shop/Categories',
+      'Shop/ghg',
+      'Shop',
+      'Shop/ProductDetails/',
+      'Shop/DetailsCheckout/'
     ];
-    this.existingClass['ms-16'] = shopRoutes.includes(url);
+    this.existingClass['ms-16'] = shopRoutes.some(sub => url.includes(sub));
   }
   
 }

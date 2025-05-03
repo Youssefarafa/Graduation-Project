@@ -1,0 +1,235 @@
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { PlatformDetectionService } from '../../core/services/platform-detection.service';
+import { ProductsShopService } from '../../core/services/products-shop.service';
+import { Data, Products } from '../../core/interface/products';
+import { NgFor, NgIf } from '@angular/common';
+import {
+  CarouselComponent,
+  CarouselModule,
+  OwlOptions,
+} from 'ngx-owl-carousel-o';
+import { NgOptimizedImage } from '@angular/common';
+import { ButtonWishComponent } from '../button-wish/button-wish.component';
+import { ShowProdutsComponent } from '../show-produts/show-produts.component';
+import { NgxSpinnerComponent, NgxSpinnerService } from 'ngx-spinner';
+import { CartService } from '../../core/services/cart.service';
+import { ToastrService } from 'ngx-toastr';
+
+@Component({
+  selector: 'app-product-details',
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    ButtonWishComponent,
+    ShowProdutsComponent,
+    CarouselModule,
+    NgOptimizedImage,
+    NgxSpinnerComponent,
+  ],
+  templateUrl: './product-details.component.html',
+  styleUrl: './product-details.component.scss',
+})
+export class ProductDetailsComponent implements OnInit {
+  private readonly _ActivatedRoute = inject(ActivatedRoute);
+  private readonly _PlatformDetectionService = inject(PlatformDetectionService);
+  private readonly _ProductsShopService = inject(ProductsShopService);
+  private spinner = inject(NgxSpinnerService);
+  private readonly _CartService = inject(CartService);
+  private readonly _ToastrService = inject(ToastrService);
+  ProductDetails!: any;
+  products?: Products;
+  ProductsShop: any = this.products?.data;
+  starSize = 'w-4 h-4'; // Add this property
+  stars: ('full' | 'half' | 'empty')[] = [];
+
+  ngOnInit() {
+    if (this._PlatformDetectionService.isBrowser) {
+      console.log('Running in the browser');
+
+      // Load Flowbite dynamically
+      this._PlatformDetectionService.loadFlowbite((flowbite) => {
+        flowbite.initFlowbite();
+        console.log('Flowbite loaded successfully');
+      });
+
+      // Access the DOM safely after rendering
+      this._PlatformDetectionService.executeAfterDOMRender(() => {
+        let id: string | null = '';
+        //? console.log(this._ActivatedRoute.snapshot.params['idProduct']);  it not used because not subscribe.
+        this._ActivatedRoute.paramMap.subscribe({
+          next: (param) => {
+            this.spinner.show();
+            console.log(param.get('idProduct'));
+            id = param.get('idProduct');
+            this._ProductsShopService.getOneproduct(id!).subscribe({
+              next: (res) => {
+                console.log(res);
+                this.ProductDetails = res.data;
+                console.log(this.ProductDetails);
+                this.calculateStars();
+                this.getProducts(this.ProductDetails);
+              },
+              error: (err) => {
+                console.log(err);
+                id = null;
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 2000);
+              },
+              complete: () => {
+                console.log('product get complete.');
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 2000);
+              },
+            });
+          },
+          error: (err) => {
+            console.log(err);
+            id = null;
+          },
+        });
+      });
+    }
+  }
+
+  getProducts = (product: any) => {
+    return this._ProductsShopService.getproducts().subscribe({
+      next: (res) => {
+        this.products = res;
+        const allProducts = this.products?.data ?? [];
+        // Exclude the specified product by ID (or compare full object if needed)
+        const filtered = allProducts.filter((p) => p._id !== product._id);
+        // Shuffle and pick 5 from remaining products
+        const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+        this.ProductsShop = shuffled.slice(0, 5);
+      },
+      error: (err) => {
+        console.error('Error fetching products:', err);
+      },
+      complete: () => {
+        console.log('Product fetching complete');
+      },
+    });
+  };
+
+  private calculateStars() {
+    const rating = this.ProductDetails?.ratingsAverage || 0;
+    const fullStars = Math.floor(rating);
+    const hasHalf = rating % 1 >= 0.5;
+    this.stars = Array(5)
+      .fill('empty')
+      .map((_, index) => {
+        if (index < fullStars) return 'full';
+        if (index === fullStars && hasHalf) return 'half';
+        return 'empty';
+      });
+  }
+
+  customOptions: OwlOptions = {
+    loop: true,
+    mouseDrag: false,
+    pullDrag: false,
+    touchDrag: false,
+    freeDrag: false,
+    dots: true,
+    navSpeed: 700,
+    navText: ['', ''],
+    responsive: {
+      0: {
+        items: 1,
+        center: false,
+      },
+      400: {
+        items: 1,
+        center: false,
+      },
+      740: {
+        items: 1,
+        center: false,
+      },
+      940: {
+        items: 1,
+        center: false,
+      },
+    },
+    nav: false, // Disable navigation arrows
+    stagePadding: 0,
+    center: false,
+    dotsEach: true,
+    autoplay: false, // Enable autoplay
+  };
+
+  isClick:boolean=false;
+  currentToastTimeout: any = null;
+  mouseleavecurrentToastTimeout: any = null;
+  AddToCart(id: string) {
+    this.isClick=true;
+    this._CartService.addProductToCart(id).subscribe({
+      next: (res) => {
+        console.log(res); //'Product added successfully to your cart'
+        const toastRef = this._ToastrService.success(
+          res.message,
+          'Successful operation!',
+          {
+            progressBar: true,
+            closeButton: true,
+            timeOut: 3500,
+            tapToDismiss: false,
+            toastClass:
+              'ngx-toastr !font-Roboto !bg-green-600 !text-green-100 dark:!bg-green-600 custom-toast-animate hover:!cursor-default !text-sm md:!text-base !w-[100%] md:!w-[450px] !mt-[70px]',
+          }
+        );
+        
+        const toastEl = toastRef.toastRef.componentInstance.toastElement;
+        
+        let leaveTimeout: any;
+        let autoCloseTimeout: any;
+        
+        const startAutoClose = () => {
+          if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
+          autoCloseTimeout = setTimeout(() => {
+            toastEl.classList.add('toast-exit');
+            setTimeout(() => {
+              toastRef.toastRef.manualClose();
+            }, 400);
+          }, 3500);
+        };
+        
+        startAutoClose();
+        
+        toastEl.addEventListener('mouseenter', () => {
+          if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
+          if (leaveTimeout) clearTimeout(leaveTimeout);
+          toastEl.classList.remove('toast-exit');
+        });
+        
+        toastEl.addEventListener('mouseleave', () => {
+          leaveTimeout = setTimeout(() => {
+            toastEl.classList.add('toast-exit');
+            setTimeout(() => {
+              toastRef.toastRef.manualClose();
+            }, 400);
+          }, 1000);
+        });        
+      },
+      error: (err) => {
+        console.log(err);
+      },
+      complete: () => {
+        console.log('the adding to cart complete');
+        this.isClick=false;
+      },
+    });
+  }
+}

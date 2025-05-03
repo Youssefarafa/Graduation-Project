@@ -4,6 +4,7 @@
 @tailwind utilities;
 @import 'ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
 @import 'ngx-owl-carousel-o/lib/styles/scss/owl.theme.default';
+@import 'ngx-toastr/toastr';
 @custom-variant dark (&:where(.dark, .dark *));
 @font-face {
   font-family: "Philosopher";
@@ -105,4 +106,41 @@ body {
 }
 html {
   scroll-behavior: smooth;
+}
+
+
+
+
+
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.custom-toast-animate {
+  animation: slideInRight 0.4s ease forwards;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.toast-exit {
+  animation: slideOutRight 0.4s ease forwards !important;
+  
 }

@@ -1,0 +1,82 @@
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { PlatformDetectionService } from '../../core/services/platform-detection.service';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-adrress-order',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule,RouterLink],
+  templateUrl: './adrress-order.component.html',
+  styleUrl: './adrress-order.component.scss',
+})
+export class AdrressOrderComponent implements OnInit {
+  private readonly _PlatformDetectionService = inject(PlatformDetectionService);
+  private readonly _ActivatedRoute = inject(ActivatedRoute);
+  private readonly _Router = inject(Router);
+
+  typeDetails: FormGroup = new FormGroup({
+    details: new FormControl('', [
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(150),
+    ]),
+    phone: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^\+?[0-9]{9,15}$/),
+    ]),
+    city: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(15),
+    ]),
+  });
+  id: string|null = '';
+
+  ngOnInit() {
+    if (this._PlatformDetectionService.isBrowser) {
+      console.log('Running in the browser');
+
+      // Load Flowbite dynamically
+      this._PlatformDetectionService.loadFlowbite((flowbite) => {
+        flowbite.initFlowbite();
+        console.log('Flowbite loaded successfully');
+      });
+
+      // Access the DOM safely after rendering
+      this._PlatformDetectionService.executeAfterDOMRender(() => {
+        this._ActivatedRoute.paramMap.subscribe({
+          next: (param) => {
+            console.log(param.get('idCart'));
+            this.id = param.get('idCart');
+          },
+          error: (err) => {
+            console.log(err);
+            this.id = null;
+          },
+        });
+      });
+    }
+  }
+
+  isSubnitClick: boolean = false;
+  onSubmit() {
+    this.isSubnitClick = true;
+    if (this.typeDetails.valid) {
+      console.log('Submitted data:', this.typeDetails.value);
+      localStorage.setItem('addressForm', JSON.stringify(this.typeDetails.value));
+      this._Router.navigate([`/User/Shop/SelectPayment/${this.id}`]);
+      this.isSubnitClick = false;
+    } else {
+      this.typeDetails.markAllAsTouched();
+      this.isSubnitClick = false;
+    }
+  }
+}

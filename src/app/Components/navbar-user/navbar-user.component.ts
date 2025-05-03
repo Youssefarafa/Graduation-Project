@@ -1,8 +1,16 @@
-import { Component, inject, OnInit, Renderer2 } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  Renderer2,
+  AfterViewInit,
+} from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import { NavbarService } from '../../core/services/navbar.service';
+// import { Router, NavigationEnd } from '@angular/router';
+// import { initDropdowns } from 'flowbite';
 
 @Component({
   selector: 'app-navbar-user',
@@ -17,8 +25,14 @@ export class NavbarUserComponent implements OnInit {
 
   constructor(
     private platformDetectionService: PlatformDetectionService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    // private router: Router
   ) {}
+
+  closeDropdown() {
+    const dropdown = document.getElementById('dropdownRight');
+    dropdown?.classList.add('hidden');  // Hide it manually
+  }
 
   ngOnInit() {
     if (this.platformDetectionService.isBrowser) {

@@ -1,0 +1,11 @@
+.carousel-product {
+  user-select: none; // Prevents text/image selection
+  -webkit-user-drag: none; // Prevents dragging images in Safari
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
+  img {
+    pointer-events: none; // Prevents image dragging or ghost dragging
+  }
+}

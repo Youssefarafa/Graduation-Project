@@ -20,10 +20,22 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { environment } from './environments/environment';
 import { connectAuthEmulator } from 'firebase/auth';
 import { connectFirestoreEmulator } from 'firebase/firestore';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { provideToastr } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAnimations(), // required animations providers
+    provideToastr({
+      preventDuplicates:true,
+      countDuplicates:true,
+      resetTimeoutOnDuplicate:true,
+      includeTitleDuplicates:true,
+      timeOut: 3500,
+      progressBar: true,
+      closeButton: true,
+      tapToDismiss: false
+    }), // Toastr providers
     importProvidersFrom(BrowserAnimationsModule),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => {

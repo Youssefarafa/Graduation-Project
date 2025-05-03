@@ -609,12 +609,14 @@ export class CVModelComponent implements OnInit, OnDestroy {
   // Method to start webcam
   async setupWebcam() {
     this.loading = true;
+  
+    // Reset UI/File inputs
     this.selectedFileImage = null;
     this.selectedFileImageName = 'No file chosen';
     this.fileImageErrorMessage = null;
     if (this.imageUrl) {
       URL.revokeObjectURL(this.imageUrl);
-      this.imageUrl = null; // optional: prevent double revoke
+      this.imageUrl = null;
     }
     if (this.videoUrl) {
       URL.revokeObjectURL(this.videoUrl);
@@ -623,33 +625,65 @@ export class CVModelComponent implements OnInit, OnDestroy {
     this.selectedFileVideo = null;
     this.selectedFileVideoName = 'No file chosen';
     this.fileVideoErrorMessage = null;
+  
     try {
-      // 1) try strict environment (back) camera
-      await navigator.mediaDevices
-      .getUserMedia({ video: { facingMode: { exact: "environment" } } })
-      .then((stream) => {
-        this.videoElement.nativeElement.srcObject = stream;
-        this.videoElement.nativeElement.play();
-        this.isStreaming = true;
-        this.connectToWebSocket(); // 🔌 connect to backend
-        this.captureFrame();
-      })
-    } catch (err) {
-      console.warn("Back camera not available, falling back to default", err);
-      // 2) fallback to whatever camera is available
-      await navigator.mediaDevices
-      .getUserMedia({ video: true })
-      .then((stream) => {
-        this.videoElement.nativeElement.srcObject = stream;
-        this.videoElement.nativeElement.play();
-        this.isStreaming = true;
-        this.connectToWebSocket(); // 🔌 connect to backend
-        this.captureFrame();
-      })
-      .catch((error) => {
-        console.error('Error accessing webcam: ', error);
+      // 1. Try environment/back camera
+      const backStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { exact: 'environment' } }
       });
+      this.handleStream(backStream);
+      return;
+    } catch (err) {
+      console.warn('Back camera not available. Checking for specific devices...');
     }
+  
+    try {
+      // 2. List available cameras
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = devices.filter((d) => d.kind === 'videoinput');
+  
+      if (videoDevices.length === 0) {
+        console.error('No video input devices found.');
+        this.loading = false;
+        return;
+      }
+  
+      // 3. Try to select DroidCam first
+      let preferredCamera = videoDevices.find((device) =>
+        device.label.toLowerCase().includes('droid')
+      );
+  
+      // 4. Fallback to first available (usually laptop cam)
+      if (!preferredCamera) {
+        console.log('DroidCam not found. Using default laptop camera.');
+        preferredCamera = videoDevices[0];
+      }
+  
+      // 5. Request camera using deviceId
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: { exact: preferredCamera.deviceId } }
+      });
+  
+      this.handleStream(stream);
+    } catch (error) {
+      // 6. Final fallback: basic access
+      try {
+        console.warn('Preferred camera not accessible. Trying generic fallback.');
+        const fallbackStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        this.handleStream(fallbackStream);
+      } catch (fallbackError) {
+        console.error('Could not access any camera:', fallbackError);
+        this.loading = false;
+      }
+    }
+  }
+  private handleStream(stream: MediaStream): void {
+    this.videoElement.nativeElement.srcObject = stream;
+    this.videoElement.nativeElement.play();
+    this.isStreaming = true;
+    this.connectToWebSocket();
+    this.captureFrame();
+    this.loading = false;
   }
 
   // Method to stop webcam

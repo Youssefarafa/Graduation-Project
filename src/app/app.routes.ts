@@ -29,6 +29,12 @@ import { isLoggedInGuard } from './core/guards/is-logged-in.guard';
 import { authGuard } from './core/guards/auth.guard';
 import { VerifyCodeComponent } from './Components/verify-code/verify-code.component';
 import { ResetPassComponent } from './Components/reset-pass/reset-pass.component';
+import { ProductDetailsComponent } from './Components/product-details/product-details.component';
+import { AdrressOrderComponent } from './Components/adrress-order/adrress-order.component';
+import { SelectPaymentProcessComponent } from './Components/select-payment-process/select-payment-process.component';
+import { TakeOrderCashComponent } from './Components/take-order-cash/take-order-cash.component';
+import { CVModel2Component } from './Components/cvmodel2/cvmodel2.component';
+// import { ArPlantComponent } from './Components/ar-plant/ar-plant.component';
 // !    canActivate:[isLoggedInGuard],canActivate:[authGuard],
 export const routes: Routes = [
   { path: '', redirectTo: 'Start', pathMatch: 'full' },
@@ -76,13 +82,19 @@ export const routes: Routes = [
             component: ProductsShopComponent,
             title: 'Products',
           },
+          // { path: 'ghg', component: ArPlantComponent },
           { path: 'Categories', component: CategoriesShopComponent },
           { path: 'WishList', component: WishListShopComponent },
           { path: 'CartShop', component: CartShopComponent },
+          { path: 'DetailsCheckout/:idCart', component: AdrressOrderComponent },
+          { path: 'SelectPayment/:idCart', component: SelectPaymentProcessComponent },
+          { path: 'TakeOrderCash/:idCart', component: TakeOrderCashComponent },
+          { path: 'ProductDetails/:idProduct', component: ProductDetailsComponent },
         ],
       },
       { path: 'ChatBot', component: ChatBotComponent },
       { path: 'CVModel', component: CVModelComponent },
+      { path: 'CVModel2', component: CVModel2Component },
       { path: 'DLModel', component: DLModelComponent },
       { path: 'Alert', component: AlertComponent },
       { path: 'Account', component: AccountComponent },

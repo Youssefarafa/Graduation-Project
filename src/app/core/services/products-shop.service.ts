@@ -12,5 +12,7 @@ export class ProductsShopService {
   getproducts = ():Observable<Products> => {
     return this._HttpClient.get<Products>(baseUrl+'api/v1/products');
   };
-  
+  getOneproduct = (id:string):Observable<Products> => {
+    return this._HttpClient.get<Products>(`${baseUrl}api/v1/products/${id}`);
+  };
 }
