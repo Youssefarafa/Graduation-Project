@@ -7,13 +7,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-adrress-order',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './adrress-order.component.html',
   styleUrl: './adrress-order.component.scss',
 })
@@ -23,10 +23,15 @@ export class AdrressOrderComponent implements OnInit {
   private readonly _Router = inject(Router);
 
   typeDetails: FormGroup = new FormGroup({
-    details: new FormControl('', [
+    Street: new FormControl('', [
       Validators.required,
-      Validators.minLength(10),
-      Validators.maxLength(150),
+      Validators.minLength(2),
+      Validators.maxLength(15),
+    ]),
+    Country: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(15),
     ]),
     phone: new FormControl('', [
       Validators.required,
@@ -72,7 +77,7 @@ export class AdrressOrderComponent implements OnInit {
     if (this.typeDetails.valid) {
       console.log('Submitted data:', this.typeDetails.value);
       localStorage.setItem('addressForm', JSON.stringify(this.typeDetails.value));
-      this._Router.navigate([`/User/Shop/SelectPayment/${this.id}`]);
+      this._Router.navigate([`/User/Shop/SelectOptions/${this.id}`]);
       this.isSubnitClick = false;
     } else {
       this.typeDetails.markAllAsTouched();

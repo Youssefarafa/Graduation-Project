@@ -196,6 +196,7 @@ export class ResetPassComponent implements OnInit, OnDestroy {
             email: localStorage.getItem('emailForgetPass') ?? ('' as string),
             newPassword:
               this.setNewPass.get('password')?.value ?? ('' as string),
+            code: localStorage.getItem('codePass') ?? ('' as string),
           })
           .subscribe({
             next: (res) => {

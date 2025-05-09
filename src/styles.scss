@@ -2,9 +2,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import 'ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
-@import 'ngx-owl-carousel-o/lib/styles/scss/owl.theme.default';
-@import 'ngx-toastr/toastr';
+@import "ngx-owl-carousel-o/lib/styles/scss/owl.carousel";
+@import "ngx-owl-carousel-o/lib/styles/scss/owl.theme.default";
+@import "ngx-toastr/toastr";
 @custom-variant dark (&:where(.dark, .dark *));
 @font-face {
   font-family: "Philosopher";
@@ -22,13 +22,15 @@
   font-family: "Philosopher";
   font-style: normal;
   font-weight: 400;
-  src: url("assets/Fonts/Philosopher/Philosopher-Regular.ttf") format("truetype");
+  src: url("assets/Fonts/Philosopher/Philosopher-Regular.ttf")
+    format("truetype");
 }
 @font-face {
   font-family: "Philosopher";
   font-style: italic;
   font-weight: 400;
-  src: url("assets/Fonts/Philosopher/Philosopher-Regular.ttf") format("truetype");
+  src: url("assets/Fonts/Philosopher/Philosopher-Regular.ttf")
+    format("truetype");
 }
 @font-face {
   font-family: "Roboto";
@@ -108,11 +110,6 @@ html {
   scroll-behavior: smooth;
 }
 
-
-
-
-
-
 @keyframes slideInRight {
   from {
     transform: translateX(100%);
@@ -142,5 +139,18 @@ html {
 
 .toast-exit {
   animation: slideOutRight 0.4s ease forwards !important;
-  
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color:   #08a208;
+  border-radius: 20px;
+  border: 3px solid #dee2e1;  
+}
+
+::-webkit-scrollbar-track{
+  background-color: #dee2e1 ;
 }

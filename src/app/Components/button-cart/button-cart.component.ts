@@ -14,6 +14,8 @@ export class ButtonCartComponent implements OnInit {
   private readonly _CartService = inject(CartService);
   private readonly _ToastrService = inject(ToastrService);
   @Input() id!: string;
+  @Input() product!: any;
+  messageerr:any=null;
   constructor(private platformDetectionService: PlatformDetectionService) {}
   ngOnInit() {
     if (this.platformDetectionService.isBrowser) {
@@ -36,9 +38,10 @@ export class ButtonCartComponent implements OnInit {
   AddToCart() {
     this.isClick = true;
     console.log(this.id);
-    
     this._CartService.addProductToCart(this.id).subscribe({
       next: (res) => {
+        this._CartService.counterCart.next(res.numOfCartItems);
+        this.messageerr=null;
         console.log(res); //'Product added successfully to your cart'
         const toastRef = this._ToastrService.success(
           res.message,
@@ -87,6 +90,7 @@ export class ButtonCartComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
+        this.messageerr=err;
       },
       complete: () => {
         console.log('the adding to cart complete');

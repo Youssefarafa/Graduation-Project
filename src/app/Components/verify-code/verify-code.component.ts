@@ -67,6 +67,10 @@ export class VerifyCodeComponent implements OnInit , OnDestroy {
         })
         .subscribe({
           next: (res) => {
+            localStorage.setItem(
+              'codePass',
+              otp
+            );
             // if (res.status == 'success') {
             this.errsubmitmessage = '';
             this.isSubnitClick = false;

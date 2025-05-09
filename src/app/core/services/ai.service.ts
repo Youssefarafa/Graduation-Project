@@ -11,23 +11,25 @@ import { DiseaseResponse } from '../interface/dlmodel';
 })
 export class AIService {
   constructor(private _HttpClient: HttpClient) {}
+  baseUrlDotNet = 'http://localhost:5001/plants/';
+  // baseUrlDotNet = 'http://localhost:5001/';
   getDLPredection = (formData: FormData): Observable<DiseaseResponse> => {
     return this._HttpClient.post<DiseaseResponse>(
-      baseUrlAI + 'PlantDetection/predict-image/',
+      this.baseUrlDotNet + 'PlantDetection/predict-image/',
       formData
     );
   };
 
   getCVImagePrediction = (formData: FormData): Observable<any> => {
     return this._HttpClient.post<any>(
-      baseUrlAI + 'WeedDetection/predict-image/',
+      this.baseUrlDotNet + 'WeedDetection/predict-image/',
       formData
     );
   };
 
   getCVImagePrediction2 = (formData: FormData): Observable<any> => {
     return this._HttpClient.post<any>(
-      baseUrlAI + 'PestDetection/predict-image/',
+      this.baseUrlDotNet + 'PestDetection/predict-image/',
       formData
     );
   };
@@ -36,7 +38,7 @@ export class AIService {
     formData: FormData
   ): Observable<{ message: string; filename: string }> {
     return this._HttpClient.post<{ message: string; filename: string }>(
-      baseUrlAI + 'WeedDetection/predict-video/',
+      this.baseUrlDotNet + 'WeedDetection/predict-video/',
       formData
     );
   }
@@ -45,7 +47,7 @@ export class AIService {
     formData: FormData
   ): Observable<{ message: string; filename: string }> {
     return this._HttpClient.post<{ message: string; filename: string }>(
-      baseUrlAI + 'PestDetection/predict-video/',
+      this.baseUrlDotNet + 'PestDetection/predict-video/',
       formData
     );
   }
@@ -54,7 +56,7 @@ export class AIService {
     filename: string
   ): Observable<'processing' | 'ready' | 'not_found'> {
     return this._HttpClient.get<{ status: 'processing' | 'ready' | 'not_found' }>(
-        `${baseUrlAI}WeedDetection/status-video/${filename}`
+        `${this.baseUrlDotNet}WeedDetection/status-video/${filename}`
       )
       .pipe(map(resp => resp.status),
             catchError(() => of<'processing' | 'ready' | 'not_found'>('not_found'))
@@ -65,7 +67,7 @@ export class AIService {
     filename: string
   ): Observable<'processing' | 'ready' | 'not_found'> {
     return this._HttpClient.get<{ status: 'processing' | 'ready' | 'not_found' }>(
-        `${baseUrlAI}PestDetection/status-video/${filename}`
+        `${this.baseUrlDotNet}PestDetection/status-video/${filename}`
       )
       .pipe(map(resp => resp.status),
             catchError(() => of<'processing' | 'ready' | 'not_found'>('not_found'))
@@ -76,7 +78,7 @@ export class AIService {
     const fd = new FormData();
     fd.append('file', file, file.name);
     return this._HttpClient.post(
-      `${baseUrlAI}WeedDetection/get-result-video/`,
+      `${this.baseUrlDotNet}WeedDetection/get-result-video/`,
       fd,
       { responseType: 'blob' }
     );
@@ -86,7 +88,7 @@ export class AIService {
     const fd = new FormData();
     fd.append('file', file, file.name);
     return this._HttpClient.post(
-      `${baseUrlAI}PestDetection/get-result-video/`,
+      `${this.baseUrlDotNet}PestDetection/get-result-video/`,
       fd,
       { responseType: 'blob' }
     );
@@ -102,8 +104,9 @@ export class AIService {
       const poll = () => {
         const formData = new FormData();
         formData.append('file', file, file.name);
-        this._HttpClient
-          .post(`${baseUrlAI}WeedDetection/get-result-image/`, formData, {
+        this._HttpClient.post(
+            `${this.baseUrlDotNet}WeedDetection/get-result-image/`, formData,
+            {
             responseType: 'blob',
           })
           .subscribe({
@@ -135,7 +138,7 @@ export class AIService {
         const formData = new FormData();
         formData.append('file', file, file.name);
         this._HttpClient
-          .post(`${baseUrlAI}PestDetection/get-result-image/`, formData, {
+          .post(`${this.baseUrlDotNet}PestDetection/get-result-image/`, formData, {
             responseType: 'blob',
           })
           .subscribe({
@@ -198,8 +201,9 @@ export class AIService {
       const poll = () => {
         const formData = new FormData();
         formData.append('file', file, file.name);
-        this._HttpClient
-          .post(`${baseUrlAI}PlantDetection/get-result-image/`, formData, {
+        this._HttpClient.post(
+            `${this.baseUrlDotNet}PlantDetection/get-result-image/`
+            ,formData, {
             responseType: 'blob',
           })
           .subscribe({

@@ -33,8 +33,7 @@ import { ToastrService } from 'ngx-toastr';
     ButtonWishComponent,
     ShowProdutsComponent,
     CarouselModule,
-    NgOptimizedImage,
-    NgxSpinnerComponent,
+    NgOptimizedImage, //? NgxSpinnerComponent
   ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.scss',
@@ -43,7 +42,7 @@ export class ProductDetailsComponent implements OnInit {
   private readonly _ActivatedRoute = inject(ActivatedRoute);
   private readonly _PlatformDetectionService = inject(PlatformDetectionService);
   private readonly _ProductsShopService = inject(ProductsShopService);
-  private spinner = inject(NgxSpinnerService);
+  // private spinner = inject(NgxSpinnerService);
   private readonly _CartService = inject(CartService);
   private readonly _ToastrService = inject(ToastrService);
   ProductDetails!: any;
@@ -68,7 +67,7 @@ export class ProductDetailsComponent implements OnInit {
         //? console.log(this._ActivatedRoute.snapshot.params['idProduct']);  it not used because not subscribe.
         this._ActivatedRoute.paramMap.subscribe({
           next: (param) => {
-            this.spinner.show();
+            // this.spinner.show('ProductDetails');
             console.log(param.get('idProduct'));
             id = param.get('idProduct');
             this._ProductsShopService.getOneproduct(id!).subscribe({
@@ -82,15 +81,15 @@ export class ProductDetailsComponent implements OnInit {
               error: (err) => {
                 console.log(err);
                 id = null;
-                setTimeout(() => {
-                  this.spinner.hide();
-                }, 2000);
+                // setTimeout(() => {
+                  // this.spinner.hide('ProductDetails');
+                // }, 2000);
               },
               complete: () => {
                 console.log('product get complete.');
-                setTimeout(() => {
-                  this.spinner.hide();
-                }, 2000);
+                // setTimeout(() => {
+                  // this.spinner.hide('ProductDetails');
+                // }, 2000);
               },
             });
           },
@@ -169,7 +168,7 @@ export class ProductDetailsComponent implements OnInit {
     dotsEach: true,
     autoplay: false, // Enable autoplay
   };
-
+  messageerr:any=null;
   isClick:boolean=false;
   currentToastTimeout: any = null;
   mouseleavecurrentToastTimeout: any = null;
@@ -177,6 +176,8 @@ export class ProductDetailsComponent implements OnInit {
     this.isClick=true;
     this._CartService.addProductToCart(id).subscribe({
       next: (res) => {
+        this._CartService.counterCart.next(res.numOfCartItems);
+        this.messageerr=null;
         console.log(res); //'Product added successfully to your cart'
         const toastRef = this._ToastrService.success(
           res.message,
@@ -225,6 +226,7 @@ export class ProductDetailsComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
+        this.messageerr=err;
       },
       complete: () => {
         console.log('the adding to cart complete');

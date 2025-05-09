@@ -368,7 +368,7 @@ export class DLModelComponent implements OnInit {
     if (!this.selectedFile) return;
     this.predictionResult = null;
     const formData = new FormData();
-    formData.append('file', this.selectedFile);
+    formData.append('file', this.selectedFile, this.selectedFile.name);
     this.loading = true;
     this._AIService.getDLPredection(formData).subscribe({
       next: (res) => {

@@ -13,6 +13,7 @@ import {
   HttpClientModule,
   provideHttpClient,
   withFetch,
+  withInterceptors,
 } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
@@ -22,6 +23,9 @@ import { connectAuthEmulator } from 'firebase/auth';
 import { connectFirestoreEmulator } from 'firebase/firestore';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
+import { headersInterceptor } from './core/interceptor/headers.interceptor';
+import { errorsInterceptor } from './core/interceptor/errors.interceptor';
+import { loadingInterceptor } from './core/interceptor/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -55,6 +59,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideClientHydration(),
     // importProvidersFrom(HttpClientModule),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(),withInterceptors([loadingInterceptor])), //?  ,withInterceptors([headersInterceptor,errorsInterceptor,loadingInterceptor])
   ],
 };

@@ -243,6 +243,7 @@ export class LoginComponent implements OnInit {
       provider.addScope('email');
       await this.auth.signOut();
       const result = await signInWithPopup(this.auth, provider);
+      //?  result and this.typeAuthByFirbase will send
       const user = result.user;
       console.log('User signed in:', user);
       await this.router.navigate(['/Start/Home']);
@@ -270,6 +271,7 @@ export class LoginComponent implements OnInit {
         provider.addScope('public_profile');
         await this.auth.signOut();
         const result = await signInWithPopup(this.auth, provider);
+        //?  result and this.typeAuthByFirbase will send
         const user = result.user;
         console.log('user signed in:', user);
         await this.router.navigate(['/Start/Home']);
@@ -297,6 +299,7 @@ export class LoginComponent implements OnInit {
         provider.addScope('profile');
         await this.auth.signOut();
         const result = await signInWithPopup(this.auth, provider);
+        //?  result and this.typeAuthByFirbase will send
         const user = result.user;
         console.log('Yahoo user:', user);
         await this.router.navigate(['/Start/Home']);

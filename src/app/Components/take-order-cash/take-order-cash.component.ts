@@ -19,6 +19,8 @@ export class TakeOrderCashComponent implements OnInit {
   private readonly _Router = inject(Router);
   private readonly _platformDetectionService = inject(PlatformDetectionService);
   OrderCreated:any='';
+  addressFormValue: any = null;
+  shippingForm:any=null;
   ngOnInit() {
     if (this._platformDetectionService.isBrowser) {
       console.log('Running in the browser');
@@ -35,12 +37,24 @@ export class TakeOrderCashComponent implements OnInit {
         if (saved) {
           this.OrderCreated = JSON.parse(saved);
         }
+        const saved2 = localStorage.getItem('addressForm');
+        if (saved2) {
+          this.addressFormValue = JSON.parse(saved2);
+          console.log('from ffffffff', this.addressFormValue);
+        }
+        const saved3 = localStorage.getItem('shippingForm');
+        if (saved3) {
+          this.shippingForm = JSON.parse(saved3);
+          console.log('from ffffffff', this.shippingForm);
+        }
       });
     }
   }
 
   backtoshop() {
     localStorage.removeItem('OrderCreated');
+    localStorage.removeItem('addressForm');
+    localStorage.removeItem('shippingForm');
     this._Router.navigate([`/User/Shop`]);
   }
 

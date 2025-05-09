@@ -561,11 +561,14 @@ export class CVModelComponent implements OnInit, OnDestroy {
   private ws: WebSocket | null = null;
 
   connectToWebSocket(): void {
-    this.ws = new WebSocket('ws://localhost:8001/WeedDetection/predict-frame');
+    this.ws = new WebSocket('ws://localhost:5001/plants/WeedDetection/predict-frame');
+    // this.ws = new WebSocket('ws://localhost:5001/WeedDetection/predict-frame');
+    //!! this.ws = new WebSocket('wss://localhost:5001/WeedDetection/predict-frame');
     //?? this.ws = new WebSocket("wss://definitely-normal-viper.ngrok-free.app/WeedDetection/predict-frame");
     this.ws.binaryType = 'arraybuffer'; // Ensure binary data
     this.ws.onopen = () => {
       console.log('WebSocket connection opened');
+      this.captureFrame();
     };
     this.ws.onmessage = (event) => {
       const blob = new Blob([event.data], { type: 'image/jpeg' });
@@ -682,7 +685,6 @@ export class CVModelComponent implements OnInit, OnDestroy {
     this.videoElement.nativeElement.play();
     this.isStreaming = true;
     this.connectToWebSocket();
-    this.captureFrame();
     this.loading = false;
   }
 

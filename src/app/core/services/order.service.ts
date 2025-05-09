@@ -17,4 +17,11 @@ export class OrderService {
     );
   };
   
+  createVisaOrder = (cartId: string, shippingAddress: any): Observable<any> => {
+    return this._HttpClient.post(
+      baseUrl + `api/v1/orders/checkout-session/${cartId}?url=http://localhost:4200/User/Shop/SelectPayment/${cartId}`,
+      { shippingAddress },
+      { headers: { ...this.headers } }
+    );
+  };
 }

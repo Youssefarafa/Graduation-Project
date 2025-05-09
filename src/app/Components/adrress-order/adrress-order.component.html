@@ -3,7 +3,7 @@
     <h2 class="text-2xl font-bold mb-6 text-green-700 dark:text-green-200 font-Poppins">Address Details:</h2>
     <form [formGroup]="typeDetails" (ngSubmit)="onSubmit()" novalidate>
         <!-- Details -->
-        <div class="mb-4">
+        <!-- <div class="mb-4">
             <label
                 class="block text-base ps-2 font-semibold font-Poppins mb-1 text-green-800 dark:text-green-100">Details:</label>
             <textarea formControlName="details" rows="3" placeholder="Enter full address details..."
@@ -26,14 +26,14 @@
                     </ul>
                 </div>
             </div>
-        </div>
-        <!-- Phone -->
+        </div> -->
+        <!-- Country -->
         <div class="mb-4">
             <label
-                class="block text-base ps-2 font-semibold font-Poppins mb-1 text-green-800 dark:text-green-100">Phone:</label>
-            <input formControlName="phone" type="text" placeholder="Enter your phone number..."
+                class="block text-base ps-2 font-semibold font-Poppins mb-1 text-green-800 dark:text-green-100">Country:</label>
+            <input formControlName="Country" type="text" placeholder="Enter your Country..." (keydown.enter)="City.focus()" #Country
                 class="w-full border border-green-600 dark:bg-gray-200 dark:border-green-600 rounded-lg p-2 text-gray-800 dark:text-gray-950 font-Signika placeholder:text-sm placeholder:font-Quicksand  focus:ring-2 focus:ring-green-400 dark:focus:ring-green-600 transition" />
-            <div *ngIf="typeDetails.get('phone')?.touched && typeDetails.get('phone')?.invalid" role="alert"
+            <div *ngIf="typeDetails.get('city')?.touched && typeDetails.get('city')?.invalid" role="alert"
                 class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-green-900 dark:text-red-400 dark:border-red-800">
                 <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor" viewBox="0 0 20 20">
@@ -43,11 +43,11 @@
                 <span class="sr-only">Danger</span>
                 <div>
                     <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
-                            Phone Input:</strong></span>
+                            Country Input:</strong></span>
                     <ul class="list-disc list-inside">
-                        <li *ngIf="typeDetails.get('phone')?.hasError('required')">Phone number is required.</li>
-                        <li *ngIf="typeDetails.get('phone')?.hasError('pattern')">Invalid phone format. Example:
-                            +123456789 or 0123456789</li>
+                        <li *ngIf="typeDetails.get('city')?.hasError('required')">Country Name is required.</li>
+                        <li *ngIf="typeDetails.get('city')?.hasError('minlength')">At least 2 characters.</li>
+                        <li *ngIf="typeDetails.get('city')?.hasError('maxlength')">At most 15 characters.</li>
                     </ul>
                 </div>
             </div>
@@ -56,7 +56,7 @@
         <div class="mb-4">
             <label
                 class="block text-base ps-2 font-semibold font-Poppins mb-1 text-green-800 dark:text-green-100">City:</label>
-            <input formControlName="city" type="text" placeholder="Enter your city..."
+            <input formControlName="city" type="text" placeholder="Enter your city..." (keydown.enter)="Street.focus()" #City
                 class="w-full border border-green-600 dark:bg-gray-200 dark:border-green-600 rounded-lg p-2 text-gray-800 dark:text-gray-950 font-Signika placeholder:text-sm placeholder:font-Quicksand  focus:ring-2 focus:ring-green-400 dark:focus:ring-green-600 transition" />
             <div *ngIf="typeDetails.get('city')?.touched && typeDetails.get('city')?.invalid" role="alert"
                 class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-green-900 dark:text-red-400 dark:border-red-800">
@@ -77,9 +77,59 @@
                 </div>
             </div>
         </div>
+        <!-- Street -->
+        <div class="mb-4">
+            <label
+                class="block text-base ps-2 font-semibold font-Poppins mb-1 text-green-800 dark:text-green-100">Street:</label>
+            <input formControlName="Street" type="text" placeholder="Enter your Street..." (keydown.enter)="Phone.focus()" #Street
+                class="w-full border border-green-600 dark:bg-gray-200 dark:border-green-600 rounded-lg p-2 text-gray-800 dark:text-gray-950 font-Signika placeholder:text-sm placeholder:font-Quicksand  focus:ring-2 focus:ring-green-400 dark:focus:ring-green-600 transition" />
+            <div *ngIf="typeDetails.get('city')?.touched && typeDetails.get('city')?.invalid" role="alert"
+                class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-green-900 dark:text-red-400 dark:border-red-800">
+                <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                </svg>
+                <span class="sr-only">Danger</span>
+                <div>
+                    <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                            Street Input:</strong></span>
+                    <ul class="list-disc list-inside">
+                        <li *ngIf="typeDetails.get('city')?.hasError('required')">Street Name is required.</li>
+                        <li *ngIf="typeDetails.get('city')?.hasError('minlength')">At least 2 characters.</li>
+                        <li *ngIf="typeDetails.get('city')?.hasError('maxlength')">At most 15 characters.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Phone -->
+        <div class="mb-4">
+            <label
+                class="block text-base ps-2 font-semibold font-Poppins mb-1 text-green-800 dark:text-green-100">Phone:</label>
+            <input formControlName="phone" type="text" placeholder="Enter your phone number..." (keydown.enter)="Submit.focus()" #Phone
+                class="w-full border border-green-600 dark:bg-gray-200 dark:border-green-600 rounded-lg p-2 text-gray-800 dark:text-gray-950 font-Signika placeholder:text-sm placeholder:font-Quicksand  focus:ring-2 focus:ring-green-400 dark:focus:ring-green-600 transition" />
+            <div *ngIf="typeDetails.get('phone')?.touched && typeDetails.get('phone')?.invalid" role="alert"
+                class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-green-900 dark:text-red-400 dark:border-red-800">
+                <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                </svg>
+                <span class="sr-only">Danger</span>
+                <div>
+                    <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
+                            Phone Input:</strong></span>
+                    <ul class="list-disc list-inside">
+                        <li *ngIf="typeDetails.get('phone')?.hasError('required')">Phone number is required.</li>
+                        <li *ngIf="typeDetails.get('phone')?.hasError('pattern')">Invalid phone format. Example:
+                            +123456789 or 0123456789</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <!-- Submit Button -->
         <button type="submit" [disabled]="isSubnitClick" class="mt-4 w-full bg-green-600 text-white dark:text-green-100 p-3 rounded-lg text-lg font-bold font-Roboto transition text-center flex justify-center
-        hover:bg-green-700 active:bg-green-800 disabled:bg-green-400 disabled:cursor-not-allowed">
+        hover:bg-green-700 active:bg-green-800 disabled:bg-green-400 disabled:cursor-not-allowed" #Submit>
             @if(!isSubnitClick){
             <div>Continue</div>
             }@else{

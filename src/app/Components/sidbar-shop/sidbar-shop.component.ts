@@ -1,7 +1,14 @@
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { NgClass, NgIf } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-sidbar-shop',
@@ -11,12 +18,24 @@ import { PlatformDetectionService } from '../../core/services/platform-detection
   styleUrl: './sidbar-shop.component.scss',
 })
 export class SidbarShopComponent implements OnInit {
+  private readonly _CartService = inject(CartService);
+  counterCart: number = 0;
   isOpen = false;
 
   constructor(
     private eRef: ElementRef,
     private platformDetectionService: PlatformDetectionService
   ) {}
+
+  getAllProduct = () => {
+    // this.spinner.show('CartShop');
+    this._CartService.GetUserCart().subscribe({
+      next: (res) => {
+        console.log(res);
+        this._CartService.counterCart.next(res.numOfCartItems);
+      },
+    });
+  };
 
   ngOnInit() {
     if (this.platformDetectionService.isBrowser) {
@@ -26,6 +45,15 @@ export class SidbarShopComponent implements OnInit {
         console.log('Flowbite loaded successfully');
       });
       this.platformDetectionService.executeAfterDOMRender(() => {
+        this.getAllProduct();
+        this._CartService.counterCart.subscribe({
+          next: (counter) => {
+            this.counterCart=counter;
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
       });
     }
   }

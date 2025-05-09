@@ -459,6 +459,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       provider.addScope('email');
       await this.auth.signOut();
       const result = await signInWithPopup(this.auth, provider);
+      //?  result and this.typeAuthByFirbase will send
       const user = result.user;
       console.log('User signed up:', user);
       await this.router.navigate(['/Start/Home']);
@@ -486,6 +487,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       provider.addScope('public_profile');
       await this.auth.signOut();
       const result = await signInWithPopup(this.auth, provider);
+      //?  result and this.typeAuthByFirbase will send
       const user = result.user;
       console.log('user signed up:', user);
       await this.router.navigate(['/Start/Home']);
@@ -513,6 +515,7 @@ export class SignupComponent implements OnInit, OnDestroy {
       provider.addScope('profile');
       await this.auth.signOut();
       const result = await signInWithPopup(this.auth, provider);
+      //?  result and this.typeAuthByFirbase will send
       const user = result.user;
       console.log('Yahoo user:', user);
       await this.router.navigate(['/Start/Home']);

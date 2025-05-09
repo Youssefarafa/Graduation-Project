@@ -75,7 +75,7 @@ export class SelectPaymentProcessComponent implements OnInit {
       // TODO: navigate or call your payment API
       if (selected == 'cash') {
         this._OrderService
-          .createCashOrder(this.id, this.addressFormValue)
+          .createCashOrder(this.id, this.addressFormValue) //? هحط رقم نوع العمليه وخلاص من عندي   )(تم تغيير الخطه)
           .subscribe({
             next: (res) => {
               console.log('Order created:', res);
@@ -88,14 +88,41 @@ export class SelectPaymentProcessComponent implements OnInit {
             },
             complete: () => {
               console.log('complete create Cash Order');
-              localStorage.removeItem('addressForm');
               this.isSubnitClick = false;
               this.isErrorSubmit=false;
               this._Router.navigate([`/User/Shop/TakeOrderCash/${this.id}`]);
             },
           });
       } else if (selected == 'stripe') {
-        this.isSubnitClick = false;
+
+
+
+        this._OrderService
+        .createVisaOrder(this.id, this.addressFormValue) //? هحط رقم نوع العمليه وخلاص من عندي   )(تم تغيير الخطه)
+        .subscribe({
+          next: (res) => {
+            console.log('Order created:', res);
+            window.location.href= res.session.url
+            // localStorage.setItem('OrderCreated', JSON.stringify(res));
+          },
+          error: (err) => {
+            console.log('Failed to create order:', err);
+            this.isSubnitClick = false;
+            this.isErrorSubmit=true;
+          },
+          complete: () => {
+            console.log('complete create Cash Order');
+            this.isSubnitClick = false;
+            this.isErrorSubmit=false;
+            // this._Router.navigate([`/User/Shop/TakeOrderCash/${this.id}`]);
+          },
+        });
+
+
+
+
+
+
       } else {
         this.isSubnitClick = false;
         return;

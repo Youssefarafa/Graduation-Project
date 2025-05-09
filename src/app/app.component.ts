@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { PlatformDetectionService } from './core/services/platform-detection.service';
 import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from './Components/footer/footer.component';
@@ -6,6 +6,8 @@ import { NotfoundComponent } from './Components/notfound/Notfound.component';
 import { UserComponent } from './Layouts/user/user.component';
 import { AdminComponent } from './Layouts/admin/admin.component';
 import { StartComponent } from './Layouts/start/start.component';
+import { NgxSpinnerComponent } from 'ngx-spinner';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +19,7 @@ import { StartComponent } from './Layouts/start/start.component';
     UserComponent,
     AdminComponent,
     StartComponent,
+    NgxSpinnerComponent,NgIf
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -35,15 +38,23 @@ export class AppComponent implements OnInit {
       });
 
       // Access the DOM safely after rendering
-      this.PlatformDetectionService.executeAfterDOMRender(() => {
-        
-      });
+      this.PlatformDetectionService.executeAfterDOMRender(() => {});
     }
   }
   onContainerDragOverDragLeaveDrop(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer!.dropEffect = 'none'; // 🚫 Not allowed
+  }
+
+  ToUp() {
+    window.scrollTo(0, 0);
+  }
+
+  showButton = false;
+  @HostListener('window:scroll', [])
+  onScroll(): void {
+    this.showButton = window.scrollY > 70; // Show if not at top
   }
 }
 

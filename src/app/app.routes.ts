@@ -34,6 +34,7 @@ import { AdrressOrderComponent } from './Components/adrress-order/adrress-order.
 import { SelectPaymentProcessComponent } from './Components/select-payment-process/select-payment-process.component';
 import { TakeOrderCashComponent } from './Components/take-order-cash/take-order-cash.component';
 import { CVModel2Component } from './Components/cvmodel2/cvmodel2.component';
+import { SelectShippingOptionsComponent } from './Components/select-shipping-options/select-shipping-options.component';
 // import { ArPlantComponent } from './Components/ar-plant/ar-plant.component';
 // !    canActivate:[isLoggedInGuard],canActivate:[authGuard],
 export const routes: Routes = [
@@ -89,6 +90,7 @@ export const routes: Routes = [
           { path: 'DetailsCheckout/:idCart', component: AdrressOrderComponent },
           { path: 'SelectPayment/:idCart', component: SelectPaymentProcessComponent },
           { path: 'TakeOrderCash/:idCart', component: TakeOrderCashComponent },
+          { path: 'SelectOptions/:idCart', component: SelectShippingOptionsComponent },
           { path: 'ProductDetails/:idProduct', component: ProductDetailsComponent },
         ],
       },
