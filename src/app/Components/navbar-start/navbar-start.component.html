@@ -1,4 +1,4 @@
-<nav class=" bg-green-100 dark:backdrop-blur-lg dark:bg-green-900/60 border-gray-400 z-20 fixed top-0 right-0 left-0">
+<nav class=" bg-green-100 dark:backdrop-blur-lg dark:bg-green-900/60 border-gray-400 z-[999] fixed top-0 right-0 left-0" [ngClass]="{'hidden': isOurTeam}">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <div class="flex items-center space-x-1 rtl:space-x-reverse cursor-default">
             <img src="./assets/Images/Group 10000020535.svg" class="h-8" alt="Napta Logo" />
@@ -49,13 +49,13 @@
                 <li class="w-auto">
                     <a routerLink="/Start/Home"
                         class="block px-3 md:px-4 md:py-1 w-40 md:w-auto border-0 rounded-lg font-Quicksand dark:text-[#ffffff] text-gray-900 hover:bg-green-200  md:hover:bg-transparent hover:text-green-700 dark:hover:text-green-300 dark:hover:bg-green-800 md:dark:hover:bg-transparen mb-3 md:mb-0"
-                        routerLinkActive="px-5 w-auto font-semibold border-2 border-green-700 dark:border-green-400 rounded-xl bg-gray-100 md:bg-transparent text-green-700 dark:text-green-500 dark:bg-green-900 md:dark:bg-transparent"
+                        
                         aria-current="page">Home</a>
                 </li>
                 <li class="w-auto">
                     <a routerLink="/Start/OurTeam"
                         class="block px-3 md:px-4 md:py-1 w-40 md:w-auto border-0 rounded-lg font-Quicksand dark:text-[#ffffff] text-gray-900 hover:bg-green-200  md:hover:bg-transparent hover:text-green-700 dark:hover:text-green-300 dark:hover:bg-green-800 md:dark:hover:bg-transparen mb-3 md:mb-0"
-                        routerLinkActive="px-5 w-auto font-semibold border-2 border-green-700 dark:border-green-400 rounded-xl bg-gray-100 md:bg-transparent text-green-700 dark:text-green-500 dark:bg-green-900 md:dark:bg-transparent"
+                        
                         aria-current="page">Our Team</a>
                 </li>
                 <li class="flex items-center space-x-2 md:order-3 mt-4 md:mt-0 md:hidden">

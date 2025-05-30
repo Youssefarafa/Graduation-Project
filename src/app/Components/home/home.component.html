@@ -1,7 +1,157 @@
-<p>home works!</p>
-<i class="fa-solid fa-quote-left"></i>
-<i class="fa-regular fa-circle-left"></i> 
-<i class="fa-regular fa-circle-right"></i>
-<i class="fa-solid fa-arrow-right"></i>
-<i class="fa-solid fa-arrow-left"></i>
-<i class="fa-solid fa-arrow-up-right-from-square"></i>
+<div></div>
+<div [@fadeIn]>
+    <section class="relative w-full h-[450px] overflow-hidden rounded-b-3xl">
+        <img src="assets/Images/images/toshka-11-jpg.jpg" class=" w-full h-[500px] rounded-b-[80px] object-cover" />
+        <div class="absolute inset-0 flex flex-col justify-center items-center bg-black/40 dark:bg-black/60 text-gray-50 dark:text-gray-100 text-center p-4">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 font-serif ">Welcome to Napta</h1>
+            <p class="text-base md:text-lg max-w-2xl font-Poppins font-medium">
+                Your one-stop platform for AI-powered plant care, weed detection, and
+                an online plant store.
+            </p>
+        </div>
+    </section>
+    <div class="w-[90%] mx-auto max-w-[1200px]">
+        <div class="flex flex-col-reverse lg:flex-row gap-10 mb-16 pt-16">
+            <div class="w-full lg:w-[40%] flex justify-center" [@slideFade]>
+                <img [src]="mainImage()"
+                    class="w-full h-auto lg:h-[610px] object-cover rounded-[20px] shadow-lg hover:shadow-xl transition-all duration-500" />
+            </div>
+            <div class="w-full lg:w-[60%] flex flex-col" [@slideFade]>
+                <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-300 mb-6 font-serif"> Napta Company </h2>
+                <div class="relative w-[168px] h-[36px] bg-white dark:bg-green-200 rounded-[15px] text-center">
+                    <p class="absolute top-[6px] font-semibold left-4">
+                        <i class="fa-solid fa-leaf mr-4 text-green-700"></i> who we are
+                    </p>
+                </div>
+                <p class="leading-7 text-[#5B5B5B] dark:text-[#a2a2a2] font-semibold my-5 lg:my-12">
+                    We are a specialized platform for selling plants and agricultural tools, offering innovative
+                    AI-powered solutions to help users care for their plants and diagnose plant diseases effortlessly.
+                    Our mission is to bridge the gap between technology and agriculture, making plant care easier and
+                    more accessible for everyone.
+                </p>
+                <div class="mt-8 lg:mt-15">
+                    <!-- Update this to use CarouselComponent -->
+                    <owl-carousel-o [options]="owlConfig" (beforeChange)="handleBeforeChange($event)">
+                        <ng-container *ngFor="let img of images">
+                            <ng-template carouselSlide>
+                                <div class="rounded-[20px] overflow-hidden cursor-pointer h-[220px]"
+                                    [ngClass]="{ 'scale-105 shadow-xl': mainImage() === img }">
+                                    <img [src]="img" class="w-full h-full object-cover" alt="gallery" />
+                                </div>
+                            </ng-template>
+                        </ng-container>
+                    </owl-carousel-o>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- mission-vision.component.html -->
+<div class="bg-green-100 dark:bg-green-700 py-4 px-4 shadow-lg font-Poppins">
+    <h2 class="text-center text-5xl font-semibold">
+        <span class="text-black dark:text-zinc-950">Our </span>
+        <span class="text-green-600 dark:text-green-300 font-bold">Mission</span>
+        <span class="text-gray-400 dark:text-gray-300 font-semibold"> &amp;</span>
+        <span class="text-green-600 dark:text-green-300 font-bold"> Our Vision</span>
+    </h2>
+</div>
+<div class="w-[90%] max-w-[1200px] mx-auto mt-10">
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 mx-auto ">
+        <!-- Left Section -->
+        <div class="lg:w-1/2">
+            <div class="relative rounded-3xl overflow-hidden sm:mx-0 justify-center max-w-[500px]">
+                <img src="assets/Images/images/Background.png" class="w-full h-auto object-cover" />
+                <div
+                    class="absolute top-0 right-0 sm:right-0 bg-[#ffffff] rounded-bl-[30px] sm:rounded-bl-[60px] rounded-tr-[10px] sm:rounded-tr-[20px] px-4 sm:px-9 py-2 sm:py-3">
+                    <p class="text-[#478673] font-bold text-[18px] sm:text-[25px] text-center">
+                        Our<br />Mission
+                    </p>
+                </div>
+            </div>
+            <p
+                class="text-[#5B5B5B] dark:text-[#a2a2a2] font-medium text-base sm:text-lg md:text-[20px] lg:text-[23px] mt-4 sm:mt-5 lg:mt-8 px-2 sm:px-0 leading-normal md:leading-relaxed">
+                Our Vision: To become the leading platform that integrates AI-driven
+                plant care with e-commerce, revolutionizing the way people interact
+                with agriculture.
+            </p>
+        </div>
+        <!-- Right Section -->
+        <div class="lg:w-1/2 flex flex-col">
+            <p
+                class="text-[#5B5B5B] dark:text-[#a2a2a2] font-medium text-base sm:text-lg md:text-[20px] lg:text-[23px] mb-4 sm:mb-6 lg:mb-0 ml-0 lg:ml-[-90px] px-2 sm:px-0 leading-normal md:leading-relaxed">
+                Our Mission: To empower individuals and farmers with smart solutions that enhance
+                plant health and productivity through technology.
+            </p>
+            <div class="relative rounded-xl overflow-hidden mt-6 sm:mt-12 justify-center max-w-[500px] sm:mx-0">
+                <img src="assets/Images/images/7.png"
+                    class="w-full h-auto object-cover ml-0 sm:ml-10 lg:ml-0 lg:mt-10" />
+                <div
+                    class="absolute bottom-0 lg:left-[-50px] bg-[#ffffff] rounded-tr-[30px] sm:rounded-tr-[60px] rounded-bl-[10px] px-4 sm:px-9 py-2 sm:py-3 ml-0 sm:ml-10">
+                    <p class="text-[#478673] font-bold text-[18px] sm:text-[25px] text-center">
+                        Our<br />vision
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="py-16">
+    <div class="flex justify-center">
+        <h2 class="text-3xl font-bold font-mono mb-12 text-gray-800 dark:text-gray-200 relative line2 ">
+            What We Provide
+        </h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full mx-auto max-w-[90%]">
+        <div *ngFor="let card of cards; index as i" [@cardAnim]="getCardState(i)"
+            class="bg-white dark:bg-gray-200 p-8 rounded-lg shadow-sm hover:shadow-md transition-all border border-[#ECECEC]">
+            <div class="transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <img [src]="card.img" alt=""
+                    class="w-[120px] h-20 mx-auto mb-6 hover:scale-110 transition-transform duration-300" />
+                <h3 class="font-serif text-xl text-gray-700 mb-4 font-medium">{{ card.title }}</h3>
+                <p class="text-gray-600 mb-5 leading-relaxed">{{ card.text }}</p>
+                <a *ngIf="i < 3" routerLink="/Start/Login"
+                    class="text-[#0D986A] font-medium cursor-pointer inline-block transition-transform hover:translate-x-1 duration-200">
+                    Explore more →
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="w-[95%] max-w-[1400px] mx-auto pb-10" [@fadeInStagger]>
+    <div class="flex justify-center">
+        <h2 class=" line text-3xl font-bold font-mono mb-12 text-gray-800 dark:text-gray-200 relative line"
+            *ngIf="inView" @fadeUpTitle>
+            What our customers say?
+        </h2>
+    </div>
+    <div class="flex flex-col md:flex-row justify-center gap-6 lg:gap-12">
+        <ng-container *ngFor="let _ of [0,1,2,3]">
+            <div
+                class="testimonial-card w-full md:w-[45%] lg:w-[32%] min-h-[300px] bg-white dark:bg-gray-200 rounded-[30px] relative shadow-md hover:scale-[1.02] transition-transform duration-300 hover:shadow-lg">
+                <div
+                    class="text-[40px] text-green-800 absolute right-2 top-2 w-16 h-16 flex justify-center items-center z-[12] bg-[#F2F2F2] dark:bg-[#cacaca] rounded-[50%]">
+                    <i class="fa-solid fa-quote-left"></i>
+                </div>
+                <div class="p-6 sm:p-8">
+                    <div class="flex gap-x-2 text-green-700">
+                        <i *ngFor="let s of customer[_].str" class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star"></i>
+                    </div>
+                    <p class="mt-4 sm:mt-6 text-[#666666] text-sm sm:text-base hover:scale-[1.01] transition-transform">
+                        {{customer[_].cont}}
+                    </p>
+                    <div class="mt-4 sm:mt-6 flex gap-x-3 items-center">
+                        <img src="assets/Images/images/joo.jpg" alt="User"
+                            class="rounded-[50%] w-[70px] h-[70px] sm:w-[100px] sm:h-[100px] object-cover hover:scale-[1.05] transition-transform" />
+                        <div>
+                            <span class="font-semibold block text-sm sm:text-base">{{customer[_].namee}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

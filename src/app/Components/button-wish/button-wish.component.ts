@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import { ProductsShopService } from '../../core/services/products-shop.service';
+import { WishListService } from '../../core/services/wish-list.service';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -8,14 +9,16 @@ import { NgClass } from '@angular/common';
   standalone: true,
   imports: [NgClass],
   templateUrl: './button-wish.component.html',
-  styleUrl: './button-wish.component.scss'
+  styleUrl: './button-wish.component.scss',
 })
-export class ButtonWishComponent implements OnInit{
- isFavorite = false; // Track if it's in the wishlist
-  isBouncing = true;  // Track animation state
+export class ButtonWishComponent implements OnInit {
+  isFavorite = false; // Track if it's in the wishlist
+  isBouncing = true; // Track animation state
+  @Input() product!: any;
   constructor(
     private platformDetectionService: PlatformDetectionService,
-    private _ProductsShopService: ProductsShopService
+    private _ProductsShopService: ProductsShopService,
+    private _WishListService: WishListService
   ) {}
   ngOnInit() {
     if (this.platformDetectionService.isBrowser) {
@@ -29,11 +32,43 @@ export class ButtonWishComponent implements OnInit{
 
       // Access the DOM safely after rendering
       this.platformDetectionService.executeAfterDOMRender(() => {
+        // console.log("hhhhhhhhhhhhhhhhhhhh hhhjjjjjjjjjj000000000000000000",this.product);
+        const productId = this.product?.id;
+        if (productId && this._WishListService.isInWishlist(productId)) {
+          this.isFavorite = true;
+          this.isBouncing = false;
+        } else {
+          this.isFavorite = false;
+          this.isBouncing = true;
+        }
       });
     }
   }
-  toggleWishlist() {
-    this.isFavorite = !this.isFavorite;  // Toggle SVG color
-    this.isBouncing = !this.isBouncing;  // Toggle animation
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['product'] && changes['product'].currentValue) {
+      // console.log('Product arrived:', this.product);
+      // console.log("hhhhhhhhhhhhhhhhhhhh ppppppppppppppppppppp",this.product);
+      const productId = this.product?.id;
+      if (productId && this._WishListService.isInWishlist(productId)) {
+        this.isFavorite = true;
+        this.isBouncing = false;
+      } else {
+        this.isFavorite = false;
+        this.isBouncing = true;
+      }
+    }
   }
+
+  toggleWishlist() {
+    const productId = this.product?.id;
+    if (!productId) {
+      return
+    };
+    // Toggle in localStorage using service
+    this.isFavorite = this._WishListService.toggleWishlist(this.product);
+    // Bouncing is only true when just added
+    this.isBouncing = !this.isFavorite;
+  }
+  
 }

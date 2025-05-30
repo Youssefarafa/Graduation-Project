@@ -5,7 +5,7 @@ import {
   Renderer2,
   AfterViewInit,
 } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import { NavbarService } from '../../core/services/navbar.service';
@@ -21,6 +21,7 @@ import { NavbarService } from '../../core/services/navbar.service';
 })
 export class NavbarUserComponent implements OnInit {
   private readonly _isDarkMode = inject(NavbarService);
+  private readonly _Router = inject(Router);
   isDarkMode = false;
 
   constructor(
@@ -85,5 +86,12 @@ export class NavbarUserComponent implements OnInit {
     } else {
       this.renderer.removeClass(document.documentElement, 'dark');
     }
+  }
+
+  Signout(){
+    if (localStorage.getItem('token')) {
+      localStorage.removeItem('token');
+    }    
+    this._Router.navigate([`/Start/Home`]);
   }
 }

@@ -1,0 +1,22 @@
+.line::before{
+    content: "aaaaaaaa";
+    position: absolute;
+    bottom: -5px;
+    left: 20%;
+    text-decoration-style: wavy;
+    font-size: 50px;
+    color: transparent;
+    text-decoration-line: underline;
+    text-decoration-color: #c0e4d9;
+  }
+  .line2::before{
+    content: "aaaaaa";
+    position: absolute;
+    bottom: -5px;
+    left: 15%;
+    text-decoration-style: wavy;
+    font-size: 50px;
+    color: transparent;
+    text-decoration-line: underline;
+    text-decoration-color: #c0e4d9;
+  }

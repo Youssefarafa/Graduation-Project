@@ -178,7 +178,7 @@ export class LoginComponent implements OnInit {
                 this.errsubmitmessage = '';
                 this.isSubnitClick = false;
                 this.cdRef.detectChanges();
-                this._Router.navigate(['/Start/Home']);
+                this._Router.navigate(['/User/Shop']);
               }
             },
             error: (err: HttpErrorResponse) => {
@@ -246,7 +246,7 @@ export class LoginComponent implements OnInit {
       //?  result and this.typeAuthByFirbase will send
       const user = result.user;
       console.log('User signed in:', user);
-      await this.router.navigate(['/Start/Home']);
+      await this.router.navigate(['/User/Shop']);
     } catch (error) {
       console.error('Google Sign-In Error:', error);
       this.handleSignInError(error);
@@ -274,7 +274,7 @@ export class LoginComponent implements OnInit {
         //?  result and this.typeAuthByFirbase will send
         const user = result.user;
         console.log('user signed in:', user);
-        await this.router.navigate(['/Start/Home']);
+        await this.router.navigate(['/User/Shop']);
       } catch (error) {
         console.error('Sign-in Error:', error);
         this.handleSignInError(error);
@@ -302,7 +302,7 @@ export class LoginComponent implements OnInit {
         //?  result and this.typeAuthByFirbase will send
         const user = result.user;
         console.log('Yahoo user:', user);
-        await this.router.navigate(['/Start/Home']);
+        await this.router.navigate(['/User/Shop']);
       } catch (error) {
         console.error('Yahoo Sign-in Error:', error);
         this.handleSignInError(error);

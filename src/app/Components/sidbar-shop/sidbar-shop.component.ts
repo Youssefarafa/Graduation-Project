@@ -9,6 +9,7 @@ import { NgClass, NgIf } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import { CartService } from '../../core/services/cart.service';
+import { WishListService } from '../../core/services/wish-list.service';
 
 @Component({
   selector: 'app-sidbar-shop',
@@ -19,7 +20,9 @@ import { CartService } from '../../core/services/cart.service';
 })
 export class SidbarShopComponent implements OnInit {
   private readonly _CartService = inject(CartService);
+  private readonly _WishListService = inject(WishListService);
   counterCart: number = 0;
+  wishCount: number = 0;
   isOpen = false;
 
   constructor(
@@ -46,6 +49,7 @@ export class SidbarShopComponent implements OnInit {
       });
       this.platformDetectionService.executeAfterDOMRender(() => {
         this.getAllProduct();
+        this._WishListService.counterWishList.next(this._WishListService.getWishlist().length);
         this._CartService.counterCart.subscribe({
           next: (counter) => {
             this.counterCart=counter;
@@ -53,6 +57,9 @@ export class SidbarShopComponent implements OnInit {
           error: (err) => {
             console.log(err);
           },
+        });
+        this._WishListService.counterWishList.subscribe(count => {
+          this.wishCount = count;
         });
       });
     }

@@ -12,4 +12,6 @@ export class NavbarService {
   setDarkMode(isDark: boolean) {
     this.isDarkModeSubject.next(isDark); // Update the BehaviorSubject value
   }
+  isHome:boolean=false;
+  isOurteam:boolean=false;
 }

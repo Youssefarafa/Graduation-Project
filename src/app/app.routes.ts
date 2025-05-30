@@ -41,16 +41,16 @@ export const routes: Routes = [
   { path: '', redirectTo: 'Start', pathMatch: 'full' },
   {
     path: 'Start',
-    component: StartComponent,
+    component: StartComponent, canActivate:[isLoggedInGuard],
     children: [
-      { path: '', redirectTo: 'Home', pathMatch: 'full' },
-      { path: 'Home', component: HomeComponent,},
-      { path: 'OurTeam', component: OurTeamComponent,},
-      { path: 'Login', component: LoginComponent, canActivate:[isLoggedInGuard]},
-      { path: 'Signup', component: SignupComponent, canActivate:[isLoggedInGuard]},
-      { path: 'ForgetPass', component: ForgetPassComponent, canActivate:[isLoggedInGuard]},
-      { path: 'verifyCode', component: VerifyCodeComponent, canActivate:[isLoggedInGuard]},
-      { path: 'resetPass', component: ResetPassComponent, canActivate:[isLoggedInGuard]},
+      { path: '', redirectTo: 'Home', pathMatch: 'full' }, 
+      { path: 'Home', component: HomeComponent, title: 'Home',},
+      { path: 'OurTeam', component: OurTeamComponent, title: 'Our Team',},
+      { path: 'Login', component: LoginComponent, title: 'Login',},
+      { path: 'Signup', component: SignupComponent, title: 'Signup',},
+      { path: 'ForgetPass', component: ForgetPassComponent, title: 'Forget Password',},
+      { path: 'verifyCode', component: VerifyCodeComponent, title: 'Verify Code',},
+      { path: 'resetPass', component: ResetPassComponent, title: 'Reset Password',},
     ],
   },
   {    
@@ -58,19 +58,18 @@ export const routes: Routes = [
     component: AdminComponent,
     children: [
       { path: '', redirectTo: 'DashBoard', pathMatch: 'full' },
-      { path: 'DashBoard', component: DashBoardComponent },
-      { path: 'Products', component: ProductsComponent },
-      { path: 'Categories', component: CategoriesComponent },
-      { path: 'Orders', component: OrdersComponent },
-      { path: 'Customers', component: CustomersComponent },
-      { path: 'PlantDiseases', component: PlantDiseasesComponent },
-      { path: 'SystemSettings', component: SystemSettingsComponent },
-      // { path: 'Account/:role', component: AccountComponent }, // 🔥 Reusing the same compo
+      { path: 'DashBoard', component: DashBoardComponent, title: 'Products', },
+      { path: 'Products', component: ProductsComponent, title: 'Products', },
+      { path: 'Categories', component: CategoriesComponent, title: 'Products', },
+      { path: 'Orders', component: OrdersComponent, title: 'Products', },
+      { path: 'Customers', component: CustomersComponent, title: 'Products', },
+      { path: 'PlantDiseases', component: PlantDiseasesComponent, title: 'Products', },
+      { path: 'SystemSettings', component: SystemSettingsComponent, title: 'Products', },
     ],
   },
   {
     path: 'User',
-    component: UserComponent,
+    component: UserComponent,canActivate:[authGuard],
     children: [
       { path: '', redirectTo: 'Shop', pathMatch: 'full' },
       {
@@ -78,41 +77,26 @@ export const routes: Routes = [
         component: ShopComponent,
         children: [
           { path: '', redirectTo: 'Products', pathMatch: 'full' },
-          {
-            path: 'Products',
-            component: ProductsShopComponent,
-            title: 'Products',
-          },
+          { path: 'Products', component: ProductsShopComponent, title: 'Products | Shop',},
+          { path: 'Categories', component: CategoriesShopComponent, title: 'Categories | Shop',},
+          { path: 'WishList', component: WishListShopComponent, title: 'Wish List | Shop',},
+          { path: 'CartShop', component: CartShopComponent, title: 'Cart | Shop',},
+          { path: 'DetailsCheckout/:idCart', component: AdrressOrderComponent, title: 'Details Checkout | Shop',},
+          { path: 'SelectPayment/:idCart', component: SelectPaymentProcessComponent, title: 'Select Payment | Shop',},
+          { path: 'TakeOrderCash/:idCart', component: TakeOrderCashComponent, title: 'Take Order Cash | Shop',},
+          { path: 'SelectOptions/:idCart', component: SelectShippingOptionsComponent, title: 'Select Options | Shop',},
+          { path: 'ProductDetails/:idProduct', component: ProductDetailsComponent, title: 'Product Details | Shop',},
           // { path: 'ghg', component: ArPlantComponent },
-          { path: 'Categories', component: CategoriesShopComponent },
-          { path: 'WishList', component: WishListShopComponent },
-          { path: 'CartShop', component: CartShopComponent },
-          { path: 'DetailsCheckout/:idCart', component: AdrressOrderComponent },
-          { path: 'SelectPayment/:idCart', component: SelectPaymentProcessComponent },
-          { path: 'TakeOrderCash/:idCart', component: TakeOrderCashComponent },
-          { path: 'SelectOptions/:idCart', component: SelectShippingOptionsComponent },
-          { path: 'ProductDetails/:idProduct', component: ProductDetailsComponent },
         ],
       },
-      { path: 'ChatBot', component: ChatBotComponent },
-      { path: 'CVModel', component: CVModelComponent },
-      { path: 'CVModel2', component: CVModel2Component },
-      { path: 'DLModel', component: DLModelComponent },
-      { path: 'Alert', component: AlertComponent },
-      { path: 'Account', component: AccountComponent },
-      // { path: 'Account/:role', component: AccountComponent }, // 🔥 Reusing the same compo
+      { path: 'ChatBot', component: ChatBotComponent, title: 'Chat Bot',},
+      { path: 'CVModel', component: CVModelComponent, title: 'Predect Harmful Weeds',},
+      { path: 'CVModel2', component: CVModel2Component, title: 'Predect Pests',},
+      { path: 'DLModel', component: DLModelComponent, title: 'Predect Plant Disease',},
+      { path: 'Alert', component: AlertComponent, title: 'Alert',},
+      { path: 'Account', component: AccountComponent, title: 'My Account',},
     ],
   },
   { path: '**', component: NotfoundComponent },
 ];
 
-// ,children:[
-//   { path: 'Signup', component: SignupComponent,children:[
-//     {path: 'LoginS' , redirectTo: 'Login', pathMatch: 'full' },
-//     {path: 'UserS', redirectTo: 'User', pathMatch: 'full' }
-//   ] },
-//   {path:'Login' , component: LoginComponent ,children:[
-//     {path: 'SignupL', redirectTo: 'Signup', pathMatch: 'full' },
-//     {path: 'ForgetBassword', Component: ForgetBassword }
-//   ]}
-// ]

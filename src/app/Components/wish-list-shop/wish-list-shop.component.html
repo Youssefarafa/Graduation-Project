@@ -1,1 +1,67 @@
-<p>wish-list-shop works!</p>
+@if(myWishlist!.length > 0) {
+<div class="py-6 px-1 md:p-6 my-5 mx-8 bg-white dark:bg-green-900 rounded shadow-md">
+    <h2 class="text-2xl font-semibold dark:text-white font-Roboto">Your Wishlist :</h2>
+    <h3 class="text-sm font-semibold dark:text-green-500 font-Roboto mt-2">Items:
+        <span class="font-Signika">{{ myWishlist.length }} product types</span>
+    </h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        @for (item of myWishlist; track $index) {
+        <div
+            class="rounded-xl border-b-4 dark:border-gray-400 bg-gray-100 dark:bg-green-800 p-4 flex flex-col sm:flex-row items-center gap-4 shadow">
+            <a [routerLink]="'/User/Shop/ProductDetails/' + item._id">
+                <img [src]="item.imageCover" [alt]="item.title"
+                    class="w-24 h-24 sm:w-20 sm:h-20 object-cover rounded-xl shadow-md flex-shrink-0" />
+            </a>
+            <div class="flex-1">
+                <h3 class="text-gray-900 dark:text-green-100 font-medium text-base font-Poppins line-clamp-2">
+                    {{ item.title }}
+                </h3>
+                <p class="text-green-700 dark:text-green-400 font-medium text-sm font-Signika">
+                    Price: {{ item.price }} EGP
+                </p>
+                <button (click)="deleteItem(item._id)"
+                    class="text-green-600 hover:underline dark:text-green-300 text-xs font-Roboto mt-1">
+                    <i class="fa-solid fa-trash"></i> Remove
+                </button>
+            </div>
+        </div>
+
+<!-- 
+
+
+
+        <div
+            class="border-b-4 rounded-xl dark:border-gray-400 bg-gray-100 dark:bg-green-800 p-4 flex items-center gap-4 shadow">
+            <a [routerLink]="'/User/Shop/ProductDetails/' + item._id">
+                <img [src]="item.imageCover" [alt]="item.title" class="w-20 h-20 object-cover rounded-xl shadow-md" />
+            </a>
+            <div class="flex-1">
+                <h3 class="text-gray-900 dark:text-green-100 font-medium text-base truncate font-Poppins">
+                    {{ item.title }}
+                </h3>
+                <p class="text-green-700 dark:text-green-400 font-medium text-sm font-Signika">
+                    Price: {{ item.price }} EGP
+                </p>
+                <button (click)="deleteItem(item._id)"
+                    class="text-green-600 hover:underline dark:text-green-300 text-xs font-Roboto mt-1">
+                    <i class="fa-solid fa-trash"></i> Remove
+                </button>
+            </div>
+        </div> -->
+        }
+    </div>
+
+</div>
+}
+@else {
+<div
+    class="py-[150px] my-5 mx-8 from-green-400 via-green-500 to-green-600 dark:from-green-600 dark:via-green-700 dark:to-green-800 bg-gradient-to-br shadow-lime-700/50 dark:shadow-lg dark:shadow-lime-800/50 rounded shadow-md flex flex-col justify-center items-center">
+    <h2 class="text-3xl font-semibold dark:text-white font-Roboto text-center pb-10">Your Wishlist Is Empty!</h2>
+    <div class="flex justify-between mx-auto items-center align-baseline w-[100%] md:w-[50%] lg:w-[40%]">
+        <h2 class="text-xl font-semibold dark:text-white font-Roboto text-center ms-2">Explore Products ✨💚 :</h2>
+        <a routerLink="/User/Shop"
+            class="font-Roboto hover:cursor-pointer text-gray-900 bg-gradient-to-r from-lime-400 via-lime-500 to-lime-600 hover:bg-gradient-to-br active:ring-4 active:outline-none active:ring-lime-300 dark:active:ring-lime-800 shadow-lg shadow-lime-500/50 dark:shadow-lg dark:shadow-lime-800/80 font-medium rounded-lg text-sm px-7 py-2.5 text-center me-2 mb-2">Shop</a>
+    </div>
+</div>
+}

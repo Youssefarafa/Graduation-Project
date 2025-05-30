@@ -9,7 +9,10 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
     spinner.show('ProductDetails');
   }else if(req.url.includes('cart')){
     spinner.show('CartShop');
-  }else{
+  }else if(req.url.includes('plants')){
+    return next(req).pipe(finalize(()=>{  }));
+  }
+  else{
     spinner.show('app');
   }
   return next(req).pipe(finalize(()=>{

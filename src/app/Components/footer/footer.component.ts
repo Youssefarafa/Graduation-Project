@@ -30,6 +30,7 @@ export class FooterComponent implements OnInit {
     'lx:px-16': true,
     'text-white': true,
     'ms-16': false, // Initially not applied
+    'hidden': false,
   };
 
   constructor(
@@ -67,6 +68,11 @@ export class FooterComponent implements OnInit {
       'Shop/DetailsCheckout/'
     ];
     this.existingClass['ms-16'] = shopRoutes.some(sub => url.includes(sub));
+    if(url.includes('OurTeam')){
+      this.existingClass['hidden']=true;
+    }else{
+      this.existingClass['hidden']=false;
+    }
   }
   
 }

@@ -1,1 +1,204 @@
-<p>chat-bot works!</p>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+
+<div class="flex h-screen overflow-hidden shadow-2xl bg-green-50 dark:bg-green-900" id="app-container"
+    (click)="onClickOutsideSidebar($event)">
+    <!-- Sidebar -->
+    <div id="sidebar"
+        class="bg-green-800 dark:bg-green-700 text-white w-64 md:w-72 p-4 transition-all duration-300 ease-in-out absolute md:relative z-[5] md:translate-x-0 flex flex-col h-full transform-gpu backdrop-filter backdrop-blur-sm bg-opacity-90"
+        [ngClass]="{'-translate-x-full': !showHistory, 'translate-x-0': showHistory, 'shadow-xl': showHistory}">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold flex items-center">
+                <i class="fa-solid fa-leaf mr-2 animate-plant-pulse"></i> Plant Chat History
+            </h2>
+            <div class="flex space-x-2" id="clear-history-container">
+                <button *ngIf="conversationHistory.length > 0" (click)="clearAllConversations()"
+                    class="text-white hover:text-red-300 text-sm p-1 rounded-full hover:bg-green-700 dark:hover:bg-green-700 transition-all duration-200 transform hover:scale-110"
+                    title="Clear all">
+                    <i class="fa-solid fa-trash" style="font-size: 14px;"></i>
+                </button>
+            </div>
+        </div>
+
+        <button id="new-conversation-btn" (click)="startNewConversation()"
+            class="w-full mb-4 p-3 bg-green-700 hover:bg-green-600 dark:bg-green-800 dark:hover:bg-green-600 text-white rounded-lg flex items-center justify-center transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0">
+            <i class="fa-solid fa-seedling mr-2 transition-transform duration-200 group-hover:rotate-12"></i>
+            New Conversation
+        </button>
+
+        <div id="conversation-history"
+            class="overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-green-600 dark:scrollbar-thumb-green-500 scrollbar-track-green-800 dark:scrollbar-track-green-900">
+            <div id="no-history-message" [class.hidden]="conversationHistory.length > 0"
+                class="text-center text-green-200 dark:text-green-300 p-4 animate-fade-in">
+                No past conversations yet. Ask about your plants!
+            </div>
+            <div *ngFor="let conv of conversationHistory" (click)="loadConversation(conv)"
+                class="p-3 mb-2 rounded-lg cursor-pointer transition-all duration-200 relative group transform hover:-translate-y-0.5 history-item"
+                [ngClass]="{
+          'bg-green-600 dark:bg-green-600 shadow-inner': messages.length > 0 && conv.messages[0]?.text === messages[0]?.text,
+          'bg-green-700 dark:bg-green-700 hover:bg-green-600 dark:hover:bg-green-600 shadow-sm hover:shadow-md': !(messages.length > 0 && conv.messages[0]?.text === messages[0]?.text)
+        }" [title]="conv.title">
+                <div class="font-medium truncate">{{ conv.title }}</div>
+                <div class="text-xs opacity-80">{{ conv.lastMessage || conv.timestamp }}</div>
+                <button (click)="deleteConversation(conv.id); $event.stopPropagation()"
+                    class="delete-conv-btn absolute top-2 right-2 text-white opacity-0 group-hover:opacity-70 hover:opacity-100 transition-all duration-200 transform hover:scale-125"
+                    title="Delete">
+                    <i class="fa-solid fa-trash text-xs"></i>
+                </button>
+            </div>
+        </div>
+
+        <div
+            class="mt-auto pt-4 border-t border-green-700 dark:border-green-600 text-center text-xs text-green-300 dark:text-green-300">
+            Plant Care Assistant v1.0
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden">
+        <!-- Header (Mobile) -->
+        <div class="md:hidden flex items-center justify-between p-4 bg-green-700 dark:bg-green-800 text-white">
+            <button id="toggle-history-btn" (click)="toggleHistory()"
+                class="p-2 rounded-lg hover:bg-green-600 dark:hover:bg-green-700 transition-all duration-200 transform hover:scale-110">
+                <i class="fa-solid fa-history"></i>
+            </button>
+            <h1 class="font-bold text-xl flex items-center">
+                <i class="fa-solid fa-seedling mr-2 animate-plant-pulse"></i> Plant Care
+            </h1>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="flex-1 overflow-hidden flex flex-col">
+            <div id="messages-container"
+                class="p-4 flex-1 overflow-y-auto bg-green-50 dark:bg-green-900 scrollbar-thin scrollbar-thumb-green-200 dark:scrollbar-thumb-gray-500 scrollbar-track-green-50 dark:scrollbar-track-gray-900 relative">
+                <div id="welcome-screen"
+                    class="h-full flex flex-col items-center justify-center text-green-800 dark:text-gray-200 p-4 animate-fade-in relative z-10"
+                    [class.hidden]="messages.length > 0">
+                    <div class="text-center max-w-lg w-full">
+                        <div class="relative inline-block mb-6">
+                            <i
+                                class="fa-solid fa-leaf text-5xl text-green-600 dark:text-green-400 mx-auto animate-bounce-slow"></i>
+                            <i
+                                class="fa-solid fa-leaf absolute -top-2 -left-3 text-xl text-green-400 dark:text-green-300 animate-spin-slow"></i>
+                            <i
+                                class="fa-solid fa-leaf absolute -bottom-2 -right-3 text-xl text-green-400 dark:text-green-300 animate-spin-slow-reverse"></i>
+                        </div>
+
+                        <h2 class="text-2xl font-bold mb-2">Abo Qurdan</h2>
+                        <p class="mb-8 text-lg">Ask me anything about plant care, diseases, or gardening tips!</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 w-full" id="suggested-questions">
+                            <button *ngFor="let question of suggestedQuestions"
+                                (click)="fillInputWithQuestion(question)"
+                                class="bg-white dark:bg-green-800 border border-green-200 dark:border-green-600 hover:border-green-300 dark:hover:border-green-500 text-green-700 dark:text-green-200 px-4 py-3 rounded-lg text-sm md:text-base transition-all duration-200 hover:shadow-sm hover:bg-green-50 dark:hover:bg-green-700 flex items-center justify-center">
+                                <i class="fa-solid fa-leaf mr-2 text-green-400 dark:text-green-300 text-sm"></i> {{
+                                question }}
+                            </button>
+                        </div>
+
+                        <div class="mt-6 text-sm text-green-500 dark:text-green-300 flex items-center justify-center">
+                            <i class="fa-solid fa-circle-info mr-2"></i>
+                            Tap any question to get instant advice
+                        </div>
+                    </div>
+                </div>
+
+                <div id="chat-messages" class="space-y-4 pb-4" [class.hidden]="messages.length === 0">
+                    <ng-container *ngFor="let msg of messages; let i = index">
+                        <div
+                            class="flex {{ msg.user ? 'justify-end' : 'justify-start' }} {{ i === messages.length - 1 ? 'animate-slide-up' : 'animate-fade-in' }}">
+                            <div
+                                class="{{ msg.user ? 'bg-green-600 dark:bg-green-700 text-white hover:bg-green-550 dark:hover:bg-green-600' : 'bg-white dark:bg-green-800 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-600 hover:border-green-300 dark:hover:border-green-500' }} rounded-lg p-4 max-w-[90%] md:max-w-[80%] shadow-sm relative">
+                                <ng-container *ngIf="editingMessageId === i; else messageContent">
+                                    <div class="flex flex-col">
+                                        <textarea
+                                            class="w-full p-2 mb-2 text-gray-800 dark:text-gray-200 rounded border border-green-300 dark:border-green-600 focus:ring-2 focus:ring-green-400 dark:focus:ring-green-500 bg-white dark:bg-green-900"
+                                            rows="3" [(ngModel)]="editText"></textarea>
+                                        <div class="flex justify-end space-x-2">
+                                            <button
+                                                class="px-3 py-1 bg-gray-300 dark:bg-green-600 rounded hover:bg-green-400 dark:hover:bg-green-500 transition-colors"
+                                                (click)="cancelEditing()">Cancel</button>
+                                            <button
+                                                class="px-3 py-1 bg-green-500 dark:bg-green-600 text-white rounded hover:bg-green-600 dark:hover:bg-green-700 transition-colors"
+                                                (click)="saveEdit(i)">Save</button>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <ng-template #messageContent>
+                                    <div class="flex items-start">
+                                        <ng-container *ngIf="!msg.user">
+                                            <div class="mr-3 mt-0.5 text-green-500 dark:text-green-300"><i
+                                                    class="fa-solid fa-leaf animate-plant-pulse"></i></div>
+                                        </ng-container>
+                                        <div class="flex-1">
+                                            <div class="prose prose-green max-w-none message-content"
+                                                [innerHTML]="parseMarkdown(msg.text)"></div>
+                                            <div
+                                                class="{{ msg.user ? 'text-green-100' : 'text-green-500 dark:text-green-300' }} text-xs mt-1 flex justify-between items-center">
+                                                <span>{{ formatTimestamp(msg.timestamp) }}{{ msg.edited ? ' (edited)' :
+                                                    '' }}</span>
+                                                <ng-container *ngIf="msg.user">
+                                                    <button class="ml-2 opacity-70 hover:opacity-100 transition-opacity"
+                                                        title="Edit message" (click)="startEditing(i, msg.text)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3"
+                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                        </svg>
+                                                    </button>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div *ngIf="loading" class="flex justify-start animate-pulse">
+                        <div
+                            class="rounded-lg p-4 shadow-sm bg-white dark:bg-green-800 border border-green-200 dark:border-green-600 text-green-800 dark:text-green-200 max-w-[80%]">
+                            <div class="flex items-center">
+                                <div class="relative mr-3">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i
+                                            class="fa-solid fa-leaf text-green-500 dark:text-green-300 animate-spin-slow"></i>
+                                    </div>
+                                    <div class="w-6 h-6 opacity-20">
+                                        <i class="fa-solid fa-leaf text-green-700 dark:text-green-500"></i>
+                                    </div>
+                                </div>
+                                <span class="bg-green-100 dark:bg-green-700 text-transparent rounded animate-pulse">
+                                    Researching your plant question...
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-4 border-t border-green-200 dark:border-green-700 bg-white dark:bg-green-800">
+                <div class="flex items-end">
+                    <div class="flex-1 relative">
+                        <input type="text" id="message-input" [formControl]="messageInput" (keydown)="onKeydown($event)"
+                            class="w-full placeholder:text-gray-700 dark:placeholder:text-gray-100 p-3 border border-green-300 dark:border-green-600 rounded-lg outline-none focus:ring-2 focus:ring-green-400 dark:focus:ring-green-500 transition-all duration-200 pr-12 bg-white dark:bg-green-900 text-green-800 dark:text-green-200"
+                            placeholder="Ask about your plants (e.g., 'Why are my leaves yellow?')..." />
+                        <button id="clear-input-btn" (click)="clearInput()"
+                            class="absolute right-16 top-3 text-gray-400 hover:text-gray-600 dark:hover:text-green-300 transition-colors"
+                            [class.hidden]="!messageInput.value">
+                            ✕
+                        </button>
+                    </div>
+                    <button id="send-message-btn" (click)="onSendMessage()"
+                        [disabled]="!messageInput.value?.trim() || loading"
+                        class="ml-2 bg-green-600 dark:bg-green-700 text-white p-3 rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 flex items-center justify-center h-[48px] w-[48px] shadow-md hover:shadow-lg"
+                        title="Send message">
+                        <i
+                            class="fa-solid fa-paper-plane transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

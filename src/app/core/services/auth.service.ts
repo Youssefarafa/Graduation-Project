@@ -32,12 +32,12 @@ export class AuthService {
           const decoded = jwtDecode(token);
           console.log(decoded);
         } catch (error) {
-          this._Router.navigate(['/Start/Login']);
+          this._Router.navigate(['/Start/Home']);
           localStorage.removeItem('token');
           this.cookieService.delete('auth_token');
         }
       } else {
-        this._Router.navigate(['/Start/Login']);
+        this._Router.navigate(['/Start/Home']);
         localStorage.removeItem('token');
         this.cookieService.delete('auth_token');
       }
