@@ -37,7 +37,7 @@ import { NgxCaptchaModule } from 'ngx-captcha';
   selector: 'app-login',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, NgIf, NgClass, RouterLink,NgxCaptchaModule],
+  imports: [ReactiveFormsModule, NgIf, NgClass, RouterLink, NgxCaptchaModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -45,8 +45,8 @@ export class LoginComponent implements OnInit {
   private readonly _AuthService = inject(AuthService);
   private readonly _Router = inject(Router);
   private readonly cookieService = inject(CookieService);
-    isDarkMode = false;
-    _DarkMode = inject(NavbarService);
+  isDarkMode = false;
+  _DarkMode = inject(NavbarService);
   login = new FormGroup({
     recaptcha: new FormControl(null, [Validators.required]),
     email: new FormControl('', [
@@ -170,16 +170,15 @@ export class LoginComponent implements OnInit {
           })
           .subscribe({
             next: (res) => {
-              if (res.message == 'success') {
-                localStorage.setItem('token', res.token);
-                this.cookieService.set('auth_token', res.token);
-                this._AuthService.saveUserData();
-                console.log('res:  ', res);
-                this.errsubmitmessage = '';
-                this.isSubnitClick = false;
-                this.cdRef.detectChanges();
-                this._Router.navigate(['/User/Shop']);
-              }
+              localStorage.setItem('token', res.token);
+              this.cookieService.set('auth_token', res.token);
+              this._AuthService.saveUserData();
+              console.log('res:  ', res);
+              this.errsubmitmessage = '';
+              this.isSubnitClick = false;
+              localStorage.setItem('register', JSON.stringify(res) || '');
+              this.cdRef.detectChanges();
+              this._Router.navigate(['/User/Shop']);
             },
             error: (err: HttpErrorResponse) => {
               console.log('err:  ', err);
@@ -243,10 +242,34 @@ export class LoginComponent implements OnInit {
       provider.addScope('email');
       await this.auth.signOut();
       const result = await signInWithPopup(this.auth, provider);
-      //?  result and this.typeAuthByFirbase will send
       const user = result.user;
-      console.log('User signed in:', user);
-      await this.router.navigate(['/User/Shop']);
+      const idToken = await user.getIdToken();
+      this._AuthService.registerWithFirebase({ idToken: idToken }).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          this.cookieService.set('auth_token', res.token);
+          this._AuthService.saveUserData();
+          console.log('res:  ', res);
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          localStorage.setItem('register', JSON.stringify(res) || '');
+          this.cdRef.detectChanges();
+          this._Router.navigate(['/User/Shop']);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log('err:  ', err);
+          console.log('err:  ', err.error.message);
+          this.errsubmitmessage = err.error.message;
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+        complete: () => {
+          console.log('complete the signup request');
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+      });
     } catch (error) {
       console.error('Google Sign-In Error:', error);
       this.handleSignInError(error);
@@ -259,62 +282,110 @@ export class LoginComponent implements OnInit {
     }
   }
 
-    async onSignInWithFacebook() {
-      try {
-        this.ngZone.run(() => {
-          this.isSubmissionInProgress = true;
-          this.typeAuthByFirbase = 'Facebook';
+  async onSignInWithFacebook() {
+    try {
+      this.ngZone.run(() => {
+        this.isSubmissionInProgress = true;
+        this.typeAuthByFirbase = 'Facebook';
+        this.cdRef.detectChanges();
+      });
+      const provider = new FacebookAuthProvider();
+      provider.addScope('email'); // Optional, but useful
+      provider.addScope('public_profile');
+      await this.auth.signOut();
+      const result = await signInWithPopup(this.auth, provider);
+      const user = result.user;
+      const idToken = await user.getIdToken();
+      this._AuthService.registerWithFirebase({ idToken: idToken }).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          this.cookieService.set('auth_token', res.token);
+          this._AuthService.saveUserData();
+          console.log('res:  ', res);
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          localStorage.setItem('register', JSON.stringify(res) || '');
           this.cdRef.detectChanges();
-        });
-        const provider = new FacebookAuthProvider();
-        provider.addScope('email'); // Optional, but useful
-        provider.addScope('public_profile');
-        await this.auth.signOut();
-        const result = await signInWithPopup(this.auth, provider);
-        //?  result and this.typeAuthByFirbase will send
-        const user = result.user;
-        console.log('user signed in:', user);
-        await this.router.navigate(['/User/Shop']);
-      } catch (error) {
-        console.error('Sign-in Error:', error);
-        this.handleSignInError(error);
-      } finally {
-        this.ngZone.run(() => {
-          this.isSubmissionInProgress = false;
-          this.typeAuthByFirbase = '';
+          this._Router.navigate(['/User/Shop']);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log('err:  ', err);
+          console.log('err:  ', err.error.message);
+          this.errsubmitmessage = err.error.message;
+          this.isSubnitClick = false;
           this.cdRef.detectChanges();
-        });
-      }
+        },
+        complete: () => {
+          console.log('complete the signup request');
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+      });
+    } catch (error) {
+      console.error('Sign-in Error:', error);
+      this.handleSignInError(error);
+    } finally {
+      this.ngZone.run(() => {
+        this.isSubmissionInProgress = false;
+        this.typeAuthByFirbase = '';
+        this.cdRef.detectChanges();
+      });
     }
-  
-    async onSignInWithYahoo() {
-      try {
-        this.ngZone.run(() => {
-          this.isSubmissionInProgress = true;
-          this.typeAuthByFirbase = 'Yahoo';
+  }
+
+  async onSignInWithYahoo() {
+    try {
+      this.ngZone.run(() => {
+        this.isSubmissionInProgress = true;
+        this.typeAuthByFirbase = 'Yahoo';
+        this.cdRef.detectChanges();
+      });
+      const provider = new OAuthProvider('yahoo.com');
+      provider.addScope('email');
+      provider.addScope('profile');
+      await this.auth.signOut();
+      const result = await signInWithPopup(this.auth, provider);
+      const user = result.user;
+      const idToken = await user.getIdToken();
+      this._AuthService.registerWithFirebase({ idToken: idToken }).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          this.cookieService.set('auth_token', res.token);
+          this._AuthService.saveUserData();
+          console.log('res:  ', res);
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          localStorage.setItem('register', JSON.stringify(res) || '');
           this.cdRef.detectChanges();
-        });
-        const provider = new OAuthProvider('yahoo.com');
-        provider.addScope('email');
-        provider.addScope('profile');
-        await this.auth.signOut();
-        const result = await signInWithPopup(this.auth, provider);
-        //?  result and this.typeAuthByFirbase will send
-        const user = result.user;
-        console.log('Yahoo user:', user);
-        await this.router.navigate(['/User/Shop']);
-      } catch (error) {
-        console.error('Yahoo Sign-in Error:', error);
-        this.handleSignInError(error);
-      } finally {
-        this.ngZone.run(() => {
-          this.isSubmissionInProgress = false;
-          this.typeAuthByFirbase = '';
+          this._Router.navigate(['/User/Shop']);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log('err:  ', err);
+          console.log('err:  ', err.error.message);
+          this.errsubmitmessage = err.error.message;
+          this.isSubnitClick = false;
           this.cdRef.detectChanges();
-        });
-      }
+        },
+        complete: () => {
+          console.log('complete the signup request');
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+      });
+    } catch (error) {
+      console.error('Yahoo Sign-in Error:', error);
+      this.handleSignInError(error);
+    } finally {
+      this.ngZone.run(() => {
+        this.isSubmissionInProgress = false;
+        this.typeAuthByFirbase = '';
+        this.cdRef.detectChanges();
+      });
     }
-  
+  }
+
   handleSignInError(error: any): void {
     console.error('Google Sign-In Error:', error);
     const errorMessages: { [key: string]: string } = {

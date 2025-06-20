@@ -1,1 +1,382 @@
-<p>account works!</p>
+<div class="min-h-screen py-12 px-4 bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:to-green-950">
+    <div class="max-w-7xl mx-auto">
+        <div class="relative mb-12">
+            <div class="absolute top-4 right-4 space-x-3 z-10">
+                <button (click)="showForgotPasswordPage()" class="px-4 py-2 bg-white dark:bg-gray-800 text-plant-primary dark:text-plant-primary-dark rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+                    <i class="fas fa-lock mr-2"></i> Reset Password
+                </button>
+            </div>
+            <div class="glass-effect rounded-3xl shadow-2xl overflow-hidden">
+                <div
+                    class="h-48 bg-gradient-to-r from-plant-primary-light to-plant-secondary-light dark:from-plant-primary-dark dark:to-plant-secondary-dark relative">
+                    <div
+                        class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent dark:from-gray-700">
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center -mt-24 pb-8">
+                    <div #profileImageContainer (click)="handleProfileImageClick()"
+                        class="relative cursor-pointer group">
+                        <div
+                            class="w-48 h-48 border-4 border-white dark:border-gray-700 shadow-xl rounded-full bg-white dark:bg-gray-800 flex items-center justify-center text-4xl overflow-hidden">
+                            <div #avatarFallback class="text-plant-accent-light dark:text-plant-accent-dark"
+                                [class.hidden]="profileImage">
+                                {{ getInitials(profileForm.get('name')?.value) }}
+                            </div>
+                            <img #avatarImage [src]="profileImage || ''" [class.hidden]="!profileImage"
+                                class="w-full h-full object-cover" alt="Profile Image">
+                        </div>
+                        <div
+                            class="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="text-white dark:text-gray-200 text-sm"><i class="fas fa-camera mr-2"></i>
+                                Change Photo</span>
+                        </div>
+                    </div>
+                    <input type="file" #profileImageInput (change)="handleImageChange($event)" accept="image/*"
+                        class="hidden">
+                </div>
+            </div>
+        </div>
+        <div class="space-y-8">
+            <div id="profilePage" [ngClass]="{'hidden': currentPage !== 'profile','block': currentPage === 'profile'}">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="animate-fade-in">
+                        <div class="glass-effect rounded-3xl shadow-xl overflow-hidden">
+                            <div class="px-8 py-6 border-b border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center justify-between">
+                                    <h2
+                                        class="text-2xl font-bold text-plant-dark dark:text-plant-dark-dark flex items-center">
+                                        <i
+                                            class="fas fa-user-circle mr-3 text-plant-accent-light dark:text-plant-accent-dark"></i>
+                                        Profile Details
+                                    </h2>
+                                    <button (click)="toggleEditMode()"
+                                        class="px-6 py-2 bg-plant-primary-light dark:bg-plant-primary-dark text-white rounded-full hover:bg-plant-dark-light dark:hover:bg-plant-dark-dark transition-all duration-300 shadow-lg">
+                                        <i class="fas fa-edit mr-2"></i>
+                                        {{ isEditing ? 'Cancel Edit' : 'Edit Profile' }}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div *ngIf="!isEditing" class="p-8 space-y-8">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="bg-plant-light-light dark:bg-plant-light-dark rounded-2xl p-6">
+                                        <h3
+                                            class="text-sm font-medium text-plant-dark-light/60 dark:text-plant-dark-dark/60 mb-2">
+                                            <i class="fas fa-user mr-2"></i>Full Name
+                                        </h3>
+                                        <p class="text-xl font-semibold text-plant-dark dark:text-plant-dark-dark">
+                                            {{ profileData.name || 'Not provided' }}
+                                        </p>
+                                    </div>
+
+                                    <div class="bg-plant-light-light dark:bg-plant-light-dark rounded-2xl p-6">
+                                        <h3
+                                            class="text-sm font-medium text-plant-dark-light/60 dark:text-plant-dark-dark/60 mb-2">
+                                            <i class="fas fa-phone mr-2"></i>Phone Number
+                                        </h3>
+                                        <p class="text-xl font-semibold text-plant-dark dark:text-plant-dark-dark">
+                                            {{ profileData.phone || 'Not provided' }}
+                                        </p>
+                                    </div>
+
+                                    <div class="bg-plant-light-light dark:bg-plant-light-dark rounded-2xl p-6">
+                                        <h3
+                                            class="text-sm font-medium text-plant-dark-light/60 dark:text-plant-dark-dark/60 mb-2">
+                                            <i class="fas fa-map-marker-alt mr-2"></i>Address
+                                        </h3>
+                                        <p class="text-xl font-semibold text-plant-dark dark:text-plant-dark-dark">
+                                            {{ profileData.address || 'Not provided' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="isEditing" class="p-8">
+                                <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="space-y-6">
+                                    <div class="space-y-4">
+                                        <label
+                                            class="block text-sm font-medium text-plant-dark dark:text-plant-dark-dark">
+                                            <i class="fas fa-user mr-2"></i>Full Name
+                                        </label>
+                                        <input formControlName="name" type="text"
+                                            class="w-full px-6 py-3 bg-plant-light-light dark:text-green-200 dark:placeholder:text-green-100 dark:bg-plant-light-dark border-0 rounded-xl focus:ring-2 focus:ring-plant-primary-light dark:focus:ring-plant-primary-dark"
+                                            [ngClass]="{'border-red-500': profileForm.get('name')?.invalid && profileForm.get('name')?.touched}">
+                                        <p *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched"
+                                            class="text-sm text-red-500">Name is required (letters and spaces only)</p>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <label
+                                            class="block text-sm font-medium text-plant-dark dark:text-plant-dark-dark">
+                                            <i class="fas fa-phone mr-2"></i>Phone Number
+                                        </label>
+                                        <input formControlName="phone" type="tel"
+                                            class="w-full px-6 py-3 bg-plant-light-light dark:text-green-200 dark:placeholder:text-green-100 dark:bg-plant-light-dark border-0 rounded-xl focus:ring-2 focus:ring-plant-primary-light dark:focus:ring-plant-primary-dark"
+                                            [ngClass]="{'border-red-500': profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched}">
+                                        <p *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched"
+                                            class="text-sm text-red-500">Please enter a valid phone number</p>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <label
+                                            class="block text-sm font-medium text-plant-dark dark:text-plant-dark-dark">
+                                            <i class="fas fa-map-marker-alt mr-2"></i>Address
+                                        </label>
+                                        <input formControlName="address" type="text"
+                                            class="w-full px-6 py-3 bg-plant-light-light dark:text-green-200 dark:placeholder:text-green-100 dark:bg-plant-light-dark border-0 rounded-xl focus:ring-2 focus:ring-plant-primary-light dark:focus:ring-plant-primary-dark"
+                                            [ngClass]="{'border-red-500': profileForm.get('address')?.invalid && profileForm.get('address')?.touched}">
+                                        <p *ngIf="profileForm.get('address')?.invalid && profileForm.get('address')?.touched"
+                                            class="text-sm text-red-500">Address cannot exceed 200 characters</p>
+                                    </div>
+
+                                    <div class="flex justify-end space-x-4 pt-6">
+                                        <button type="button" (click)="toggleEditMode()"
+                                            class="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-plant-dark dark:text-plant-dark-dark rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+                                            <i class="fas fa-times mr-2"></i>Cancel
+                                        </button>
+                                        <button type="submit"
+                                            class="px-6 py-3 bg-plant-accent-light dark:bg-plant-accent-dark text-white rounded-xl hover:bg-plant-dark-light dark:hover:bg-plant-dark-dark transition-all duration-300 shadow-lg">
+                                            <i class="fas fa-check mr-2"></i>Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="animate-fade-in">
+                        <div class="glass-effect rounded-3xl shadow-xl overflow-hidden">
+                            <div class="px-8 py-6 border-b border-gray-100 dark:border-gray-700">
+                                <h2
+                                    class="text-2xl font-bold text-plant-dark dark:text-plant-dark-dark flex items-center">
+                                    <i
+                                        class="fas fa-envelope mr-3 text-plant-accent-light dark:text-plant-accent-dark"></i>
+                                    Contact Support
+                                </h2>
+                            </div>
+
+                            <div class="p-8">
+                                <form [formGroup]="contactForm" (ngSubmit)="sendEmail()" class="space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div class="space-y-4">
+                                            <label
+                                                class="block text-sm font-medium text-plant-dark dark:text-plant-dark-dark">
+                                                <i class="fas fa-user mr-2"></i>Your Name
+                                            </label>
+                                            <input formControlName="contactName" type="text"
+                                                class="w-full px-6 py-3 bg-plant-light-light dark:text-green-200 dark:placeholder:text-green-100 dark:bg-plant-light-dark border-0 rounded-xl focus:ring-2 focus:ring-plant-primary-light dark:focus:ring-plant-primary-dark"
+                                                [ngClass]="{'border-red-500': contactForm.get('contactName')?.invalid && contactForm.get('contactName')?.touched}"
+                                                required>
+                                            <p *ngIf="contactForm.get('contactName')?.invalid && contactForm.get('contactName')?.touched"
+                                                class="text-sm text-red-500">Name is required (letters and spaces only)
+                                            </p>
+                                        </div>
+
+                                        <div class="space-y-4">
+                                            <label
+                                                class="block text-sm font-medium text-plant-dark dark:text-plant-dark-dark">
+                                                <i class="fas fa-envelope mr-2"></i>Email Address
+                                            </label>
+                                            <input formControlName="contactEmail" type="email"
+                                                class="w-full px-6 py-3 bg-plant-light-light dark:text-green-200 dark:placeholder:text-green-100 dark:bg-plant-light-dark border-0 rounded-xl focus:ring-2 focus:ring-plant-primary-light dark:focus:ring-plant-primary-dark"
+                                                [ngClass]="{'border-red-500': contactForm.get('contactEmail')?.invalid && contactForm.get('contactEmail')?.touched}"
+                                                required>
+                                            <p *ngIf="contactForm.get('contactEmail')?.invalid && contactForm.get('contactEmail')?.touched"
+                                                class="text-sm text-red-500">Please enter a valid email address</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <label
+                                            class="block text-sm font-medium text-plant-dark dark:text-plant-dark-dark">
+                                            <i class="fas fa-tag mr-2"></i>Subject
+                                        </label>
+                                        <input formControlName="contactSubject" type="text"
+                                            class="w-full px-6 py-3 bg-plant-light-light dark:text-green-200 dark:placeholder:text-green-100 dark:bg-plant-light-dark border-0 rounded-xl focus:ring-2 focus:ring-plant-primary-light dark:focus:ring-plant-primary-dark"
+                                            [ngClass]="{'border-red-500': contactForm.get('contactSubject')?.invalid && contactForm.get('contactSubject')?.touched}"
+                                            required>
+                                        <p *ngIf="contactForm.get('contactSubject')?.invalid && contactForm.get('contactSubject')?.touched"
+                                            class="text-sm text-red-500">Subject is required (max 100 characters)</p>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <label
+                                            class="block text-sm font-medium text-plant-dark dark:text-plant-dark-dark">
+                                            <i class="fas fa-comment-dots mr-2"></i>Message
+                                        </label>
+                                        <textarea formControlName="contactMessage" rows="5"
+                                            class="w-full px-6 py-3 bg-plant-light-light dark:text-green-200 dark:placeholder:text-green-100 dark:bg-plant-light-dark border-0 rounded-xl focus:ring-2 focus:ring-plant-primary-light dark:focus:ring-plant-primary-dark"
+                                            placeholder="Please describe your issue or feedback..."
+                                            [ngClass]="{'border-red-500': contactForm.get('contactMessage')?.invalid && contactForm.get('contactMessage')?.touched}"
+                                            required></textarea>
+                                        <p *ngIf="contactForm.get('contactMessage')?.invalid && contactForm.get('contactMessage')?.touched"
+                                            class="text-sm text-red-500">Message is required (max 1000 characters)</p>
+                                    </div>
+
+                                    <button type="submit" [disabled]="isSubmitting"
+                                        class="w-full px-6 py-4 bg-plant-accent-light dark:bg-plant-accent-dark text-white rounded-xl hover:bg-plant-accent-hoverr dark:hover:bg-plant-accent-hoverr transition-all duration-300 shadow-lg">
+                                        <i class="fas fa-paper-plane mr-2"></i>
+                                        {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+                                        <span *ngIf="isSubmitting" class="ml-2">
+                                            <div
+                                                class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin inline-block">
+                                            </div>
+                                        </span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="forgotPasswordPage" [ngClass]="{'hidden': currentPage !== 'forgotPassword'}">
+                <div class="max-w-md mx-auto">
+                    <div class="glass-effect rounded-3xl shadow-xl overflow-hidden animate-bounce-in">
+                        <div class="px-8 py-6 border-b border-gray-100 dark:border-gray-700">
+                            <h2 class="text-2xl font-bold text-center text-plant-dark dark:text-plant-dark-dark">
+                                Password Recovery</h2>
+                            <p class="text-center text-plant-dark-light/70 dark:text-plant-dark-dark/70 mt-2">{{
+                                forgotPasswordDescription }}</p>
+                        </div>
+
+                        <div class="p-8 space-y-6">
+                            <form *ngIf="showForgotPasswordForm" [formGroup]="forgotPasswordForm"
+                                (ngSubmit)="handleSendVerification()" class="space-y-6">
+                                <div class="space-y-4">
+                                    <label class="block text-sm font-medium text-plant-dark dark:text-plant-dark-dark">
+                                        <i class="fas fa-envelope mr-2"></i>Email Address
+                                    </label>
+                                    <input formControlName="email" type="email" placeholder="your.email@example.com"
+                                        class="w-full px-6 py-3 bg-plant-light-light dark:text-green-200 dark:placeholder:text-green-100 dark:bg-plant-light-dark border-0 rounded-xl focus:ring-2 focus:ring-plant-primary-light dark:focus:ring-plant-primary-dark"
+                                        [ngClass]="{'border-red-500': forgotPasswordForm.get('email')?.invalid && forgotPasswordForm.get('email')?.touched}"
+                                        required>
+                                    <p *ngIf="emailError || (forgotPasswordForm.get('email')?.invalid && forgotPasswordForm.get('email')?.touched)"
+                                        class="text-sm text-red-500">{{ emailError || 'Please enter a valid email
+                                        address' }}</p>
+                                </div>
+
+                                <button type="submit" [disabled]="isSubmitting"
+                                    class="w-full px-6 py-4 bg-plant-accent-light dark:bg-plant-accent-dark text-white rounded-xl hover:bg-plant-accent-hoverr dark:hover:bg-plant-accent-hoverr transition-all duration-300 shadow-lg">
+                                    <i class="fas fa-paper-plane mr-2"></i>
+                                    {{ isSubmitting ? 'Sending...' : 'Send Verification Code' }}
+                                </button>
+                            </form>
+
+                            <form *ngIf="showVerificationForm" [formGroup]="verificationForm"
+                                (ngSubmit)="handleVerifyCode()" class="space-y-6">
+                                <div class="space-y-4">
+                                    <label class="block text-sm font-medium text-plant-dark dark:text-plant-dark-dark">
+                                        <i class="fas fa-key mr-2"></i>Verification Code
+                                    </label>
+                                    <input formControlName="verificationCode" type="text"
+                                        placeholder="Enter 6-digit code" maxlength="6"
+                                        class="w-full px-6 py-3 bg-plant-light-light dark:text-green-200 dark:placeholder:text-green-100 dark:bg-plant-light-dark border-0 rounded-xl focus:ring-2 focus:ring-plant-primary-light dark:focus:ring-plant-primary-dark"
+                                        [ngClass]="{'border-red-500': verificationForm.get('verificationCode')?.invalid && verificationForm.get('verificationCode')?.touched}"
+                                        required>
+                                    <p *ngIf="verificationError || (verificationForm.get('verificationCode')?.invalid && verificationForm.get('verificationCode')?.touched)"
+                                        class="text-sm text-red-500">{{ verificationError || 'Please enter a valid
+                                        6-digit code' }}</p>
+                                </div>
+
+                                <button type="submit"
+                                    class="w-full px-6 py-4 bg-plant-accent-light dark:bg-plant-accent-dark text-white rounded-xl hover:bg-plant-dark-light dark:hover:bg-plant-dark-dark transition-all duration-300 shadow-lg">
+                                    <i class="fas fa-check-circle mr-2"></i>Verify Code
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="px-8 py-6 border-t border-gray-100 dark:border-gray-700">
+                        <button (click)="goBackFromForgotPassword()"
+                            class="w-full px-6 py-3 bg-gray-100 dark:bg-gray-700 text-plant-dark dark:text-plant-dark-dark rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+                            <i class="fas fa-arrow-left mr-2"></i>Back
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="resetPasswordPage" [ngClass]="{'hidden': currentPage !== 'resetPassword'}">
+            <div class="max-w-md mx-auto">
+                <div class="glass-effect rounded-3xl shadow-xl overflow-hidden animate-bounce-in">
+                    <div class="px-8 py-6 border-b border-gray-100 dark:border-gray-700">
+                        <h2 class="text-2xl font-bold text-center text-plant-dark dark:text-plant-dark-dark">Reset
+                            Password</h2>
+                        <p class="text-center text-plant-dark-light/70 dark:text-plant-dark-dark/70 mt-2">{{
+                            resetPasswordDescription }}</p>
+                    </div>
+
+                    <div class="p-8 space-y-6">
+                        <form [formGroup]="resetPasswordForm" (ngSubmit)="handleResetPassword()" class="space-y-6">
+                            <div class="space-y-4">
+                                <label class="block text-sm font-medium text-plant-dark dark:text-plant-dark-dark">
+                                    <i class="fas fa-key mr-2"></i>New Password
+                                </label>
+                                <input formControlName="newPassword" type="password" placeholder="••••••••"
+                                    class="w-full px-6 py-3 bg-plant-light-light dark:text-green-200 dark:placeholder:text-green-100 dark:bg-plant-light-dark border-0 rounded-xl focus:ring-2 focus:ring-plant-primary-light dark:focus:ring-plant-primary-dark"
+                                    [ngClass]="{'border-red-500': resetPasswordForm.get('newPassword')?.invalid && resetPasswordForm.get('newPassword')?.touched}"
+                                    required>
+                                <p *ngIf="passwordError || (resetPasswordForm.get('newPassword')?.invalid && resetPasswordForm.get('newPassword')?.touched)"
+                                    class="text-sm text-red-500">{{ passwordError || 'Password must be at least 8
+                                    characters with uppercase, lowercase, and numbers' }}</p>
+                            </div>
+
+                            <div class="space-y-4">
+                                <label class="block text-sm font-medium text-plant-dark dark:text-plant-dark-dark">
+                                    <i class="fas fa-lock mr-2"></i>Confirm Password
+                                </label>
+                                <input formControlName="confirmPassword" type="password" placeholder="••••••••"
+                                    class="w-full px-6 py-3 bg-plant-light-light dark:text-green-200 dark:placeholder:text-green-100 dark:bg-plant-light-dark border-0 rounded-xl focus:ring-2 focus:ring-plant-primary-light dark:focus:ring-plant-primary-dark"
+                                    [ngClass]="{'border-red-500': resetPasswordForm.get('confirmPassword')?.invalid && resetPasswordForm.get('confirmPassword')?.touched}"
+                                    required>
+                                <p *ngIf="confirmPasswordError || (resetPasswordForm.errors?.['mismatch'] && resetPasswordForm.get('confirmPassword')?.touched)"
+                                    class="text-sm text-red-500">{{ confirmPasswordError || "Passwords don't match" }}
+                                </p>
+                            </div>
+
+                            <button type="submit"
+                                class="w-full px-6 py-4 bg-plant-accent-light dark:bg-plant-accent-dark text-white rounded-xl hover:bg-plant-accent-hoverr dark:hover:bg-plant-accent-hoverr transition-all duration-300 shadow-lg">
+                                <i class="fas fa-sync mr-2"></i>Update Password
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="px-8 py-6 border-t border-gray-100 dark:border-gray-700">
+                        <button (click)="showForgotPasswordPage()"
+                            class="w-full px-6 py-3 bg-gray-100 dark:bg-gray-700 text-plant-dark dark:text-plant-dark-dark rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+                            <i class="fas fa-arrow-left mr-2"></i>Back
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div #toast [class.translate-x-full]="!showToast"
+    class="fixed top-24 right-4 p-4 rounded-xl shadow-lg transform transition-transform duration-300 z-[9999] bg-green-200 dark:bg-green-700"
+    [class.bg-green-100]="toastType === 'success'" [class.border-green-500]="toastType === 'success'"
+    [class.bg-red-100]="toastType === 'error'" [class.border-red-500]="toastType === 'error'">
+    <div class="flex items-center">
+        <div class="mr-3">
+            <svg *ngIf="toastType === 'success'" class="w-5 h-5 text-green-500" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <svg *ngIf="toastType === 'error'" class="w-5 h-5 text-red-500" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </div>
+        <div>
+            <h3 class="font-semibold text-plant-dark dark:text-plant-dark-dark">{{ toastTitle }}</h3>
+            <p class="text-sm text-plant-dark-light/70 dark:text-plant-dark-dark/70">{{ toastMessage }}</p>
+        </div>
+        <button (click)="hideToast()"
+            class="ml-4 text-plant-dark-light/50 dark:text-plant-dark-dark/50 hover:text-plant-dark dark:hover:text-plant-dark-dark transition-colors">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>

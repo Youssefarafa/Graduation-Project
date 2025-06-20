@@ -35,6 +35,7 @@ import { SelectPaymentProcessComponent } from './Components/select-payment-proce
 import { TakeOrderCashComponent } from './Components/take-order-cash/take-order-cash.component';
 import { CVModel2Component } from './Components/cvmodel2/cvmodel2.component';
 import { SelectShippingOptionsComponent } from './Components/select-shipping-options/select-shipping-options.component';
+import { OrdersShopComponent } from './Components/orders-shop/orders-shop.component';
 // import { ArPlantComponent } from './Components/ar-plant/ar-plant.component';
 // !    canActivate:[isLoggedInGuard],canActivate:[authGuard],
 export const routes: Routes = [
@@ -84,8 +85,9 @@ export const routes: Routes = [
           { path: 'DetailsCheckout/:idCart', component: AdrressOrderComponent, title: 'Details Checkout | Shop',},
           { path: 'SelectPayment/:idCart', component: SelectPaymentProcessComponent, title: 'Select Payment | Shop',},
           { path: 'TakeOrderCash/:idCart', component: TakeOrderCashComponent, title: 'Take Order Cash | Shop',},
-          { path: 'SelectOptions/:idCart', component: SelectShippingOptionsComponent, title: 'Select Options | Shop',},
+          { path: 'SelectOptions/:idCart', component: SelectShippingOptionsComponent, title: 'Delivery Method | Shop',},
           { path: 'ProductDetails/:idProduct', component: ProductDetailsComponent, title: 'Product Details | Shop',},
+          { path: 'Orders', component: OrdersShopComponent, title: 'Orders | Shop',},
           // { path: 'ghg', component: ArPlantComponent },
         ],
       },
@@ -93,7 +95,7 @@ export const routes: Routes = [
       { path: 'CVModel', component: CVModelComponent, title: 'Predect Harmful Weeds',},
       { path: 'CVModel2', component: CVModel2Component, title: 'Predect Pests',},
       { path: 'DLModel', component: DLModelComponent, title: 'Predect Plant Disease',},
-      { path: 'Alert', component: AlertComponent, title: 'Alert',},
+      { path: 'Alert', component: AlertComponent, title: 'Reminder',},
       { path: 'Account', component: AccountComponent, title: 'My Account',},
     ],
   },

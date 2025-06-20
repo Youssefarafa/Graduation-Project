@@ -22,7 +22,6 @@ export class OurTeamComponent implements AfterViewInit {
       socialLinks: [
         { url: '#', icon: 'fa-brands fa-linkedin' },
         { url: '#', icon: 'fa-brands fa-github' },
-        { url: '#', icon: 'fa-brands fa-facebook' },
       ],
     },
     {
@@ -32,7 +31,6 @@ export class OurTeamComponent implements AfterViewInit {
       socialLinks: [
         { url: '#', icon: 'fa-brands fa-linkedin' },
         { url: '#', icon: 'fa-brands fa-github' },
-        { url: '#', icon: 'fa-brands fa-facebook' },
       ],
     },
     {
@@ -42,7 +40,6 @@ export class OurTeamComponent implements AfterViewInit {
       socialLinks: [
         { url: '#', icon: 'fa-brands fa-linkedin' },
         { url: '#', icon: 'fa-brands fa-github' },
-        { url: '#', icon: 'fa-brands fa-facebook' },
       ],
     },
     {
@@ -52,7 +49,6 @@ export class OurTeamComponent implements AfterViewInit {
       socialLinks: [
         { url: '#', icon: 'fa-brands fa-linkedin' },
         { url: '#', icon: 'fa-brands fa-github' },
-        { url: '#', icon: 'fa-brands fa-facebook' },
       ],
     },
     {
@@ -62,7 +58,6 @@ export class OurTeamComponent implements AfterViewInit {
       socialLinks: [
         { url: '#', icon: 'fa-brands fa-linkedin' },
         { url: '#', icon: 'fa-brands fa-github' },
-        { url: '#', icon: 'fa-brands fa-facebook' },
       ],
     },
     {
@@ -72,7 +67,6 @@ export class OurTeamComponent implements AfterViewInit {
       socialLinks: [
         { url: '#', icon: 'fa-brands fa-linkedin' },
         { url: '#', icon: 'fa-brands fa-github' },
-        { url: '#', icon: 'fa-brands fa-facebook' },
       ],
     },
     {
@@ -82,7 +76,6 @@ export class OurTeamComponent implements AfterViewInit {
       socialLinks: [
         { url: '#', icon: 'fa-brands fa-linkedin' },
         { url: '#', icon: 'fa-brands fa-github' },
-        { url: '#', icon: 'fa-brands fa-facebook' },
       ],
     },
     {
@@ -92,7 +85,6 @@ export class OurTeamComponent implements AfterViewInit {
       socialLinks: [
         { url: '#', icon: 'fa-brands fa-linkedin' },
         { url: '#', icon: 'fa-brands fa-github' },
-        { url: '#', icon: 'fa-brands fa-facebook' },
       ],
     },
     {
@@ -102,7 +94,6 @@ export class OurTeamComponent implements AfterViewInit {
       socialLinks: [
         { url: '#', icon: 'fa-brands fa-linkedin' },
         { url: '#', icon: 'fa-brands fa-github' },
-        { url: '#', icon: 'fa-brands fa-facebook' },
       ],
     },
     {
@@ -112,7 +103,6 @@ export class OurTeamComponent implements AfterViewInit {
       socialLinks: [
         { url: '#', icon: 'fa-brands fa-linkedin' },
         { url: '#', icon: 'fa-brands fa-github' },
-        { url: '#', icon: 'fa-brands fa-facebook' },
       ],
     },
   ];

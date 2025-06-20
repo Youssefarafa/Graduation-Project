@@ -7,6 +7,7 @@ import { CategoriesShopComponent } from '../categories-shop/categories-shop.comp
 import { WishListShopComponent } from '../wish-list-shop/wish-list-shop.component';
 import { CartShopComponent } from '../cart-shop/cart-shop.component';
 import { AdrressOrderComponent } from '../adrress-order/adrress-order.component';
+import { OrdersShopComponent } from '../orders-shop/orders-shop.component';
 // import { ArPlantComponent } from '../ar-plant/ar-plant.component';
 
 @Component({
@@ -18,7 +19,7 @@ import { AdrressOrderComponent } from '../adrress-order/adrress-order.component'
     ProductsShopComponent,
     CategoriesShopComponent,
     WishListShopComponent,
-    CartShopComponent,ProductDetailsComponent,AdrressOrderComponent
+    CartShopComponent,ProductDetailsComponent,AdrressOrderComponent,OrdersShopComponent
   ],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss',

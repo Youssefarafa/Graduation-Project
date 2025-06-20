@@ -241,9 +241,10 @@ export class SignupComponent implements OnInit, OnDestroy {
           .signup(
             // this.register.value
             {
-              // fname: this.register.get('fname')?.value ?? ('' as string),
-              name: this.register.get('lname')?.value ?? ('' as string),
               email: this.register.get('email')?.value ?? ('' as string),
+              fname: this.register.get('fname')?.value ?? ('' as string),
+              lname: this.register.get('lname')?.value ?? ('' as string),
+              PhoneNumber: '01024643785',
               password: this.register.get('password')?.value ?? ('' as string),
               rePassword:
                 this.register.get('rePassword')?.value ?? ('' as string),
@@ -251,9 +252,7 @@ export class SignupComponent implements OnInit, OnDestroy {
           )
           .subscribe({
             next: (res) => {
-              if (res.message == 'success') {
-                this._Router.navigate(['/Start/Login']);
-              }
+              this._Router.navigate(['/Start/Login']);
               console.log('res:  ', res);
               this.errsubmitmessage = '';
               this.isSubnitClick = false;
@@ -459,12 +458,35 @@ export class SignupComponent implements OnInit, OnDestroy {
       provider.addScope('email');
       await this.auth.signOut();
       const result = await signInWithPopup(this.auth, provider);
-      //?  result and this.typeAuthByFirbase will send
       const user = result.user;
-      console.log('User signed up:', user);
-      await this.router.navigate(['/Start/Home']);
+      const idToken = await user.getIdToken();
+      this._AuthService.registerWithFirebase({ idToken: idToken }).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          this._AuthService.saveUserData();
+          console.log('res:  ', res);
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          localStorage.setItem('register', JSON.stringify(res) || '');
+          this.cdRef.detectChanges();
+          this._Router.navigate(['/User/Shop']);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log('err:  ', err);
+          console.log('err:  ', err.error.message);
+          this.errsubmitmessage = err.error.message;
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+        complete: () => {
+          console.log('complete the signup request');
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+      });
     } catch (error) {
-      console.error('Google Sign-up Error:', error);
+      console.error('Google Sign-In Error:', error);
       this.handleSignUpError(error);
     } finally {
       this.ngZone.run(() => {
@@ -487,12 +509,35 @@ export class SignupComponent implements OnInit, OnDestroy {
       provider.addScope('public_profile');
       await this.auth.signOut();
       const result = await signInWithPopup(this.auth, provider);
-      //?  result and this.typeAuthByFirbase will send
       const user = result.user;
-      console.log('user signed up:', user);
-      await this.router.navigate(['/Start/Home']);
+      const idToken = await user.getIdToken();
+      this._AuthService.registerWithFirebase({ idToken: idToken }).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          this._AuthService.saveUserData();
+          console.log('res:  ', res);
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          localStorage.setItem('register', JSON.stringify(res) || '');
+          this.cdRef.detectChanges();
+          this._Router.navigate(['/User/Shop']);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log('err:  ', err);
+          console.log('err:  ', err.error.message);
+          this.errsubmitmessage = err.error.message;
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+        complete: () => {
+          console.log('complete the signup request');
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+      });
     } catch (error) {
-      console.error('Sign-up Error:', error);
+      console.error('Sign-in Error:', error);
       this.handleSignUpError(error);
     } finally {
       this.ngZone.run(() => {
@@ -515,12 +560,35 @@ export class SignupComponent implements OnInit, OnDestroy {
       provider.addScope('profile');
       await this.auth.signOut();
       const result = await signInWithPopup(this.auth, provider);
-      //?  result and this.typeAuthByFirbase will send
       const user = result.user;
-      console.log('Yahoo user:', user);
-      await this.router.navigate(['/Start/Home']);
+      const idToken = await user.getIdToken();
+      this._AuthService.registerWithFirebase({ idToken: idToken }).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          this._AuthService.saveUserData();
+          console.log('res:  ', res);
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          localStorage.setItem('register', JSON.stringify(res) || '');
+          this.cdRef.detectChanges();
+          this._Router.navigate(['/User/Shop']);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log('err:  ', err);
+          console.log('err:  ', err.error.message);
+          this.errsubmitmessage = err.error.message;
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+        complete: () => {
+          console.log('complete the signup request');
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+      });
     } catch (error) {
-      console.error('Yahoo Sign-up Error:', error);
+      console.error('Yahoo Sign-in Error:', error);
       this.handleSignUpError(error);
     } finally {
       this.ngZone.run(() => {

@@ -1,4 +1,11 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  Input,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import { CartService } from '../../core/services/cart.service';
 import { ToastrService } from 'ngx-toastr';
@@ -10,13 +17,19 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './button-cart.component.html',
   styleUrl: './button-cart.component.scss',
 })
-export class ButtonCartComponent implements OnInit {
+export class ButtonCartComponent implements OnInit, OnChanges {
   private readonly _CartService = inject(CartService);
   private readonly _ToastrService = inject(ToastrService);
+
   @Input() id!: string;
   @Input() product!: any;
-  messageerr:any=null;
+
+  messageerr: any = null;
+  isClick: boolean = false;
+  isInCart: boolean = false;
+
   constructor(private platformDetectionService: PlatformDetectionService) {}
+
   ngOnInit() {
     if (this.platformDetectionService.isBrowser) {
       console.log('Running in the browser');
@@ -28,23 +41,58 @@ export class ButtonCartComponent implements OnInit {
       });
 
       // Access the DOM safely after rendering
-      this.platformDetectionService.executeAfterDOMRender(() => {});
+      this.platformDetectionService.executeAfterDOMRender(() => {
+        // Check initial cart status
+        this.checkCartStatus();
+      });
     }
   }
 
-  isClick: boolean = false;
-  currentToastTimeout: any = null;
-  mouseleavecurrentToastTimeout: any = null;
+  ngOnChanges(changes: SimpleChanges) {
+    // Reset cart status when product ID changes
+    if (
+      changes['id'] &&
+      changes['id'].currentValue !== changes['id'].previousValue
+    ) {
+      this.isInCart = false;
+      this.checkCartStatus();
+    }
+  }
+
+  // Check if product is already in cart
+  checkCartStatus() {
+    this._CartService.GetUserCart().subscribe({
+      next: (cart) => {
+        this.isInCart = cart.items.some(
+          (item: any) => item.productId === this.id
+        );
+      },
+      error: (err) => {
+        console.error('Error checking cart status:', err);
+      },
+    });
+  }
+
   AddToCart() {
     this.isClick = true;
-    console.log(this.id);
+
+    // store current cart status before adding
+    const wasInCart = this.isInCart;
+
     this._CartService.addProductToCart(this.id).subscribe({
       next: (res) => {
-        this._CartService.counterCart.next(res.numOfCartItems);
-        this.messageerr=null;
-        console.log(res); //'Product added successfully to your cart'
+        this._CartService.counterCart.next(res.items.length);
+        this.messageerr = null;
+        this.isInCart = true;
+
+        // Use previous state to determine toast message
+        const des = wasInCart
+          ? 'Increase Product to Cart Successfully'
+          : 'Added Product to Cart Successfully';
+
+        // Show success toast
         const toastRef = this._ToastrService.success(
-          res.message,
+          des,
           'Successful operation!',
           {
             progressBar: true,
@@ -89,11 +137,10 @@ export class ButtonCartComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.log(err);
-        this.messageerr=err;
+        console.error(err);
+        this.messageerr = err;
       },
       complete: () => {
-        console.log('the adding to cart complete');
         this.isClick = false;
       },
     });

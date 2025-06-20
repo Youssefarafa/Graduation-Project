@@ -9,6 +9,7 @@ import {
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
+import { OrderService } from '../../core/services/order.service';
 
 @Component({
   selector: 'app-adrress-order',
@@ -21,6 +22,7 @@ export class AdrressOrderComponent implements OnInit {
   private readonly _PlatformDetectionService = inject(PlatformDetectionService);
   private readonly _ActivatedRoute = inject(ActivatedRoute);
   private readonly _Router = inject(Router);
+  private readonly _OrderService = inject(OrderService);
 
   typeDetails: FormGroup = new FormGroup({
     Street: new FormControl('', [
@@ -35,7 +37,7 @@ export class AdrressOrderComponent implements OnInit {
     ]),
     phone: new FormControl('', [
       Validators.required,
-      Validators.pattern(/^\+?[0-9]{9,15}$/),
+      Validators.pattern(/^01[0-9]{9}$/),
     ]),
     city: new FormControl('', [
       Validators.required,
@@ -43,7 +45,7 @@ export class AdrressOrderComponent implements OnInit {
       Validators.maxLength(15),
     ]),
   });
-  id: string|null = '';
+  id: string | null = '';
 
   ngOnInit() {
     if (this._PlatformDetectionService.isBrowser) {
@@ -75,10 +77,32 @@ export class AdrressOrderComponent implements OnInit {
   onSubmit() {
     this.isSubnitClick = true;
     if (this.typeDetails.valid) {
-      console.log('Submitted data:', this.typeDetails.value);
-      localStorage.setItem('addressForm', JSON.stringify(this.typeDetails.value));
-      this._Router.navigate([`/User/Shop/SelectOptions/${this.id}`]);
-      this.isSubnitClick = false;
+      console.log({
+        city: this.typeDetails.get('city')?.value ?? ('' as string),
+        street: this.typeDetails.get('Street')?.value ?? ('' as string),
+        country: this.typeDetails.get('Country')?.value ?? ('' as string),
+      });
+
+      this._OrderService
+        .AddUserAddress({
+          city: this.typeDetails.get('city')?.value ?? ('' as string),
+          street: this.typeDetails.get('Street')?.value ?? ('' as string),
+          country: this.typeDetails.get('Country')?.value ?? ('' as string),
+        })
+        .subscribe({
+          next: (res) => {
+            console.log('Submitted data:', this.typeDetails.value);
+            localStorage.setItem(
+              'addressForm',
+              JSON.stringify(this.typeDetails.value)
+            );
+            this._Router.navigate([`/User/Shop/SelectOptions/${this.id}`]);
+            this.isSubnitClick = false;
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
     } else {
       this.typeDetails.markAllAsTouched();
       this.isSubnitClick = false;

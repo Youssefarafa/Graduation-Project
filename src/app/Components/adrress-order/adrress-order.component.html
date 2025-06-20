@@ -33,7 +33,7 @@
                 class="block text-base ps-2 font-semibold font-Poppins mb-1 text-green-800 dark:text-green-100">Country:</label>
             <input formControlName="Country" type="text" placeholder="Enter your Country..." (keydown.enter)="City.focus()" #Country
                 class="w-full border border-green-600 dark:bg-gray-200 dark:border-green-600 rounded-lg p-2 text-gray-800 dark:text-gray-950 font-Signika placeholder:text-sm placeholder:font-Quicksand  focus:ring-2 focus:ring-green-400 dark:focus:ring-green-600 transition" />
-            <div *ngIf="typeDetails.get('city')?.touched && typeDetails.get('city')?.invalid" role="alert"
+            <div *ngIf="typeDetails.get('Country')?.touched && typeDetails.get('Country')?.invalid" role="alert"
                 class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-green-900 dark:text-red-400 dark:border-red-800">
                 <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor" viewBox="0 0 20 20">
@@ -45,9 +45,9 @@
                     <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
                             Country Input:</strong></span>
                     <ul class="list-disc list-inside">
-                        <li *ngIf="typeDetails.get('city')?.hasError('required')">Country Name is required.</li>
-                        <li *ngIf="typeDetails.get('city')?.hasError('minlength')">At least 2 characters.</li>
-                        <li *ngIf="typeDetails.get('city')?.hasError('maxlength')">At most 15 characters.</li>
+                        <li *ngIf="typeDetails.get('Country')?.hasError('required')">Country Name is required.</li>
+                        <li *ngIf="typeDetails.get('Country')?.hasError('minlength')">At least 2 characters.</li>
+                        <li *ngIf="typeDetails.get('Country')?.hasError('maxlength')">At most 15 characters.</li>
                     </ul>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                 class="block text-base ps-2 font-semibold font-Poppins mb-1 text-green-800 dark:text-green-100">Street:</label>
             <input formControlName="Street" type="text" placeholder="Enter your Street..." (keydown.enter)="Phone.focus()" #Street
                 class="w-full border border-green-600 dark:bg-gray-200 dark:border-green-600 rounded-lg p-2 text-gray-800 dark:text-gray-950 font-Signika placeholder:text-sm placeholder:font-Quicksand  focus:ring-2 focus:ring-green-400 dark:focus:ring-green-600 transition" />
-            <div *ngIf="typeDetails.get('city')?.touched && typeDetails.get('city')?.invalid" role="alert"
+            <div *ngIf="typeDetails.get('Street')?.touched && typeDetails.get('Street')?.invalid" role="alert"
                 class="flex p-4 mt-4 mb-0 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-green-900 dark:text-red-400 dark:border-red-800">
                 <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor" viewBox="0 0 20 20">
@@ -95,9 +95,9 @@
                     <span class="font-medium"><strong>Ensure</strong> that this requirement is met in <strong>
                             Street Input:</strong></span>
                     <ul class="list-disc list-inside">
-                        <li *ngIf="typeDetails.get('city')?.hasError('required')">Street Name is required.</li>
-                        <li *ngIf="typeDetails.get('city')?.hasError('minlength')">At least 2 characters.</li>
-                        <li *ngIf="typeDetails.get('city')?.hasError('maxlength')">At most 15 characters.</li>
+                        <li *ngIf="typeDetails.get('Street')?.hasError('required')">Street Name is required.</li>
+                        <li *ngIf="typeDetails.get('Street')?.hasError('minlength')">At least 2 characters.</li>
+                        <li *ngIf="typeDetails.get('Street')?.hasError('maxlength')">At most 15 characters.</li>
                     </ul>
                 </div>
             </div>
@@ -122,7 +122,7 @@
                     <ul class="list-disc list-inside">
                         <li *ngIf="typeDetails.get('phone')?.hasError('required')">Phone number is required.</li>
                         <li *ngIf="typeDetails.get('phone')?.hasError('pattern')">Invalid phone format. Example:
-                            +123456789 or 0123456789</li>
+                            01123456789 or 01023456789</li>
                     </ul>
                 </div>
             </div>

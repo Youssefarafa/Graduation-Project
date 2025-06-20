@@ -1,8 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import { AIService } from '../../core/services/ai.service';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-dlmodel',
@@ -10,8 +17,28 @@ import { AIService } from '../../core/services/ai.service';
   imports: [CommonModule, FormsModule, NgClass],
   templateUrl: './dlmodel.component.html',
   styleUrl: './dlmodel.component.scss',
+  animations: [
+    trigger('fadeInOut', [
+      state(
+        'hidden',
+        style({
+          opacity: 0,
+          transform: 'translateY(20px)',
+        })
+      ),
+      state(
+        'visible',
+        style({
+          opacity: 1,
+          transform: 'translateY(0)',
+        })
+      ),
+      transition('hidden => visible', [animate('600ms ease-out')]),
+      transition('visible => hidden', [animate('300ms ease-in')]),
+    ]),
+  ],
 })
-export class DLModelComponent implements OnInit {
+export class DLModelComponent implements OnInit,OnDestroy {
   selectedFile: any = null;
   selectedFileName: string | null = null;
   isDragging = false;
@@ -19,6 +46,7 @@ export class DLModelComponent implements OnInit {
   fileErrorMessage: string | null = null;
   loading = false;
   predictionResult: any = null;
+  predictionResultLenght: number = 0;
   objectURL: any = null;
   showimage: any = null;
 
@@ -42,14 +70,21 @@ export class DLModelComponent implements OnInit {
         const savedData = localStorage.getItem('detectionResult');
         if (savedData) {
           this.predictionResult = JSON.parse(savedData);
-          this.loadImage()
+          this.predictionResultLenght = Object.keys(
+            this.predictionResult
+          ).length;
+          this.loadImage();
         }
       });
     }
   }
 
   async generatePDF() {
-    if (!this.predictionResult || !this.showimage) {
+    if (
+      !this.predictionResult ||
+      !this.showimage ||
+      this.predictionResultLenght <= 1
+    ) {
       alert('Prediction result or image is not available!');
       return;
     }
@@ -356,7 +391,7 @@ export class DLModelComponent implements OnInit {
     const base64Image = await this.fileToBase64(this.selectedFile);
     localStorage.setItem('selectedImage', base64Image);
   }
-  
+
   loadImage() {
     const base64Image = localStorage.getItem('selectedImage');
     if (base64Image) {
@@ -367,6 +402,7 @@ export class DLModelComponent implements OnInit {
   submitImage() {
     if (!this.selectedFile) return;
     this.predictionResult = null;
+    this.predictionResultLenght = 0;
     const formData = new FormData();
     formData.append('file', this.selectedFile, this.selectedFile.name);
     this.loading = true;
@@ -378,8 +414,11 @@ export class DLModelComponent implements OnInit {
             this.blobToJson(blob)
               .then((json) => {
                 this.predictionResult = json;
+                this.predictionResultLenght = Object.keys(
+                  this.predictionResult
+                ).length;
                 localStorage.setItem('detectionResult', JSON.stringify(json));
-                this.saveImage()
+                this.saveImage();
               })
               .catch((err) => console.error('❌ Failed to parse JSON:', err));
             this.showimage = URL.createObjectURL(this.selectedFile);
@@ -429,5 +468,10 @@ export class DLModelComponent implements OnInit {
         }, 1000); // Delay to allow image load
       },
     });
+  }
+  ngOnDestroy() {
+    if (localStorage.getItem('detectionResult')) {
+      localStorage.removeItem('detectionResult');
+    }
   }
 }

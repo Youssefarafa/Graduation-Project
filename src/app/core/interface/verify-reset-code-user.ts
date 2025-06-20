@@ -1,3 +1,4 @@
 export interface VerifyResetCodeUser {
-    resetCode:string;
+    email:string;
+    code:string;
 }

@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-cart-shop',
   standalone: true,
-  imports: [ RouterLink], //? NgxSpinnerComponent
+  imports: [RouterLink], //? NgxSpinnerComponent
   templateUrl: './cart-shop.component.html',
   styleUrl: './cart-shop.component.scss',
 })
@@ -44,17 +44,20 @@ export class CartShopComponent implements OnInit {
       next: (res) => {
         console.log(res);
         this.MyCart = res;
+        this._CartService.counterCart.next(res.items.length);
       },
       error: (err) => {
         console.log(err);
+        this._CartService.counterCart.next(0);
+        this.MyCart = null;
         // setTimeout(() => {
-          // this.spinner.hide('CartShop');
+        // this.spinner.hide('CartShop');
         // }, 2000);
       },
       complete: () => {
         console.log('complete view cart');
         // setTimeout(() => {
-          // this.spinner.hide('CartShop');
+        // this.spinner.hide('CartShop');
         // }, 2000);
       },
     });
@@ -65,9 +68,11 @@ export class CartShopComponent implements OnInit {
   mouseleavecurrentToastTimeout: any = null;
   deleteItem = (id: string) => {
     // this.spinner.show('CartShop');
+    console.log(id);
+
     this._CartService.RemoveProduct(id).subscribe({
       next: (res) => {
-        this._CartService.counterCart.next(res.numOfCartItems);
+        this._CartService.counterCart.next(res.items.length);
         console.log(res);
         this.MyCart = res;
         const toastRef = this._ToastrService.success(
@@ -118,43 +123,21 @@ export class CartShopComponent implements OnInit {
       error: (err) => {
         console.log(err);
         // setTimeout(() => {
-          // this.spinner.hide('CartShop');
+        // this.spinner.hide('CartShop');
         // }, 2000);
       },
       complete: () => {
         console.log('complete delete product and view cart');
         // setTimeout(() => {
-          // this.spinner.hide('CartShop');
+        // this.spinner.hide('CartShop');
         // }, 2000);
       },
     });
   };
 
-  tempCartCounts: { [productId: string]: number | undefined } = {};
-  debounceTimers: Map<string, any> = new Map();
-  numberchanges:number=0;
-  updateQTYLocal = (item: any, delta: number) => {
-    const id = item.product._id;
-    const maxQty = item.product.quantity;
-    const current = this.tempCartCounts[id] ?? item.count;
-    this.numberchanges+=delta;
-    const newCount = current + delta;
-    if (newCount < 1 || newCount > maxQty) return;
-  
-    // Update local count immediately
-    this.tempCartCounts[id] = newCount;
-  
-    // Clear any previous timer
-    if (this.debounceTimers.has(id)) {
-      clearTimeout(this.debounceTimers.get(id));
-    }
-  console.log(this.numberchanges);
-  
-    // Set new debounce timer
+  IncreaseItemQuantity(id: any) {
     const timer = setTimeout(() => {
-  console.log(this.numberchanges);
-      // this.spinner.show('CartShop');
-      this._CartService.UpdateCartQTY(id, newCount).subscribe({
+      this._CartService.IncreaseItemQuantity(id).subscribe({
         next: (res) => {
           this.MyCart = res;
           const toastRef = this._ToastrService.success(
@@ -173,7 +156,7 @@ export class CartShopComponent implements OnInit {
 
           let leaveTimeout: any;
           let autoCloseTimeout: any;
-  
+
           const startAutoClose = () => {
             if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
             autoCloseTimeout = setTimeout(() => {
@@ -183,15 +166,15 @@ export class CartShopComponent implements OnInit {
               }, 400);
             }, 3500);
           };
-  
+
           startAutoClose();
-  
+
           toastEl.addEventListener('mouseenter', () => {
             if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
             if (leaveTimeout) clearTimeout(leaveTimeout);
             toastEl.classList.remove('toast-exit');
           });
-  
+
           toastEl.addEventListener('mouseleave', () => {
             leaveTimeout = setTimeout(() => {
               toastEl.classList.add('toast-exit');
@@ -202,30 +185,182 @@ export class CartShopComponent implements OnInit {
           });
         },
         error: (err) => {
-          console.error(err);
-          this.numberchanges=0;
+          console.log(err);
           // setTimeout(() => {
-            // this.spinner.hide('CartShop');
+          // this.spinner.hide('CartShop');
           // }, 2000);
         },
         complete: () => {
           console.log('complete delete product and view cart');
-          this.numberchanges=0;
           // setTimeout(() => {
-            // this.spinner.hide('CartShop');
+          // this.spinner.hide('CartShop');
           // }, 2000);
         },
       });
     }, 1000); // 1 second delay
-  
-    this.debounceTimers.set(id, timer);
-  };
+  }
 
-  deletingALLCart = () => {    
+  DecreaseItemQuantity(id: any) {
+    const timer = setTimeout(() => {
+      this._CartService.DecreaseItemQuantity(id).subscribe({
+        next: (res) => {
+          this.MyCart = res;
+          const toastRef = this._ToastrService.success(
+            'Quantity updated successfully!',
+            'Success',
+            {
+              progressBar: true,
+              closeButton: true,
+              timeOut: 3500,
+              tapToDismiss: false,
+              toastClass:
+                'ngx-toastr !font-Roboto !bg-green-600 !text-green-100 dark:!bg-green-600 custom-toast-animate hover:!cursor-default !text-sm md:!text-base !w-[100%] md:!w-[450px] !mt-[70px]',
+            }
+          );
+          const toastEl = toastRef.toastRef.componentInstance.toastElement;
+
+          let leaveTimeout: any;
+          let autoCloseTimeout: any;
+
+          const startAutoClose = () => {
+            if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
+            autoCloseTimeout = setTimeout(() => {
+              toastEl.classList.add('toast-exit');
+              setTimeout(() => {
+                toastRef.toastRef.manualClose();
+              }, 400);
+            }, 3500);
+          };
+
+          startAutoClose();
+
+          toastEl.addEventListener('mouseenter', () => {
+            if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
+            if (leaveTimeout) clearTimeout(leaveTimeout);
+            toastEl.classList.remove('toast-exit');
+          });
+
+          toastEl.addEventListener('mouseleave', () => {
+            leaveTimeout = setTimeout(() => {
+              toastEl.classList.add('toast-exit');
+              setTimeout(() => {
+                toastRef.toastRef.manualClose();
+              }, 400);
+            }, 1000);
+          });
+        },
+        error: (err) => {
+          console.log(err);
+          // setTimeout(() => {
+          // this.spinner.hide('CartShop');
+          // }, 2000);
+        },
+        complete: () => {
+          console.log('complete delete product and view cart');
+          // setTimeout(() => {
+          // this.spinner.hide('CartShop');
+          // }, 2000);
+        },
+      });
+    }, 1000); // 1 second delay
+  }
+  // tempCartCounts: { [productId: string]: number | undefined } = {};
+  // debounceTimers: Map<string, any> = new Map();
+  // numberchanges: number = 0;
+  // updateQTYLocal = (item: any, delta: number) => {
+  //   const id = item.id;
+  //   const maxQty = item.quantity;
+  //   const current = this.tempCartCounts[id] ?? item.quantity;
+  //   this.numberchanges += delta;
+  //   const newCount = current + delta;
+  //   if (newCount < 1 || newCount > maxQty) return;
+
+  //   // Update local count immediately
+  //   this.tempCartCounts[id] = newCount;
+
+  //   // Clear any previous timer
+  //   if (this.debounceTimers.has(id)) {
+  //     clearTimeout(this.debounceTimers.get(id));
+  //   }
+  //   console.log(this.numberchanges);
+
+  //   // Set new debounce timer
+  //   const timer = setTimeout(() => {
+  //     console.log(this.numberchanges);
+  //     // this.spinner.show('CartShop');
+  //     this._CartService.UpdateCartQTY(id, newCount).subscribe({
+  //       next: (res) => {
+  //         this.MyCart = res;
+  // const toastRef = this._ToastrService.success(
+  //   'Quantity updated successfully!',
+  //   'Success',
+  //   {
+  //     progressBar: true,
+  //     closeButton: true,
+  //     timeOut: 3500,
+  //     tapToDismiss: false,
+  //     toastClass:
+  //       'ngx-toastr !font-Roboto !bg-green-600 !text-green-100 dark:!bg-green-600 custom-toast-animate hover:!cursor-default !text-sm md:!text-base !w-[100%] md:!w-[450px] !mt-[70px]',
+  //   }
+  // );
+  // const toastEl = toastRef.toastRef.componentInstance.toastElement;
+
+  // let leaveTimeout: any;
+  // let autoCloseTimeout: any;
+
+  // const startAutoClose = () => {
+  //   if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
+  //   autoCloseTimeout = setTimeout(() => {
+  //     toastEl.classList.add('toast-exit');
+  //     setTimeout(() => {
+  //       toastRef.toastRef.manualClose();
+  //     }, 400);
+  //   }, 3500);
+  // };
+
+  // startAutoClose();
+
+  // toastEl.addEventListener('mouseenter', () => {
+  //   if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
+  //   if (leaveTimeout) clearTimeout(leaveTimeout);
+  //   toastEl.classList.remove('toast-exit');
+  // });
+
+  // toastEl.addEventListener('mouseleave', () => {
+  //   leaveTimeout = setTimeout(() => {
+  //     toastEl.classList.add('toast-exit');
+  //     setTimeout(() => {
+  //       toastRef.toastRef.manualClose();
+  //     }, 400);
+  //   }, 1000);
+  // });
+  //       },
+  //       error: (err) => {
+  //         console.error(err);
+  //         this.numberchanges = 0;
+  //         // setTimeout(() => {
+  //         // this.spinner.hide('CartShop');
+  //         // }, 2000);
+  //       },
+  //       complete: () => {
+  //         console.log('complete delete product and view cart');
+  //         this.numberchanges = 0;
+  //         // setTimeout(() => {
+  //         // this.spinner.hide('CartShop');
+  //         // }, 2000);
+  //       },
+  //     });
+  //   }, 1000); // 1 second delay
+
+  //   this.debounceTimers.set(id, timer);
+  // };
+
+  deletingALLCart = () => {
     // this.spinner.show('CartShop');
     this._CartService.ClearCart().subscribe({
       next: (res) => {
         console.log(res);
+        this._CartService.counterCart.next(0);
         this.MyCart = null;
         const toastRef = this._ToastrService.success(
           'The Cart Is Clear',
@@ -275,13 +410,13 @@ export class CartShopComponent implements OnInit {
       error: (err) => {
         console.log(err);
         // setTimeout(() => {
-          // this.spinner.hide('CartShop');
+        // this.spinner.hide('CartShop');
         // }, 2000);
       },
       complete: () => {
         console.log('complete delete product and view cart');
         // setTimeout(() => {
-          // this.spinner.hide('CartShop');
+        // this.spinner.hide('CartShop');
         // }, 2000);
       },
     });

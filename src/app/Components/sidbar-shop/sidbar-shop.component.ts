@@ -10,6 +10,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import { CartService } from '../../core/services/cart.service';
 import { WishListService } from '../../core/services/wish-list.service';
+import { OrderService } from '../../core/services/order.service';
 
 @Component({
   selector: 'app-sidbar-shop',
@@ -20,8 +21,10 @@ import { WishListService } from '../../core/services/wish-list.service';
 })
 export class SidbarShopComponent implements OnInit {
   private readonly _CartService = inject(CartService);
+  private readonly _OrderService = inject(OrderService);
   private readonly _WishListService = inject(WishListService);
   counterCart: number = 0;
+  counterOrder: number = 0;
   wishCount: number = 0;
   isOpen = false;
 
@@ -35,7 +38,7 @@ export class SidbarShopComponent implements OnInit {
     this._CartService.GetUserCart().subscribe({
       next: (res) => {
         console.log(res);
-        this._CartService.counterCart.next(res.numOfCartItems);
+        this._CartService.counterCart.next(res.items.length);
       },
     });
   };
@@ -48,17 +51,27 @@ export class SidbarShopComponent implements OnInit {
         console.log('Flowbite loaded successfully');
       });
       this.platformDetectionService.executeAfterDOMRender(() => {
-        this.getAllProduct();
-        this._WishListService.counterWishList.next(this._WishListService.getWishlist().length);
-        this._CartService.counterCart.subscribe({
+        // this.getAllProduct();
+        this._WishListService.counterWishList.next(
+          this._WishListService.getWishlist().length
+        );
+        this._OrderService.counterOrder.subscribe({
           next: (counter) => {
-            this.counterCart=counter;
+            this.counterOrder = counter;
           },
           error: (err) => {
             console.log(err);
           },
         });
-        this._WishListService.counterWishList.subscribe(count => {
+        this._CartService.counterCart.subscribe({
+          next: (counter) => {
+            this.counterCart = counter;
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+        this._WishListService.counterWishList.subscribe((count) => {
           this.wishCount = count;
         });
       });

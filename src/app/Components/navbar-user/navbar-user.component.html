@@ -32,15 +32,15 @@
                     id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
                     data-dropdown-placement="bottom">
                     <span class="sr-only">Open user menu</span>
-                    <img class="w-10 h-10 rounded-full" src="./assets/Images/1726949646493.jpg" alt="user photo">
+                    <img class="w-10 h-10 rounded-full" [src]="photoProfile" alt="user photo">
                 </button>
                 <!-- Dropdown menu -->
                 <div class="z-50 hidden my-4 text-base list-none bg-green-50 divide-y divide-gray-100 rounded-lg shadow-xl dark:bg-gray-700 dark:divide-gray-600"
                     id="user-dropdown">
-                    <div class="px-4 py-3 cursor-default">
-                        <span class="block text-sm text-gray-900 dark:text-white font-Roboto">Youssef Arafa</span>
+                    <div class="px-4 py-3 cursor-default"> 
+                        <span class="block text-sm text-gray-900 dark:text-white font-Roboto">{{name}}</span>
                         <span
-                            class="block text-sm  text-gray-500 truncate dark:text-gray-400 font-Roboto">rfhy300&#64;gmail.com</span>
+                            class="block text-sm  text-gray-500 truncate dark:text-gray-400 font-Roboto">{{email}}</span>
                     </div>
                     <ul class="py-2  text-sm text-gray-700 dark:text-gray-400 space-y-2"
                         aria-labelledby="user-menu-button">
@@ -88,7 +88,7 @@
                 <li class="w-auto">
                     <a routerLink="/User/Alert"
                         class="block px-3 md:px-4 md:py-1 w-40 md:w-auto border-0 rounded-lg font-Quicksand dark:text-[#ffffff] text-gray-900 hover:bg-green-200  md:hover:bg-transparent hover:text-green-700 dark:hover:text-green-300 dark:hover:bg-green-800 mb-3 md:mb-0"
-                        routerLinkActive="px-5 w-auto font-semibold border-2 border-green-700 dark:border-green-400 rounded-xl bg-gray-100 md:bg-transparent text-green-700 dark:text-green-500 dark:bg-green-900 md:dark:bg-transparent">ِAlarm</a>
+                        routerLinkActive="px-5 w-auto font-semibold border-2 border-green-700 dark:border-green-400 rounded-xl bg-gray-100 md:bg-transparent text-green-700 dark:text-green-500 dark:bg-green-900 md:dark:bg-transparent">Reminder</a>
                 </li>
                 <li>
                     <button id="dropdownRightButton" data-dropdown-toggle="dropdownRight"

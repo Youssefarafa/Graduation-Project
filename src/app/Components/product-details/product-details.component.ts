@@ -5,7 +5,9 @@ import {
   ElementRef,
   HostListener,
   inject,
+  OnChanges,
   OnInit,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -24,6 +26,7 @@ import { ShowProdutsComponent } from '../show-produts/show-produts.component';
 import { NgxSpinnerComponent, NgxSpinnerService } from 'ngx-spinner';
 import { CartService } from '../../core/services/cart.service';
 import { ToastrService } from 'ngx-toastr';
+import { OrderService } from '../../core/services/order.service';
 
 interface ProductRating {
   productId: string;
@@ -46,7 +49,7 @@ interface ProductRating {
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.scss',
 })
-export class ProductDetailsComponent implements OnInit {
+export class ProductDetailsComponent implements OnInit, OnChanges {
   private readonly _ActivatedRoute = inject(ActivatedRoute);
   private readonly _PlatformDetectionService = inject(PlatformDetectionService);
   private readonly _ProductsShopService = inject(ProductsShopService);
@@ -60,7 +63,7 @@ export class ProductDetailsComponent implements OnInit {
   starSize = 'w-4 h-4'; // Add this property
   stars: ('full' | 'half' | 'empty')[] = [];
   starshis: ('full' | 'half' | 'empty')[] = [];
-
+  isInCart: boolean = false;
   ngOnInit() {
     if (this._PlatformDetectionService.isBrowser) {
       console.log('Running in the browser');
@@ -80,15 +83,18 @@ export class ProductDetailsComponent implements OnInit {
             // this.spinner.show('ProductDetails');
             console.log(param.get('idProduct'));
             id = param.get('idProduct');
+            console.log(id);
+
             this.userRating = this.getUserRating(id!);
             this.calculateStarshis(this.userRating);
             this._ProductsShopService.getOneproduct(id!).subscribe({
               next: (res) => {
                 console.log(res);
-                this.ProductDetails = res.data;
+                this.ProductDetails = res;
                 console.log(this.ProductDetails);
                 this.calculateStars();
                 this.getProducts(this.ProductDetails);
+                this.checkCartStatus();
               },
               error: (err) => {
                 console.log(err);
@@ -114,28 +120,55 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  getProducts = (product: any) => {
-    return this._ProductsShopService.getproducts().subscribe({
-      next: (res) => {
-        this.products = res;
-        const allProducts = this.products?.data ?? [];
-        // Exclude the specified product by ID (or compare full object if needed)
-        const filtered = allProducts.filter((p) => p._id !== product._id);
-        // Shuffle and pick 5 from remaining products
-        const shuffled = [...filtered].sort(() => 0.5 - Math.random());
-        this.ProductsShop = shuffled.slice(0, 5);
+  ngOnChanges(changes: SimpleChanges) {
+    // Reset cart status when product ID changes
+    if (
+      changes['id'] &&
+      changes['id'].currentValue !== changes['id'].previousValue
+    ) {
+      this.isInCart = false;
+      this.checkCartStatus();
+    }
+  }
+
+  // Check if product is already in cart
+  checkCartStatus() {
+    this._CartService.GetUserCart().subscribe({
+      next: (cart) => {
+        this.isInCart = cart.items.some(
+          (item: any) => item.productId === this.ProductDetails.id
+        );
       },
       error: (err) => {
-        console.error('Error fetching products:', err);
-      },
-      complete: () => {
-        console.log('Product fetching complete');
+        console.error('Error checking cart status:', err);
       },
     });
+  }
+
+  getProducts = (product: any) => {
+    return this._ProductsShopService
+      .getSomeproductsByCategory(product.typeId)
+      .subscribe({
+        next: (res) => {
+          this.products = res;
+          const allProducts = this.products?.data ?? [];
+          // Exclude the specified product by ID (or compare full object if needed)
+          const filtered = allProducts.filter((p) => p.id !== product.id);
+          // Shuffle and pick 5 from remaining products
+          const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+          this.ProductsShop = shuffled.slice(0, 5);
+        },
+        error: (err) => {
+          console.error('Error fetching products:', err);
+        },
+        complete: () => {
+          console.log('Product fetching complete');
+        },
+      });
   };
 
   private calculateStars() {
-    const rating = this.ProductDetails?.ratingsAverage || 0;
+    const rating = this.ProductDetails?.rate || 0;
     const fullStars = Math.floor(rating);
     const hasHalf = rating % 1 >= 0.5;
     this.stars = Array(5)
@@ -196,68 +229,83 @@ export class ProductDetailsComponent implements OnInit {
   isClick: boolean = false;
   currentToastTimeout: any = null;
   mouseleavecurrentToastTimeout: any = null;
-  AddToCart(id: string) {
-    this.isClick = true;
-    this._CartService.addProductToCart(id).subscribe({
-      next: (res) => {
-        this._CartService.counterCart.next(res.numOfCartItems);
-        this.messageerr = null;
-        console.log(res); //'Product added successfully to your cart'
-        const toastRef = this._ToastrService.success(
-          res.message,
-          'Successful operation!',
-          {
-            progressBar: true,
-            closeButton: true,
-            timeOut: 3500,
-            tapToDismiss: false,
-            toastClass:
-              'ngx-toastr !font-Roboto !bg-green-600 !text-green-100 dark:!bg-green-600 custom-toast-animate hover:!cursor-default !text-sm md:!text-base !w-[100%] md:!w-[450px] !mt-[70px]',
-          }
-        );
+  // Updated AddToCart method in product-details.component.ts
+AddToCart(id: string) {
+  this.isClick = true;
 
-        const toastEl = toastRef.toastRef.componentInstance.toastElement;
+  // Check if product was already in cart
+  const wasInCart = this.isInCart;
 
-        let leaveTimeout: any;
-        let autoCloseTimeout: any;
+  this._CartService.addProductToCart(id).subscribe({
+    next: (res) => {
+      this._CartService.counterCart.next(res.items.length);
+      this.messageerr = null;
 
-        const startAutoClose = () => {
-          if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
-          autoCloseTimeout = setTimeout(() => {
-            toastEl.classList.add('toast-exit');
-            setTimeout(() => {
-              toastRef.toastRef.manualClose();
-            }, 400);
-          }, 3500);
-        };
+      // Update cart status
+      this.isInCart = true;
 
-        startAutoClose();
+      // Toast message based on previous cart status
+      const des = wasInCart
+        ? 'Increase Product to Cart Successfully'
+        : 'Added Product to Cart Successfully';
 
-        toastEl.addEventListener('mouseenter', () => {
-          if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
-          if (leaveTimeout) clearTimeout(leaveTimeout);
-          toastEl.classList.remove('toast-exit');
-        });
+      const toastRef = this._ToastrService.success(
+        des,
+        'Successful operation!',
+        {
+          progressBar: true,
+          closeButton: true,
+          timeOut: 3500,
+          tapToDismiss: false,
+          toastClass:
+            'ngx-toastr !font-Roboto !bg-green-600 !text-green-100 dark:!bg-green-600 custom-toast-animate hover:!cursor-default !text-sm md:!text-base !w-[100%] md:!w-[450px] !mt-[70px]',
+        }
+      );
 
-        toastEl.addEventListener('mouseleave', () => {
-          leaveTimeout = setTimeout(() => {
-            toastEl.classList.add('toast-exit');
-            setTimeout(() => {
-              toastRef.toastRef.manualClose();
-            }, 400);
-          }, 1000);
-        });
-      },
-      error: (err) => {
-        console.log(err);
-        this.messageerr = err;
-      },
-      complete: () => {
-        console.log('the adding to cart complete');
-        this.isClick = false;
-      },
-    });
-  }
+      // Optional: handle toast hover animation (same logic as before)
+      const toastEl = toastRef.toastRef.componentInstance.toastElement;
+
+      let leaveTimeout: any;
+      let autoCloseTimeout: any;
+
+      const startAutoClose = () => {
+        if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
+        autoCloseTimeout = setTimeout(() => {
+          toastEl.classList.add('toast-exit');
+          setTimeout(() => {
+            toastRef.toastRef.manualClose();
+          }, 400);
+        }, 3500);
+      };
+
+      startAutoClose();
+
+      toastEl.addEventListener('mouseenter', () => {
+        if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
+        if (leaveTimeout) clearTimeout(leaveTimeout);
+        toastEl.classList.remove('toast-exit');
+      });
+
+      toastEl.addEventListener('mouseleave', () => {
+        leaveTimeout = setTimeout(() => {
+          toastEl.classList.add('toast-exit');
+          setTimeout(() => {
+            toastRef.toastRef.manualClose();
+          }, 400);
+        }, 1000);
+      });
+    },
+    error: (err) => {
+      console.log(err);
+      this.messageerr = err;
+    },
+    complete: () => {
+      console.log('the adding to cart complete');
+      this.isClick = false;
+    },
+  });
+}
+
 
   showRatingModal = false;
   userRating = 0;
@@ -306,7 +354,7 @@ export class ProductDetailsComponent implements OnInit {
       this.spinner.hide('rating');
       this._cdr.detectChanges();
     }, 1000);
-    
+
     const toastRef = this._ToastrService.success(
       'You Add Your Ratting Successfully',
       'Successful operation!',
@@ -354,7 +402,6 @@ export class ProductDetailsComponent implements OnInit {
         }, 1000);
       });
     }, 0); // defer execution after DOM update
-  
   }
 
   clearRating() {

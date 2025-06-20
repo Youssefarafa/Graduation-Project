@@ -27,7 +27,7 @@
         </button>
 
         <div id="conversation-history"
-            class="overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-green-600 dark:scrollbar-thumb-green-500 scrollbar-track-green-800 dark:scrollbar-track-green-900">
+            class="overflow-y-auto flex-1">
             <div id="no-history-message" [class.hidden]="conversationHistory.length > 0"
                 class="text-center text-green-200 dark:text-green-300 p-4 animate-fade-in">
                 No past conversations yet. Ask about your plants!
@@ -70,7 +70,7 @@
         <!-- Chat Area -->
         <div class="flex-1 overflow-hidden flex flex-col">
             <div id="messages-container"
-                class="p-4 flex-1 overflow-y-auto bg-green-50 dark:bg-green-900 scrollbar-thin scrollbar-thumb-green-200 dark:scrollbar-thumb-gray-500 scrollbar-track-green-50 dark:scrollbar-track-gray-900 relative">
+                class="p-4 flex-1 overflow-y-auto bg-green-50  dark:bg-gradient-to-br dark:from-gray-900 dark:to-green-950  relative">
                 <div id="welcome-screen"
                     class="h-full flex flex-col items-center justify-center text-green-800 dark:text-gray-200 p-4 animate-fade-in relative z-10"
                     [class.hidden]="messages.length > 0">
@@ -108,7 +108,7 @@
                         <div
                             class="flex {{ msg.user ? 'justify-end' : 'justify-start' }} {{ i === messages.length - 1 ? 'animate-slide-up' : 'animate-fade-in' }}">
                             <div
-                                class="{{ msg.user ? 'bg-green-600 dark:bg-green-700 text-white hover:bg-green-550 dark:hover:bg-green-600' : 'bg-white dark:bg-green-800 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-600 hover:border-green-300 dark:hover:border-green-500' }} rounded-lg p-4 max-w-[90%] md:max-w-[80%] shadow-sm relative">
+                                class="{{ msg.user ? 'bg-green-600 dark:bg-gray-800 text-white hover:bg-green-500 dark:hover:bg-gray-700' : 'bg-white dark:bg-gray-800 text-green-800 dark:text-green-500 border border-green-200 dark:border-green-600 hover:border-green-300 dark:hover:border-green-500' }} rounded-lg p-4 max-w-[90%] md:max-w-[80%] shadow-sm relative">
                                 <ng-container *ngIf="editingMessageId === i; else messageContent">
                                     <div class="flex flex-col">
                                         <textarea
@@ -178,11 +178,11 @@
             </div>
 
             <!-- Input Area -->
-            <div class="p-4 border-t border-green-200 dark:border-green-700 bg-white dark:bg-green-800">
+            <div class="p-4 border-t border-green-200 dark:border-green-700 bg-white dark:bg-green-950">
                 <div class="flex items-end">
                     <div class="flex-1 relative">
                         <input type="text" id="message-input" [formControl]="messageInput" (keydown)="onKeydown($event)"
-                            class="w-full placeholder:text-gray-700 dark:placeholder:text-gray-100 p-3 border border-green-300 dark:border-green-600 rounded-lg outline-none focus:ring-2 focus:ring-green-400 dark:focus:ring-green-500 transition-all duration-200 pr-12 bg-white dark:bg-green-900 text-green-800 dark:text-green-200"
+                            class="w-full placeholder:text-gray-700 dark:placeholder:text-gray-100 p-3 border border-green-300 dark:border-green-600 rounded-lg outline-none focus:ring-2 focus:ring-green-400 dark:focus:ring-green-500 transition-all duration-200 pr-12 bg-white dark:bg-gray-800 text-green-800 dark:text-green-200"
                             placeholder="Ask about your plants (e.g., 'Why are my leaves yellow?')..." />
                         <button id="clear-input-btn" (click)="clearInput()"
                             class="absolute right-16 top-3 text-gray-400 hover:text-gray-600 dark:hover:text-green-300 transition-colors"

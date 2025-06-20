@@ -23,14 +23,15 @@ export class WishListShopComponent implements OnInit {
     this.myWishlist = this.wishlistService.getWishlist();
   }
 
-  deleteItem(productId: any): void {
-    this.wishlistService.removeFromWishlist(productId);
+  deleteItem(product: any): void {
+    this.wishlistService.toggleWishlist(product);
     this.getWishlist(); // Refresh the list
   }
 
-  deleteAll(): void {
-    localStorage.removeItem('wishlist');
-    this.getWishlist(); // Refresh the list
-    this.wishlistService.counterWishList.next(0); // Reset counter
-  }
+  //? مع نفسي بقا وقت الاجازه ابقا اضفها ان شاء الله
+  //? deleteAll(): void {
+  //?   localStorage.removeItem('wishlist');
+  //?   this.getWishlist(); // Refresh the list
+  //?   this.wishlistService.counterWishList.next(0); // Reset counter
+  //? }
 }

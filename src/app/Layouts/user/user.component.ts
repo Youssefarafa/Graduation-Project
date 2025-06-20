@@ -6,8 +6,8 @@ import { CVModelComponent } from '../../Components/cvmodel/cvmodel.component';
 import { ChatBotComponent } from '../../Components/chat-bot/chat-bot.component';
 import { DLModelComponent } from '../../Components/dlmodel/dlmodel.component';
 import { AlertComponent } from '../../Components/alert/alert.component';
-import { AccountComponent } from '../../Components/account/account.component';
 import { CVModel2Component } from '../../Components/cvmodel2/cvmodel2.component';
+import { AccountComponent } from '../../Components/account/account.component';
 @Component({
   selector: 'app-user',
   standalone: true,

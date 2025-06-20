@@ -31,6 +31,9 @@
         </div>
         }
     </div>
+    <h3
+        class="inline-block mx-auto text-2xl font-bold font-Roboto pt-12  ps-[12px] sm:ps-0 text-green-800 dark:text-green-300 text-center border-b-8 border-green-800 dark:border-green-300 rounded-lg">
+        {{H3Category}}:</h3>
     <form class="mb-7 ps-[8px] w-full sm:w-3/4 mx-auto mt-12" [formGroup]="searchForm" (ngSubmit)="onSearch()">
         <label for="search" class="mb-2 text-sm font-medium text-green-900 sr-only dark:text-green-200">
             Search Product
@@ -53,8 +56,12 @@
             </button>
         </div>
     </form>
-    <h3 class="w-full text-2xl font-bold font-Roboto  pb-5 ps-[12px] sm:ps-0 text-green-800 dark:text-green-300">
-        {{H3Category}}:</h3>
     <!-- Responsive Grid for Products -->
-    <app-show-produts [products]="ProductsShop" [isProductDetails]="false"></app-show-produts>
+    <app-show-produts [products]="ProductsShop" [isProductDetails]="false" class=""></app-show-produts>
+    <div *ngIf="!allLoaded && !loading" class="text-center font-Poppins text-green-600 font-bold mt-4">
+        Load more products available...
+    </div>
+    <div *ngIf="allLoaded && !loading" class="text-center font-Signika text-gray-400 mt-4">
+        No more products to load.
+    </div>
 </div>

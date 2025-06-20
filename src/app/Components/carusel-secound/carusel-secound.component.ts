@@ -220,11 +220,13 @@ import {
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import { CategoriesService } from '../../core/services/categories.service';
 import { NgOptimizedImage } from '@angular/common';
+import { ProductsShopService } from '../../core/services/products-shop.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-carusel-secound',
   standalone: true,
-  imports: [NgOptimizedImage],
+  imports: [NgOptimizedImage,RouterLink],
   templateUrl: './carusel-secound.component.html',
   styleUrl: './carusel-secound.component.scss',
 })
@@ -234,7 +236,7 @@ export class CaruselSecoundComponent
   categories: any[] = [];
   constructor(
     private platformDetectionService: PlatformDetectionService,
-    private _CategoriesShopService: CategoriesService,
+    private _ProductsShopService: ProductsShopService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -256,7 +258,7 @@ export class CaruselSecoundComponent
   }
 
   getCategories = () => {
-    this._CategoriesShopService.getcategories().subscribe({
+    this._ProductsShopService.getBestproducts().subscribe({
       next: (res) => {
         this.categories = [...res.data, ...res.data]; // duplicate list
         this.cdr.detectChanges();

@@ -1,39 +1,40 @@
-@if(MyCart?.numOfCartItems !=0&& MyCart !=null){
+@if(MyCart?.items.length !=0&& MyCart !=null){
 <div class="py-6 px-1 md:p-6 my-5 mx-8 bg-white dark:bg-green-900 rounded shadow-md">
     <h2 class="text-2xl font-semibold dark:text-white font-Roboto">Shop Cart :</h2>
     <div class="flex flex-col justify-center items-start md:flex-row md:justify-between md:items-center">
         <p class="text-green-600 dark:text-green-400 text-lg font-semibold font-Signika">Total Cart Price : {{
-            MyCart?.data?.totalCartPrice }} EGP</p>
+            MyCart?.totalPrice }} EGP</p>
         <h1 class="text-sm font-semibold dark:text-white font-Roboto sm:pe-5">Items :<span class="font-Signika">
-                {{MyCart?.numOfCartItems}} product type </span></h1>
+                {{MyCart?.items.length}} product type </span></h1>
     </div>
-    @for(item of MyCart?.data?.products;track $index ){
+    @for(item of MyCart?.items;track $index ){
     <div class="my-4 border-b-4 rounded-xl dark:border-gray-400">
         <div class="flex items-center justify-between p-4 rounded">
             <div class="flex items-center gap-4 ">
-                <a [routerLink]="'/User/Shop/ProductDetails/'+item.product._id">
-                    <img [src]="item.product.imageCover" [alt]="item.product.title"
+                <a [routerLink]="'/User/Shop/ProductDetails/'+item.productId">
+                    <img [src]="item.pictureUrl" [alt]="item.productName"
                         class="w-16 h-16 object-cover rounded" />
                 </a>
                 <div class="whitespace-nowrap overflow-hidden ">
                     <h3
                         class="text-gray-900 dark:text-green-100 font-medium text-base w-[140px] sm:w-[240px] md:w-[100%] truncate whitespace-nowrap overflow-hidden font-Poppins">
-                        {{ item.product.title }}</h3>
+                        {{ item.productName }}</h3>
                     <p class="text-green-700 dark:text-green-400 font-medium text-sm font-Signika">price : {{ item.price
                         }} EGP</p>
-                    <button (click)="deleteItem(item.product._id)"
+                    <button (click)="deleteItem(item.productId)"
                         class="text-green-600 hover:underline dark:text-green-300 text-xs font-Roboto">
                         <i class="fa-solid fa-trash"></i> Remove
                     </button>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button (click)="updateQTYLocal(item, +1)"
-                    [disabled]="(tempCartCounts[item.product._id] ?? item.count) == item.product.quantity"
+                <!-- updateQTYLocal(item, +1)        updateQTYLocal(item, -1) -->
+                <button (click)="IncreaseItemQuantity(item.productId)"      
+                    [disabled]="(item.quantity) >= 9"
                     class="px-2 py-1 border border-green-700 dark:border-green-300 disabled:cursor-not-allowed text-green-700 dark:text-green-300 rounded bg-transparent hover:bg-green-200 active:bg-green-300 dark:hover:bg-green-900 dark:active:bg-green-950 transition duration-200"><i
                         class="fa-solid fa-plus"></i></button>
-                <span class="text-green-900 dark:text-white font-Signika font-medium">{{ tempCartCounts[item.product._id] ?? item.count }}</span>
-                <button (click)="updateQTYLocal(item, -1)" [disabled]="(tempCartCounts[item.product._id] ?? item.count) <= 1"
+                <span class="text-green-900 dark:text-white font-Signika font-medium">{{ item.quantity }}</span>
+                <button (click)="DecreaseItemQuantity(item.productId)" [disabled]="(item.quantity) <= 1"
                     class="px-2 py-1 border border-green-700 dark:border-green-300 disabled:cursor-not-allowed text-green-700 dark:text-green-300 rounded bg-transparent hover:bg-green-200 active:bg-green-300 dark:hover:bg-green-900 dark:active:bg-green-950 transition duration-200"><i
                         class="fa-solid fa-minus"></i></button>
             </div>
@@ -41,7 +42,7 @@
     </div>
     }
     <div class="w-full flex flex-col px-8 pt-5 lg:px-5 justify-center items-center lg:flex-row lg:justify-center lg:items-center">
-        <a [routerLink]="'/User/Shop/DetailsCheckout/'+MyCart?.cartId"  
+        <a [routerLink]="'/User/Shop/DetailsCheckout/'+MyCart?.id"  
             class="bg-green-600 text-center font-Philosopher mb-1 lg:mb-0 me-0 lg:me-5 hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-green-500 active:bg-green-800 text-white w-full text-md font-medium px-5 py-2 rounded mt-2 transition-colors duration-200">
             @if (!paybuttonisClick) {
             Place Order

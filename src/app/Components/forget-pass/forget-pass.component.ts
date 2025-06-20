@@ -176,8 +176,32 @@ export class ForgetPassComponent implements OnInit {
       await this.auth.signOut();
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
-      console.log('User signed in:', user);
-      await this.router.navigate(['/Start/Home']);
+      const idToken = await user.getIdToken();
+      this._AuthService.registerWithFirebase({ idToken: idToken }).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          this._AuthService.saveUserData();
+          console.log('res:  ', res);
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          localStorage.setItem('register', JSON.stringify(res) || '');
+          this.cdRef.detectChanges();
+          this._Router.navigate(['/User/Shop']);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log('err:  ', err);
+          console.log('err:  ', err.error.message);
+          this.errsubmitmessage = err.error.message;
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+        complete: () => {
+          console.log('complete the signup request');
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+      });
     } catch (error) {
       console.error('Google Sign-In Error:', error);
       this.handleSignInError(error);
@@ -203,8 +227,34 @@ export class ForgetPassComponent implements OnInit {
       await this.auth.signOut();
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
-      console.log('user signed in:', user);
-      await this.router.navigate(['/Start/Home']);
+      const idToken = await user.getIdToken();
+      console.log("gggggggggggggggggg",idToken);
+      
+      this._AuthService.registerWithFirebase({ idToken: idToken }).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          this._AuthService.saveUserData();
+          console.log('res:  ', res);
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          localStorage.setItem('register', JSON.stringify(res) || '');
+          this.cdRef.detectChanges();
+          this._Router.navigate(['/User/Shop']);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log('err:  ', err);
+          console.log('err:  ', err.error.message);
+          this.errsubmitmessage = err.error.message;
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+        complete: () => {
+          console.log('complete the signup request');
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+      });
     } catch (error) {
       console.error('Sign-in Error:', error);
       this.handleSignInError(error);
@@ -230,8 +280,32 @@ export class ForgetPassComponent implements OnInit {
       await this.auth.signOut();
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
-      console.log('Yahoo user:', user);
-      await this.router.navigate(['/Start/Home']);
+      const idToken = await user.getIdToken();
+      this._AuthService.registerWithFirebase({ idToken: idToken }).subscribe({
+        next: (res) => {
+          localStorage.setItem('token', res.token);
+          this._AuthService.saveUserData();
+          console.log('res:  ', res);
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          localStorage.setItem('register', JSON.stringify(res) || '');
+          this.cdRef.detectChanges();
+          this._Router.navigate(['/User/Shop']);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log('err:  ', err);
+          console.log('err:  ', err.error.message);
+          this.errsubmitmessage = err.error.message;
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+        complete: () => {
+          console.log('complete the signup request');
+          this.errsubmitmessage = '';
+          this.isSubnitClick = false;
+          this.cdRef.detectChanges();
+        },
+      });
     } catch (error) {
       console.error('Yahoo Sign-in Error:', error);
       this.handleSignInError(error);

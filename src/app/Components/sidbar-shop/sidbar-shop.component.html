@@ -1,4 +1,4 @@
-<div class="flex" >
+<div class="flex">
     <!-- Sidebar -->
     <div [ngClass]="{'w-64': isOpen, 'w-16': !isOpen}"
         class="transition-all duration-300 bg-green-200 shadow-2xl dark:bg-green-950 fixed top-[72px] bottom-0  z-10 rounded-tr-xl">
@@ -7,11 +7,13 @@
             <i [ngClass]="{'fa-solid fa-bars text-xl': !isOpen, 'fas fa-times text-xl': isOpen}"></i>
         </button>
         <div class="h-full z-0 pt-4 pb-1 py-4 overflow-hidden font-Roboto">
-            <div class="bg-[url('/assets/Images/SidebarGroup.svg')] w-[75%] h-full m-auto bg-contain bg-left-bottom bg-no-repeat">
+            <div
+                class="bg-[url('/assets/Images/SidebarGroup.svg')] w-[75%] h-full m-auto bg-contain bg-left-bottom bg-no-repeat">
                 <ul class="space-y-4">
                     <li>
                         <a [routerLink]="['/User/Shop/Products']" (click)="closeOnLinkClick()"
-                            routerLinkActive="border-green-700 text-green-700 dark:text-green-400 dark:bg-green-900 bg-green-300" class="flex items-center p-3 rounded-lg transition duration-300 
+                            routerLinkActive="border-green-700 text-green-700 dark:text-green-400 dark:bg-green-900 bg-green-300"
+                            class="flex items-center p-3 rounded-lg transition duration-300 
                                     text-gray-700 dark:text-gray-300 hover:bg-green-100 dark:hover:bg-green-800">
                             <i class="fa-solid fa-tags text-lg"></i>
                             <span *ngIf="isOpen" class="ml-3 font-medium">Products</span>
@@ -19,7 +21,8 @@
                     </li>
                     <li>
                         <a [routerLink]="['/User/Shop/Categories']" (click)="closeOnLinkClick()"
-                            routerLinkActive="border-green-700 text-green-700 dark:text-green-400 dark:bg-green-900 bg-green-300" class="flex items-center p-3 rounded-lg transition duration-300 
+                            routerLinkActive="border-green-700 text-green-700 dark:text-green-400 dark:bg-green-900 bg-green-300"
+                            class="flex items-center p-3 rounded-lg transition duration-300 
                                     text-gray-700 dark:text-gray-300 hover:bg-green-100 dark:hover:bg-green-800">
                             <i class="fa-solid fa-layer-group text-lg"></i>
                             <span *ngIf="isOpen" class="ml-3 font-medium">Categories</span>
@@ -27,21 +30,39 @@
                     </li>
                     <li>
                         <a [routerLink]="['/User/Shop/WishList']" (click)="closeOnLinkClick()"
-                            routerLinkActive="border-green-700 text-green-700 dark:text-green-400 dark:bg-green-900 bg-green-300" class="relative flex items-center p-3 rounded-lg transition duration-300 
+                            routerLinkActive="border-green-700 text-green-700 dark:text-green-400 dark:bg-green-900 bg-green-300"
+                            class="relative flex items-center p-3 rounded-lg transition duration-300 
                                     text-gray-700 dark:text-gray-300 hover:bg-green-100 dark:hover:bg-green-800">
-                                    <!-- <i class="fa-regular fa-heart text-lg"></i> -->
-                                    <i class="fa-solid fa-heart text-lg"></i>
-                                    <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900 font-Signika">{{wishCount}}</div>
+                            <!-- <i class="fa-regular fa-heart text-lg"></i> -->
+                            <i class="fa-solid fa-heart text-lg"></i>
+                            <div
+                                class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900 font-Signika">
+                                {{wishCount}}</div>
                             <span *ngIf="isOpen" class="ml-3 font-medium">Wishes</span>
                         </a>
                     </li>
                     <li>
                         <a [routerLink]="['/User/Shop/CartShop']" (click)="closeOnLinkClick()"
-                            routerLinkActive="border-green-700 text-green-700 dark:text-green-400 dark:bg-green-900 bg-green-300" class="relative flex items-center p-3 rounded-lg transition duration-300 
+                            routerLinkActive="border-green-700 text-green-700 dark:text-green-400 dark:bg-green-900 bg-green-300"
+                            class="relative flex items-center p-3 rounded-lg transition duration-300 
                                     text-gray-700 dark:text-gray-300 hover:bg-green-100 dark:hover:bg-green-800">
-                                    <i class="fa-solid fa-cart-shopping text-lg"></i>
-                                    <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900 font-Signika">{{counterCart}}</div>
+                            <i class="fa-solid fa-cart-shopping text-lg"></i>
+                            <div
+                                class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900 font-Signika">
+                                {{counterCart}}</div>
                             <span *ngIf="isOpen" class="ml-3 font-medium">Cart</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/User/Shop/Orders']" (click)="closeOnLinkClick()"
+                            routerLinkActive="border-green-700 text-green-700 dark:text-green-400 dark:bg-green-900 bg-green-300"
+                            class="relative flex items-center p-3 rounded-lg transition duration-300 
+                                    text-gray-700 dark:text-gray-300 hover:bg-green-100 dark:hover:bg-green-800">
+                            <i class="fa-solid fa-cash-register text-lg"></i>
+                            <div
+                                class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900 font-Signika">
+                                {{counterOrder}}</div>
+                            <span *ngIf="isOpen" class="ml-3 font-medium">Orders</span>
                         </a>
                     </li>
                 </ul>

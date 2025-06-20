@@ -9,6 +9,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import { NavbarService } from '../../core/services/navbar.service';
+import { CartService } from '../../core/services/cart.service';
 // import { Router, NavigationEnd } from '@angular/router';
 // import { initDropdowns } from 'flowbite';
 
@@ -22,8 +23,12 @@ import { NavbarService } from '../../core/services/navbar.service';
 export class NavbarUserComponent implements OnInit {
   private readonly _isDarkMode = inject(NavbarService);
   private readonly _Router = inject(Router);
+  private readonly _CartService = inject(CartService);
   isDarkMode = false;
-
+  name:string=JSON.parse(localStorage.getItem('register')?? '').fName+ ' ' + JSON.parse(localStorage.getItem('register')?? '').lName
+  email:string=JSON.parse(localStorage.getItem('register')?? '').email
+  userphoto:any='./assets/Images/userimage.png';
+  photoProfile:any;
   constructor(
     private platformDetectionService: PlatformDetectionService,
     private renderer: Renderer2,
@@ -52,6 +57,21 @@ export class NavbarUserComponent implements OnInit {
         this._isDarkMode.isDarkMode$.subscribe((darkModeState) => {
           this.isDarkMode = darkModeState; // Update local state
           this.applyTheme(); // Apply theme based on updated state
+        });
+        if(JSON.parse(localStorage.getItem('register')?? '').userPictureUrl.includes('http://naptaapi.runasp.net')){
+          localStorage.setItem('profileImage', JSON.parse(localStorage.getItem('register')?? '').userPictureUrl);
+        }else{
+          localStorage.setItem('profileImage', 'http://naptaapi.runasp.net'+JSON.parse(localStorage.getItem('register')?? '').userPictureUrl);
+        }
+        this._isDarkMode.FunCallFromAccount();
+        this._isDarkMode.photoProfile.subscribe(photo => {
+        this.userphoto = photo;
+        console.log(this.userphoto);
+        if(this.userphoto){
+          this.photoProfile =this.userphoto;
+        }else{
+          this.photoProfile ='./assets/Images/userimage.png';
+        }
         });
       });
     }
@@ -89,9 +109,17 @@ export class NavbarUserComponent implements OnInit {
   }
 
   Signout(){
+    this._isDarkMode.FunCallFromNavBarUser();
     if (localStorage.getItem('token')) {
       localStorage.removeItem('token');
     }    
+    if (localStorage.getItem('profileImage')) {
+      localStorage.removeItem('profileImage');
+    }  
+    // if (localStorage.getItem('register')) {
+    //   localStorage.removeItem('register');
+    // } 
+    this._CartService.counterCart.next(0)
     this._Router.navigate([`/Start/Home`]);
   }
 }

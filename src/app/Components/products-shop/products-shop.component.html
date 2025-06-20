@@ -28,5 +28,8 @@
         </div>
     </form>
     <!-- Responsive Grid for Products -->
-    <app-show-produts [products]="ProductsShop" [isProductDetails]="false"></app-show-produts>
+    <app-show-produts [products]="products" [isProductDetails]="false"></app-show-produts>
+    <div *ngIf="isLoading" class="text-center font-Poppins text-green-600 font-bold mt-4">Loading more products...</div>
+    <div *ngIf="!hasMore && !isLoading" class="text-center font-Signika text-gray-400 mt-4">No more products to load.</div>
+
 </div>

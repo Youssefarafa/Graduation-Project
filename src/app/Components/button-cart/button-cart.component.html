@@ -18,12 +18,12 @@
         font-medium rounded-lg text-sm px-4 py-2 shadow-md transform hover:scale-110 active:scale-95 disabled:cursor-not-allowed disabled:bg-green-500"
     (click)="AddToCart()" [disabled]="isClick">
     @if (!isClick) {
-    <svg class="w-4 h-4 mr-2 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <svg class="shrink-0 w-4 h-4 mr-2 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round"
             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1 5m0 0h12m-12 0a1 1 0 1 0 2 0m10 0a1 1 0 1 0 2 0m-2-5V5m-4 8V5m-4 8V5">
         </path>
     </svg>
-    Add to Cart
+    {{ isInCart ? 'Add More' : 'Add to Cart' }}
     }@else {
     <div class="align-baseline flex items-center justify-center"><svg aria-hidden="true" role="status"
             class="inline w-5 h-5 me-1 text-white animate-spin" viewBox="0 0 100 101" fill="none"

@@ -28,13 +28,15 @@
             @for (slide of categories; track $index) {
             <ng-container style="user-select: none; -webkit-user-drag: none;">
                 <div class=" carousel-product h-[200px] w-[200px] flex-shrink-0 overflow-hidden relative group hover:cursor-pointer mx-1">
-                    <div class="absolute top-0 bottom-0 right-0 left-0 z-[2]" style="user-select: none; -webkit-user-drag: none;"></div>
-                    <img [ngSrc]="slide.image" fill class="w-full h-full" 
-                        [alt]="slide.name" [title]="slide.name" />
-                    <p
-                        class="absolute z-[2] inset-x-0 bottom-0 bg-black bg-opacity-75 text-white text-sm font-Poppins text-center py-2 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
-                        {{ slide.name }}
-                    </p>
+                    <a [routerLink]="'/User/Shop/ProductDetails/'+slide.id">
+                        <div class="absolute top-0 bottom-0 right-0 left-0 z-[2]" style="user-select: none; -webkit-user-drag: none;"></div>
+                        <img [ngSrc]="slide.pictureUrl" fill class="w-full h-full" 
+                            [alt]="slide.name" [title]="slide.name" />
+                        <p
+                            class="absolute z-[2] inset-x-0 bottom-0 bg-black bg-opacity-75 text-white text-sm font-Poppins text-center py-2 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
+                            {{ slide.name }}
+                        </p>
+                    </a>
                 </div>
             </ng-container>
             }

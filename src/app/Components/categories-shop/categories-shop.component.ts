@@ -1,5 +1,6 @@
-import { NgFor } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
@@ -14,117 +15,164 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Products } from '../../core/interface/products';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
+import { RouterLink } from '@angular/router';
+import { Products } from '../../core/interface/products';
 import { PlatformDetectionService } from '../../core/services/platform-detection.service';
 import { ProductsShopService } from '../../core/services/products-shop.service';
 import { ButtonWishComponent } from '../button-wish/button-wish.component';
 import { ButtonCartComponent } from '../button-cart/button-cart.component';
-import { RouterLink } from '@angular/router';
 import { ShowProdutsComponent } from '../show-produts/show-produts.component';
 
 @Component({
   selector: 'app-categories-shop',
   standalone: true,
-  imports: [ReactiveFormsModule, ShowProdutsComponent],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    ShowProdutsComponent,
+  ],
   templateUrl: './categories-shop.component.html',
   styleUrl: './categories-shop.component.scss',
 })
-export class CategoriesShopComponent implements OnInit, OnDestroy {
+export class CategoriesShopComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   products?: Products;
-  searchForm = new FormGroup({
-    search: new FormControl('', [Validators.required]),
-  });
+  ProductsShop: Products['data'] = [];
+  searchForm!: FormGroup;
   private sub!: Subscription;
+  private scrollSub!: () => void;
+
+  private currentPage: number = 1;
+  loading: boolean = false;
+  allLoaded: boolean = false;
+
   categories = [
     {
       id: 1,
       title: 'Tools Plants Products',
-      description:
-        'Essential plant care tools for healthy growth and maintenance.',
-      count: 24,
+      description: 'Essential plant care tools for healthy growth and maintenance.',
+      count: 50,
       image: './assets/Images/Plantss.webp',
     },
     {
       id: 2,
       title: 'Agricultural Seeds Of All Kinds',
-      description:
-        'High-quality seeds for all your farming and gardening needs.',
-      count: 18,
+      description: 'High-quality seeds for all your farming and gardening needs.',
+      count: 50,
       image: './assets/Images/plantsss.jpg',
     },
     {
       id: 3,
       title: 'Ornamental Plants Products',
-      description:
-        'Decorative plants that enhance indoor or outdoor spaces beautifully.',
-      count: 12,
+      description: 'Decorative plants that enhance indoor or outdoor spaces beautifully.',
+      count: 40,
       image: './assets/Images/Plantsssss.jpg',
     },
   ];
-  H3Category: string = '';
-  idCategory: number = 1;
+
+  idCategory: number = this.categories[0].id;
+  H3Category: string = this.categories[0].title;
+
   @ViewChildren('categoryRef') categoryElements!: QueryList<ElementRef>;
-  ProductsShop: any = this.products?.data;
 
   constructor(
-    private platformDetectionService: PlatformDetectionService,
+    private fb: FormBuilder,
     private _ProductsShopService: ProductsShopService,
-    private fb: FormBuilder
+    private platformDetectionService: PlatformDetectionService
   ) {}
 
-  ngOnInit() {
-    if (this.platformDetectionService.isBrowser) {
-      console.log('Running in the browser');
+  ngOnInit(): void {
+    this.searchForm = this.fb.group({
+      search: new FormControl('', Validators.required),
+    });
 
-      // Load Flowbite dynamically
-      this.platformDetectionService.loadFlowbite((flowbite) => {
-        flowbite.initFlowbite();
-        console.log('Flowbite loaded successfully');
+    this.loadInitialProducts();
+
+    this.sub = this.searchForm
+      .get('search')!
+      .valueChanges.pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((term: string) => {
+        const trimmed = term?.trim() ?? '';
+        if (trimmed === '') {
+          this.resetAndLoad(); 
+        }
       });
 
-      // Access the DOM safely after rendering
-      this.platformDetectionService.executeAfterDOMRender(() => {
-        this.getProducts();
-        this.H3Category = this.categories?.[0].title;
-        const el = this.categoryElements.find(
-          (el) => el.nativeElement.getAttribute('data-title') === this.categories?.[0].title
-        );
-        el?.nativeElement.classList.add('ring-4', 'ring-green-500', 'scale-102');
-        this.sub = this.searchForm
-          .get('search')!
-          .valueChanges.pipe(debounceTime(300), distinctUntilChanged())
-          .subscribe((value) => {
-            if (value && value.trim().length > 0) {
-              console.log('Input is not empty:', value);
-              // e.g. filter your categories:
-              // this.filtered = this.categories.filter(c => c.name.includes(value));
-            } else {
-              console.log('Input is empty');
-              this.ProductsShop = this.products?.data;
-            }
-          });
+    this.scrollSub = this.handleScroll.bind(this);
+    window.addEventListener('scroll', this.scrollSub, true);
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      const selectedCategory = this.categories.find(
+        (cat) => cat.id === this.idCategory
+      );
+      if (selectedCategory) {
+        this.getProductsCategory(selectedCategory);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.sub) this.sub.unsubscribe();
+    if (this.scrollSub)
+      window.removeEventListener('scroll', this.scrollSub, true);
+  }
+
+  private loadInitialProducts(): void {
+    this.currentPage = 1;
+    this.allLoaded = false;
+    this.ProductsShop = [];
+    this.getProducts();
+  }
+
+  private getProducts(): void {
+    if (this.loading || this.allLoaded) return;
+    this.loading = true;
+
+    this._ProductsShopService
+      .getSomeproductsByCategory(this.idCategory, 20, this.currentPage)
+      .subscribe({
+        next: (res) => {
+          if (res.data.length === 0) {
+            this.allLoaded = true;
+          } else {
+            this.ProductsShop = [...this.ProductsShop, ...res.data];
+            this.products = res;
+            this.currentPage++;
+          }
+        },
+        error: (err) => console.error('Error fetching products:', err),
+        complete: () => (this.loading = false),
       });
+  }
+
+  private getResponsiveThreshold(): number {
+    const width = window.innerWidth;
+    if (width >= 1280) return 300;
+    if (width >= 768) return 500;
+    return 600;
+  }
+
+  private handleScroll(): void {
+    const scrollTop = window.scrollY;
+    const viewportHeight = window.innerHeight;
+    const fullHeight = document.documentElement.scrollHeight;
+    const threshold = this.getResponsiveThreshold();
+
+    if (scrollTop + viewportHeight + threshold >= fullHeight) {
+      this.getProducts();
     }
   }
 
-  getProducts = () => {
-    return this._ProductsShopService.getproducts().subscribe({
-      next: (res) => {
-        this.products = res;
-        this.ProductsShop = this.products?.data;
-      },
-      error: (err) => {
-        console.error('Error fetching products:', err);
-      },
-      complete: () => {
-        console.log('Product fetching complete');
-      },
-    });
-  };
-  getProductsCategory(category: any) {
+  getProductsCategory(category: any): void {
     this.idCategory = category.id;
     this.H3Category = category.title;
+    this.searchForm.reset();
+    this.loadInitialProducts();
+
     this.categoryElements.forEach((elRef: ElementRef) => {
       const el = elRef.nativeElement;
       const dataTitle = el.getAttribute('data-title');
@@ -135,19 +183,28 @@ export class CategoriesShopComponent implements OnInit, OnDestroy {
       }
     });
   }
-  onSearch() {
-    if (this.searchForm.invalid) return;
-    const term = this.searchForm.value.search?.trim() ?? '';
-    console.log('Search term:', term);
-    // TODO: perform your search/filter logic on this.categories
-    const firstProductArray: Products['data'] = [];
-    if (this.products?.data[0]) {
-      firstProductArray.push(this.products?.data[0]);
-    }
-    this.ProductsShop = firstProductArray;
+
+  private searchProducts(term: string): void {
+    this._ProductsShopService
+      .getSearchproductsByCategory(term, this.idCategory)
+      .subscribe({
+        next: (res) => {
+          this.ProductsShop = res.data;
+        },
+        error: (err) => console.error('Search error:', err),
+      });
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+  onSearch(): void {
+    const term = this.searchForm.get('search')?.value.trim();
+    if (term) {
+      this.searchProducts(term);
+    } else {
+      this.resetAndLoad();
+    }
+  }
+
+  private resetAndLoad(): void {
+    this.loadInitialProducts();
   }
 }
